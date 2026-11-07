@@ -175,7 +175,8 @@ import FixStatCore
         #expect(!SSDText.needsFullDiskAccess(drive))
         // Big Sur passes no SMART through the same adapter: the text names macOS too.
         #expect(SSDText.externalSMARTProblem(drive, macOSMajor: 11)?.contains("macOS 11") == true)
-        #expect(SSDText.externalSMARTProblem(drive, macOSMajor: 27)?.contains("macOS 11") == false)
+        #expect(SSDText.externalSMARTProblem(drive, macOSMajor: 26)?.contains("macOS 11") == false)
+        #expect(SSDText.externalSMARTProblem(drive, macOSMajor: 15)?.contains("macOS 26") == true)
     }
 
     @Test func thunderboltNVMeTexts() {

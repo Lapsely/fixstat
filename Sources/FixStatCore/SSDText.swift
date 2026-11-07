@@ -306,10 +306,10 @@ public enum SSDText {
         return findings + [drive.io.flatMap(ioFinding)].compactMap { $0 }
     }
 
-    /// macOS passes ATA SMART through USB–SATA adapters from this major version on: 27 does, 11 does
-    /// not (the same ASMedia enclosure and UAS driver chain, no "SMART Capable" on Big Sur); the
-    /// versions in between are not known yet.
-    static let usbSMARTKnownFrom = 27
+    /// macOS passes ATA SMART through USB–SATA adapters from this major version on: 26 and 27 do
+    /// (owner, bench), 11 does not (the same ASMedia enclosure and UAS driver chain, no "SMART
+    /// Capable" on Big Sur); 12 – 15 are not known yet (macOS 14 did not in 2024, Eclectic Light).
+    static let usbSMARTKnownFrom = 26
 
     /// Why an external drive shows no SMART data; nil when it has SMART.
     public static func externalSMARTProblem(_ drive: ATADrive,
@@ -322,7 +322,7 @@ public enum SSDText {
             return L("This drive does not offer SMART data. Read / write errors are counted.")
         }
         if macOSMajor < usbSMARTKnownFrom {
-            return L("SMART data does not come through USB here: the USB adapter does not pass it on, or this macOS version does not (macOS 11 does not; macOS 27 does with the same adapter). Read / write errors are counted.")
+            return L("SMART data does not come through USB here: the USB adapter does not pass it on, or this macOS version does not (macOS 11 does not; macOS 26 and later do with the same adapter). Read / write errors are counted.")
         }
         return L("The USB adapter does not pass SMART data on (common with USB–NVMe adapters, memory sticks and card readers). Read / write errors are counted.")
     }
