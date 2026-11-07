@@ -4020,12 +4020,52 @@
         }
       }
     },
+    "Host reads (32 MiB)" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Okunan veri (32 MiB)"
+          }
+        }
+      }
+    },
+    "Host reads (GiB)" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Okunan veri (GiB)"
+          }
+        }
+      }
+    },
     "Host reads (MiB)" : {
       "localizations" : {
         "tr" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Okunan veri (MiB)"
+          }
+        }
+      }
+    },
+    "Host writes (32 MiB)" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Yazılan veri (32 MiB)"
+          }
+        }
+      }
+    },
+    "Host writes (GiB)" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Yazılan veri (GiB)"
           }
         }
       }
@@ -10784,6 +10824,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "dokunmalar Touch Bar sensöründen de okunuyor (tüm şerit, Esc bölgesi dahil)"
+          }
+        }
+      }
+    },
+    "unit unknown (raw value %@)" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "birim bilinmiyor (ham değer %@)"
           }
         }
       }

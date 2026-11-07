@@ -87,7 +87,9 @@ public struct ATAHealth: Codable, Sendable, Equatable {
 
     public var powerOnHours: Double? { counter(ID.powerOnHours) }
     public var powerCycles: Double? { counter(ID.powerCycles) }
-    public var unsafeShutdowns: Double? { counter(ID.unsafeShutdowns) }
+    /// 192, or 174 "Unexpected power loss count" (Kingston, Crucial, Intel …; on Apple's SanDisk
+    /// SSDs 174 counts host reads).
+    public var unsafeShutdowns: Double? { counter(ID.unsafeShutdowns) ?? (isAppleSanDisk ? nil : counter(174)) }
     public var reallocatedSectors: Double? { counter(ID.reallocated) }
     public var pendingSectors: Double? { counter(ID.pending) }
     public var uncorrectableSectors: Double? { counter(ID.uncorrectable) }
@@ -100,16 +102,63 @@ public struct ATAHealth: Codable, Sendable, Equatable {
         return nil
     }
 
-    /// Total data written: LBAs × 512 bytes (most SSDs; some count in larger units), or
-    /// MiB on Apple's SanDisk SSDs.
+    /// What the host write / read counters (241 / 242) count. Most SSDs count LBAs (512 bytes);
+    /// some vendors count GiB or 32 MiB, which smartmontools knows per model.
+    public enum DataUnit: Equatable, Sendable {
+        /// 512-byte LBAs (most drives; the default).
+        case lba
+        /// GiB: Kingston UV400 (Marvell, bench: 241 = 2601 after 1 240 h, 233 NAND writes 3 303) and
+        /// A400 (Phison), SanDisk SSD Plus / Ultra.
+        case gibibytes
+        /// 32 MiB: Intel SATA SSDs.
+        case mebibytes32
+        /// MiB in 174 / 175: Apple's SanDisk SSDs.
+        case mebibytesAppleSanDisk
+        /// Read as LBAs the total is implausibly small for the power-on time: the drive counts in
+        /// a unit FixStat does not know.
+        case unknown
+    }
+
+    public var dataUnit: DataUnit {
+        if isAppleSanDisk { return .mebibytesAppleSanDisk }
+        let name = (model ?? "").uppercased()
+        if name.hasPrefix("KINGSTON SUV400") || name.hasPrefix("KINGSTON SA400")
+            || name.hasPrefix("SANDISK SDSSDA") || name.hasPrefix("SANDISK SDSSDH") {
+            return .gibibytes
+        }
+        if name.hasPrefix("INTEL SSDSC") { return .mebibytes32 }
+        // Less than 10 GB in 100 hours or more: not LBAs.
+        if let raw = attribute(ID.totalLBAsWritten)?.raw, raw > 0, Double(raw) * 512 < 10e9,
+           let hours = powerOnHours, hours >= 100 {
+            return .unknown
+        }
+        return .lba
+    }
+
+    func bytes(_ id: Int) -> Double? {
+        guard let raw = attribute(id).map({ Double($0.raw & 0xFFFF_FFFF_FFFF) }) else { return nil }
+        switch dataUnit {
+        case .lba: return raw * 512
+        case .gibibytes: return raw * 1_073_741_824
+        case .mebibytes32: return raw * 33_554_432
+        case .mebibytesAppleSanDisk, .unknown: return nil
+        }
+    }
+
+    /// Total data the host wrote: 241 in the drive's unit, or 175 (MiB) on Apple's SanDisk SSDs;
+    /// nil when the unit is unknown.
     public var bytesWritten: Double? {
-        if let lbas = attribute(ID.totalLBAsWritten) { return Double(lbas.raw) * 512 }
-        return isAppleSanDisk ? attribute(175).map { Double($0.raw & 0xFFFF_FFFF_FFFF) * 1_048_576 } : nil
+        if dataUnit == .mebibytesAppleSanDisk {
+            return attribute(175).map { Double($0.raw & 0xFFFF_FFFF_FFFF) * 1_048_576 }
+        }
+        return bytes(ID.totalLBAsWritten)
     }
 
     public var bytesRead: Double? {
-        if let lbas = attribute(ID.totalLBAsRead) { return Double(lbas.raw) * 512 }
-        return isAppleSanDisk ? attribute(174).map { Double($0.raw & 0xFFFF_FFFF_FFFF) * 1_048_576 } : nil
+        if dataUnit == .mebibytesAppleSanDisk {
+            return attribute(174).map { Double($0.raw & 0xFFFF_FFFF_FFFF) * 1_048_576 }
+        }
+        return bytes(ID.totalLBAsRead)
     }
 
     /// NAND erase counts of Apple's SanDisk SSDs (attribute 173 raw: average, maximum, minimum

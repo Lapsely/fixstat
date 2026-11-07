@@ -152,7 +152,7 @@ public struct SensorReport: Encodable {
             add("ssd", "pendingSectors", "", a.pendingSectors, "")
             add("ssd", "uncorrectableSectors", "", a.uncorrectableSectors, "")
             add("ssd", "crcErrors", "", a.crcErrors, "")
-            add("ssd", "bytesWrittenEstimate", "", a.bytesWritten, "B")
+            add("ssd", "bytesWrittenEstimate", "\(a.dataUnit)", a.bytesWritten, "B")
         }
         if let h = ssd?.health {
             add("ssd", "percentageUsed", ssd?.model ?? "", Double(h.percentageUsed), "%")

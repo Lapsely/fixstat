@@ -142,10 +142,13 @@ public enum SSDText {
         add(L("Pending sectors"), h.pendingSectors)
         add(L("Uncorrectable sectors"), h.uncorrectableSectors)
         add(L("Interface CRC errors"), h.crcErrors)
+        let unit = h.dataUnit
         if let written = h.bytesWritten {
-            rows.append((h.isAppleSanDisk ? L("Data written") : L("Data written (estimate)"), Format.bytes(written)))
+            rows.append((unit == .lba ? L("Data written (estimate)") : L("Data written"), Format.bytes(written)))
+        } else if unit == .unknown, let raw = h.attribute(ATAHealth.ID.totalLBAsWritten)?.raw {
+            rows.append((L("Data written"), L("unit unknown (raw value %@)", Format.number(Double(raw)))))
         }
-        if let read = h.bytesRead, h.isAppleSanDisk { rows.append((L("Data read"), Format.bytes(read))) }
+        if let read = h.bytesRead, unit != .lba { rows.append((L("Data read"), Format.bytes(read))) }
         if let erase = h.eraseCounts {
             rows.append((L("NAND erase cycles"), L("average %1$lld (lowest %2$lld, highest %3$lld)",
                                                      erase.average, erase.minimum, erase.maximum)))
@@ -157,7 +160,7 @@ public enum SSDText {
     /// All attributes: id, name, current, worst, threshold, raw.
     public static func ataTable(_ h: ATAHealth) -> [[String]] {
         h.attributes.map { a in
-            [String(a.id), attributeName(a.id, appleSanDisk: h.isAppleSanDisk), String(a.current), String(a.worst),
+            [String(a.id), attributeName(a.id, appleSanDisk: h.isAppleSanDisk, unit: h.dataUnit), String(a.current), String(a.worst),
              a.threshold > 0 ? String(a.threshold) : "–", String(a.raw)]
         }
     }
@@ -166,7 +169,14 @@ public enum SSDText {
         [L("ID"), L("Attribute"), L("Value"), L("Worst"), L("Threshold"), L("Raw")]
     }
 
-    public static func attributeName(_ id: Int, appleSanDisk: Bool = false) -> String {
+    public static func attributeName(_ id: Int, appleSanDisk: Bool = false, unit: ATAHealth.DataUnit = .lba) -> String {
+        switch (id, unit) {
+        case (241, .gibibytes): return L("Host writes (GiB)")
+        case (242, .gibibytes): return L("Host reads (GiB)")
+        case (241, .mebibytes32): return L("Host writes (32 MiB)")
+        case (242, .mebibytes32): return L("Host reads (32 MiB)")
+        default: break
+        }
         if appleSanDisk {
             switch id {
             case 173: return L("Erase count (average, highest, lowest)")

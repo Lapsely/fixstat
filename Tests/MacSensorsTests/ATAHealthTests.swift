@@ -113,6 +113,37 @@ import FixStatCore
     }
 }
 
+@Suite struct DataUnitTests {
+    /// The Kingston UV400 under DATA (bench, 2026-11-07): 241 / 242 count GiB.
+    @Test func kingstonCountsGiB() throws {
+        let (data, limits) = ATAHealthTests.smart([(9, 100, 100, 1240), (174, 100, 100, 2382), (231, 46, 46, 54),
+                                                   (241, 100, 100, 2601), (242, 100, 100, 8074)])
+        var health = try #require(ATAHealth.parse(data: data, thresholds: limits, exceeded: 0))
+        // Without the model the LBA reading (1.3 MB in 1 240 h) is implausible: unit unknown, no number.
+        #expect(health.dataUnit == .unknown)
+        #expect(health.bytesWritten == nil)
+        #expect(SSDText.ataRows(health).contains { $0.1.contains("2.601") || $0.1.contains("2,601") || $0.1.contains("2601") })
+        health.model = "KINGSTON SUV400S37240G"
+        #expect(health.dataUnit == .gibibytes)
+        #expect(health.bytesWritten == 2601.0 * 1_073_741_824)
+        #expect(health.bytesRead == 8074.0 * 1_073_741_824)
+        #expect(health.unsafeShutdowns == 2382, "174 when there is no 192")
+        #expect(SSDText.attributeName(241, unit: health.dataUnit) != SSDText.attributeName(241))
+    }
+
+    @Test func lbasStayLBAs() throws {
+        // Samsung 870 EVO: LBAs, plausible for 1 636 h.
+        let (data, limits) = ATAHealthTests.smart([(9, 99, 99, 1636), (241, 99, 99, 3_814_602_913)])
+        var health = try #require(ATAHealth.parse(data: data, thresholds: limits, exceeded: 0))
+        health.model = "Samsung SSD 870 EVO 500G"
+        #expect(health.dataUnit == .lba)
+        #expect(health.bytesWritten == 3_814_602_913.0 * 512)
+        // A new drive with little written and few hours is not "unknown".
+        let (fresh, freshLimits) = ATAHealthTests.smart([(9, 100, 100, 12), (241, 100, 100, 2_000_000)])
+        #expect(try #require(ATAHealth.parse(data: fresh, thresholds: freshLimits, exceeded: 0)).dataUnit == .lba)
+    }
+}
+
 @Suite struct ExternalDriveTests {
     @Test func samsungSATAReportsOnlyAirflowTemperature() throws {
         // Samsung 870 EVO behind an ASMedia USB bridge: no 194, 190 raw = 28 °C.
