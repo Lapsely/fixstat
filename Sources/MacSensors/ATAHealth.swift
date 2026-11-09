@@ -30,6 +30,11 @@ public struct ATAHealth: Codable, Sendable, Equatable {
     /// writes in MiB (DriveDx names 175 "Host Writes MiB"), 173 packs erase counts.
     public var isAppleSanDisk: Bool { model?.hasPrefix("APPLE SSD SD") == true }
 
+    /// Apple's AHCI SSDs from Samsung ("APPLE SSD SM…") and SanDisk ("SD…"): 173 runs from 200
+    /// (new) down to its threshold 100 (rated endurance used up) and its raw value packs the
+    /// NAND erase counts.
+    public var isAppleAHCI: Bool { isAppleSanDisk || model?.hasPrefix("APPLE SSD SM") == true }
+
     /// Well-known attribute ids.
     public enum ID {
         public static let reallocated = 5
@@ -161,17 +166,23 @@ public struct ATAHealth: Codable, Sendable, Equatable {
         return bytes(ID.totalLBAsRead)
     }
 
-    /// NAND erase counts of Apple's SanDisk SSDs (attribute 173 raw: average, maximum, minimum
-    /// as 16-bit words from the low end).
+    /// NAND erase counts of Apple's Samsung / SanDisk AHCI SSDs (attribute 173 raw: average,
+    /// maximum, minimum as 16-bit words from the low end).
     public var eraseCounts: (average: Int, maximum: Int, minimum: Int)? {
-        guard isAppleSanDisk, let a = attribute(173), a.raw > 0 else { return nil }
+        guard isAppleAHCI, let a = attribute(173), a.raw > 0 else { return nil }
         let word = { (shift: UInt64) in Int((a.raw >> shift) & 0xFFFF) }
         return (word(0), word(16), word(32))
     }
 
     /// Remaining life in % from the first life attribute whose normalized value is a
     /// percentage, and that attribute's id. A vendor estimate, like NVMe's percentage used.
+    /// Apple's Samsung / SanDisk AHCI SSDs: 173's normalized value minus its threshold 100 (the
+    /// same as DriveDx on 9 of 11 bench drives; their 169 stays at 100 or reads 232–253). DriveDx
+    /// showed 97.5 % on two SD0128F with 563 and 1 720 average erase cycles, where 173 gives 78 / 39 %.
     public var lifeLeft: (percent: Int, attribute: Int)? {
+        if isAppleAHCI, let a = attribute(173), a.threshold == 100, (100...200).contains(a.current) {
+            return (a.current - 100, 173)
+        }
         for id in ID.lifeLeft {
             if let a = attribute(id), (1...100).contains(a.current) { return (a.current, id) }
         }

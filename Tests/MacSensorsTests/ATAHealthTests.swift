@@ -37,7 +37,9 @@ import FixStatCore
         #expect(health.eraseCounts?.average == 639)
         #expect(health.eraseCounts?.maximum == 743)
         #expect(health.eraseCounts?.minimum == 540)
-        #expect(health.lifeLeft?.attribute == 169)
+        // 169 stays at 100 on these drives; 173 (176 − its threshold 100) is the life left.
+        #expect(health.lifeLeft?.attribute == 173)
+        #expect(health.lifeLeft?.percent == 76)
     }
 
     @Test func parsesASamsungStyleSSD() throws {
@@ -110,6 +112,33 @@ import FixStatCore
                                       kern_return_t(bitPattern: 0xe00002c7), FSATAStepNotRun]
         #expect(ATADrive.describe(steps: steps)
             == "plugin ok · interface ok · identify ok · read 0xe00002ca · retry 0xe00002ca · parent plugin 0xe00002c7")
+    }
+}
+
+@Suite struct AppleAHCILifeTests {
+    /// Values from DriveDx records of bench drives: life = 173 normalized − 100.
+    @Test(arguments: [("APPLE SSD SM0128G", 145, 45), ("APPLE SSD SM0512G", 194, 94), ("APPLE SSD SM1024G", 193, 93),
+                      ("APPLE SSD SD0256F", 166, 66)])
+    func lifeFrom173(model: String, value: Int, expected: Int) throws {
+        // 169 stays at 100 on SanDisk and reads 232–253 on Samsung: never the life.
+        let (data, limits) = ATAHealthTests.smart([(9, 100, 100, 5054), (169, model.contains("SD") ? 100 : 253, 100, 1),
+                                                   (173, value, value, 0x033A_0403_0397)],
+                                                  thresholds: [169: 10, 173: 100])
+        var health = try #require(ATAHealth.parse(data: data, thresholds: limits, exceeded: 0))
+        health.model = model
+        #expect(health.lifeLeft?.percent == expected)
+        #expect(health.lifeLeft?.attribute == 173)
+        let erase = try #require(health.eraseCounts)
+        #expect(erase.average == 919 && erase.maximum == 1027 && erase.minimum == 826)
+    }
+
+    @Test func otherDrivesKeepTheOrder() throws {
+        // A non-Apple drive with 173 counting erases (threshold 0) still reads 177.
+        let (data, limits) = ATAHealthTests.smart([(173, 150, 150, 900), (177, 91, 91, 108)])
+        var health = try #require(ATAHealth.parse(data: data, thresholds: limits, exceeded: 0))
+        health.model = "Samsung SSD 860 EVO 250GB"
+        #expect(health.lifeLeft?.attribute == 177)
+        #expect(health.eraseCounts == nil)
     }
 }
 

@@ -287,7 +287,9 @@ individual cores. Never name them per core ("P-core 1"). Use ids like
   failure it retries once and tries the parent service, and every step's IOKit code is shown,
   e.g. `kIOReturnIOError` 0xe00002ca on an SD0128F that DriveDx reads, fixed by IDENTIFY first)
   → `ATAHealth`; Apple's SanDisk SSDs ("APPLE SSD SD…"): 174 / 175 = host reads / writes in
-  MiB, 173 raw = erase counts (average, maximum, minimum 16-bit words), life from 169;
+  MiB; Apple's Samsung (SM…) and SanDisk (SD…) AHCI SSDs: 173 raw = erase counts (average, maximum,
+  minimum 16-bit words), life = 173 normalized − its threshold 100 (matches DriveDx on 9 of 11 bench
+  drives; 169 stays at 100 on SanDisk, 232–253 on Samsung);
   every internal ATA drive is read (`ATADrive`, e.g. a Fusion Drive's hard disk). External drives
   (`ATADrive.readExternal`, `SSDInfo.externalDrives`; "External drives" in the SSD window, PDF / CSV):
   every block storage device with location "External" and media (disk images left out), with its USB
