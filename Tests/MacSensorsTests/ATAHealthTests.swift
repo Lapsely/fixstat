@@ -160,6 +160,19 @@ import FixStatCore
         #expect(SSDText.attributeName(241, unit: health.dataUnit) != SSDText.attributeName(241))
     }
 
+    @Test func siliconMotionCountsGiB() throws {
+        // APS-SL3N-240 in a USB enclosure (bench, 2026-11-09): erase counts in 206 / 207 / 208.
+        let (data, limits) = ATAHealthTests.smart([(9, 100, 100, 276), (206, 200, 200, 32), (207, 200, 200, 118),
+                                                   (208, 200, 200, 85), (231, 91, 91, 9), (241, 100, 100, 6517),
+                                                   (242, 100, 100, 3737)], thresholds: [231: 5])
+        var health = try #require(ATAHealth.parse(data: data, thresholds: limits, exceeded: 0))
+        health.model = "APS-SL3N -240"
+        #expect(health.dataUnit == .gibibytes)
+        #expect(health.bytesWritten == 6517.0 * 1_073_741_824)
+        #expect(health.lifeLeft?.percent == 91)
+        #expect(health.lifeLeft?.attribute == 231)
+    }
+
     @Test func lbasStayLBAs() throws {
         // Samsung 870 EVO: LBAs, plausible for 1 636 h.
         let (data, limits) = ATAHealthTests.smart([(9, 99, 99, 1636), (241, 99, 99, 3_814_602_913)])

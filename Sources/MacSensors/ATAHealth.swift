@@ -113,7 +113,7 @@ public struct ATAHealth: Codable, Sendable, Equatable {
         /// 512-byte LBAs (most drives; the default).
         case lba
         /// GiB: Kingston UV400 (Marvell, bench: 241 = 2601 after 1 240 h, 233 NAND writes 3 303) and
-        /// A400 (Phison), SanDisk SSD Plus / Ultra.
+        /// A400 (Phison), SanDisk SSD Plus / Ultra, Silicon Motion controllers (206 – 208 erase counts).
         case gibibytes
         /// 32 MiB: Intel SATA SSDs.
         case mebibytes32
@@ -132,6 +132,10 @@ public struct ATAHealth: Codable, Sendable, Equatable {
             return .gibibytes
         }
         if name.hasPrefix("INTEL SSDSC") { return .mebibytes32 }
+        // Silicon Motion controllers (many brands: Apacer, Transcend, Kingston A400 / KC600, Lexar …)
+        // publish the minimum / maximum / average erase count in 206 / 207 / 208 and count host
+        // writes in GiB (APS-SL3N-240, bench: 241 = 6 517 with 85 average erases on 240 GB).
+        if [206, 207, 208].allSatisfy({ attribute($0) != nil }) { return .gibibytes }
         // Less than 10 GB in 100 hours or more: not LBAs.
         if let raw = attribute(ID.totalLBAsWritten)?.raw, raw > 0, Double(raw) * 512 < 10e9,
            let hours = powerOnHours, hours >= 100 {
