@@ -1,0 +1,150 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>FixStat — Mac menu bar monitor and diagnostics for repair technicians</title>
+<meta name="description" content="Free, open-source macOS menu bar monitor for Mac repair: temperature sensor names verified per model, battery cell voltages and gauge data, SSD SMART (NVMe, AHCI, USB drives), panic history and guided hardware tests.">
+<link rel="canonical" href="https://burakfixlab.github.io/fixstat/">
+<link rel="icon" href="icon.png">
+<meta property="og:type" content="website">
+<meta property="og:title" content="FixStat — Mac diagnostics in the menu bar">
+<meta property="og:description" content="Sensor names verified per Mac model, battery cells, SSD SMART and hardware tests. Free and open source.">
+<meta property="og:url" content="https://burakfixlab.github.io/fixstat/">
+<meta property="og:image" content="https://burakfixlab.github.io/fixstat/screenshots/en/technician-dark.png">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "SoftwareApplication",
+  "name": "FixStat",
+  "operatingSystem": "macOS 10.13 or later (Intel), macOS 11 or later (Apple Silicon)",
+  "applicationCategory": "UtilitiesApplication",
+  "description": "Menu bar monitor and diagnostics for Mac repair technicians: per-model sensor names, battery cell data, SSD SMART, panic history and hardware tests.",
+  "license": "https://opensource.org/licenses/MIT",
+  "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+  "downloadUrl": "https://github.com/BurakFixLab/fixstat/releases/latest/download/FixStat.dmg",
+  "codeRepository": "https://github.com/BurakFixLab/fixstat"
+}
+</script>
+<style>
+  :root {
+    --bg: #fbfbfd; --surface: #ffffff; --text: #1d1d1f; --muted: #5f6368; --line: #e3e3e8;
+    --accent: #0a66d8; --accent-text: #ffffff; --code: #f2f2f5;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root { --bg: #111214; --surface: #1b1c1f; --text: #f2f2f4; --muted: #a3a6ad; --line: #2c2e33;
+            --accent: #3d8bff; --accent-text: #ffffff; --code: #24262a; }
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--text);
+         font: 17px/1.55 -apple-system, BlinkMacSystemFont, "SF Pro Text", "Helvetica Neue", Arial, sans-serif; }
+  .wrap { max-width: 1040px; margin: 0 auto; padding: 0 20px; }
+  header { padding: 72px 0 40px; text-align: center; }
+  header img { width: 112px; height: 112px; }
+  h1 { font-size: 44px; line-height: 1.1; margin: 16px 0 12px; letter-spacing: -0.02em; }
+  .lead { font-size: 21px; color: var(--muted); max-width: 720px; margin: 0 auto 28px; }
+  .buttons { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
+  .btn { display: inline-block; padding: 12px 22px; border-radius: 10px; text-decoration: none; font-weight: 600; }
+  .btn.primary { background: var(--accent); color: var(--accent-text); }
+  .btn.secondary { border: 1px solid var(--line); color: var(--text); background: var(--surface); }
+  .meta { margin-top: 14px; font-size: 14px; color: var(--muted); }
+  .shots { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 20px; align-items: start; margin: 24px 0 64px; }
+  .shots figure { margin: 0; }
+  .shots img { width: 100%; height: auto; border-radius: 12px; border: 1px solid var(--line); background: var(--surface); }
+  .shots figcaption { font-size: 14px; color: var(--muted); margin-top: 8px; text-align: center; }
+  h2 { font-size: 28px; margin: 0 0 20px; letter-spacing: -0.01em; }
+  section { margin-bottom: 64px; }
+  .grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; }
+  .card { background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 20px; }
+  .card h3 { margin: 0 0 8px; font-size: 18px; }
+  .card p { margin: 0; color: var(--muted); font-size: 15px; }
+  code { background: var(--code); padding: 1px 6px; border-radius: 5px; font-size: 0.9em; }
+  .wide img { width: 100%; height: auto; border-radius: 12px; border: 1px solid var(--line); }
+  footer { border-top: 1px solid var(--line); padding: 28px 0 48px; color: var(--muted); font-size: 14px; }
+  footer a { color: var(--muted); }
+  a { color: var(--accent); }
+  @media (max-width: 760px) {
+    header { padding-top: 48px; }
+    h1 { font-size: 34px; }
+    .lead { font-size: 18px; }
+    .shots, .grid { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <img src="icon.png" alt="FixStat icon" width="112" height="112">
+    <h1>FixStat</h1>
+    <p class="lead">A free, open-source menu bar monitor and diagnostics app for Mac repair technicians.
+      Sensor names verified per Mac model, battery cell data, SSD health and guided hardware tests.</p>
+    <div class="buttons">
+      <a class="btn primary" href="https://github.com/BurakFixLab/fixstat/releases/latest/download/FixStat.dmg">Download FixStat.dmg</a>
+      <a class="btn secondary" href="https://github.com/BurakFixLab/fixstat">Source on GitHub</a>
+    </div>
+    <p class="meta">macOS 10.13 or later (Intel) · macOS 11 or later (Apple Silicon) · one universal app · MIT license ·
+      <a href="https://github.com/BurakFixLab/fixstat/blob/main/INSTALL.md">install steps</a></p>
+  </header>
+
+  <div class="shots">
+    <figure>
+      <img src="screenshots/en/panel-light.png" alt="FixStat menu bar panel with battery, temperatures and system load" width="776" height="926">
+      <figcaption>Menu bar panel</figcaption>
+    </figure>
+    <figure>
+      <img src="screenshots/en/technician-dark.png" alt="Technician mode with battery gauge data and grouped sensors" width="776" height="1464">
+      <figcaption>Technician mode: gauge data and every sensor, grouped by component</figcaption>
+    </figure>
+  </div>
+
+  <section>
+    <h2>Built for the repair bench</h2>
+    <div class="grid">
+      <div class="card">
+        <h3>Sensors with real names</h3>
+        <p>Instead of raw keys like <code>Tp09</code> or <code>TG0B</code>, sensors are named per Mac model from load tests on the bench, and marked verified or estimated.</p>
+      </div>
+      <div class="card">
+        <h3>Battery in detail</h3>
+        <p>Design and raw capacity, cell voltages with an imbalance warning, cycle count, the adapter's real input power, an originality check and a capacity test.</p>
+      </div>
+      <div class="card">
+        <h3>SSD health</h3>
+        <p>SMART of NVMe and AHCI SSDs and of SATA drives in USB enclosures, a write–verify stress test and a read-only surface scan.</p>
+      </div>
+      <div class="card">
+        <h3>Hardware check</h3>
+        <p>Keyboard, trackpad surface, display, speakers, camera, Touch Bar, ports, fans under load, temperature sensors and the live lid angle, with a PDF report.</p>
+      </div>
+      <div class="card">
+        <h3>Power and drain</h3>
+        <p>Live power rails and system power on Apple Silicon, battery drain while asleep and while shut down, and a live monitor with CSV recording.</p>
+      </div>
+      <div class="card">
+        <h3>Read-only and private</h3>
+        <p>Never writes to the SMC, needs no administrator rights for monitoring and collects no data. The only network access is an optional daily update check.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="wide">
+    <h2>Live monitor</h2>
+    <img src="screenshots/en/live-monitor.png" alt="Live monitor charting system power, a CPU rail and a CPU temperature during a load" width="1880" height="1440" loading="lazy">
+  </section>
+
+  <section class="wide">
+    <h2>Temperature sensor check</h2>
+    <img src="screenshots/en/sensor-check.png" alt="Sensor check finding an open sensor and a sensor that does not follow the load (simulated faults)" width="1360" height="940" loading="lazy">
+    <p class="meta">Shown with two simulated faults.</p>
+  </section>
+</div>
+<footer>
+  <div class="wrap">
+    FixStat is free software under the MIT license. Made by a Mac repair technician.
+    · <a href="https://github.com/BurakFixLab/fixstat">GitHub</a>
+    · <a href="https://github.com/BurakFixLab/fixstat/blob/main/README.tr.md">Türkçe</a>
+    · <a href="https://github.com/BurakFixLab/fixstat/issues">Report a problem</a>
+  </div>
+</footer>
+</body>
+</html>
