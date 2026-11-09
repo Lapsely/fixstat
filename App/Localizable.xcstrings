@@ -1244,6 +1244,16 @@
         }
       }
     },
+    "Available reserved space" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kalan yedek alan"
+          }
+        }
+      }
+    },
     "Available spare" : {
       "localizations" : {
         "tr" : {
@@ -1280,6 +1290,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Ortalama deşarj akımı"
+          }
+        }
+      }
+    },
+    "Average erase count" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ortalama silme sayısı"
           }
         }
       }
@@ -3258,6 +3278,16 @@
         }
       }
     },
+    "Fewest bad blocks per die" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kalıp başına en az bozuk blok"
+          }
+        }
+      }
+    },
     "FileVault" : {
       "localizations" : {
         "tr" : {
@@ -3698,6 +3728,16 @@
         }
       }
     },
+    "Grown bad blocks" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sonradan oluşan bozuk bloklar"
+          }
+        }
+      }
+    },
     "Half of the CPU cores busy — like heavy multitasking or photo editing." : {
       "localizations" : {
         "tr" : {
@@ -3986,6 +4026,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "En yüksek deşarj akımı"
+          }
+        }
+      }
+    },
+    "Highest erase count" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "En yüksek silme sayısı"
           }
         }
       }
@@ -4476,6 +4526,16 @@
         }
       }
     },
+    "Life left not known for this drive model: its wear counter is not documented. Judge it by the erase cycles, spare blocks and errors." : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bu disk modelinin kalan ömrü bilinmiyor: aşınma sayacı belgelenmemiş. Silme döngülerine, yedek bloklara ve hatalara bakarak değerlendirin."
+          }
+        }
+      }
+    },
     "Lifetime (gauge)" : {
       "localizations" : {
         "tr" : {
@@ -4618,6 +4678,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "En düşük hücre voltajı"
+          }
+        }
+      }
+    },
+    "Lowest erase count" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "En düşük silme sayısı"
           }
         }
       }
@@ -5028,6 +5098,36 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "NAND silme döngüsü"
+          }
+        }
+      }
+    },
+    "NAND writes (GiB)" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "NAND yazımı (GiB)"
+          }
+        }
+      }
+    },
+    "NAND writes, SLC (GiB)" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "NAND yazımı, SLC (GiB)"
+          }
+        }
+      }
+    },
+    "NAND writes, TLC (GiB)" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "NAND yazımı, TLC (GiB)"
           }
         }
       }
@@ -6922,12 +7022,12 @@
         }
       }
     },
-    "SMART data does not come through USB here: the USB adapter does not pass it on, or this macOS version does not (macOS 11 does not; macOS 26 and later do with the same adapter). Read / write errors are counted." : {
+    "SMART data does not come through USB here: the USB adapter does not pass it on, or this macOS version does not (macOS 11 and 13 do not; macOS 26 and later do with the same adapter). Read / write errors are counted." : {
       "localizations" : {
         "tr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "SMART verisi burada USB üzerinden gelmiyor: ya USB adaptörü iletmiyor ya da bu macOS sürümü (macOS 11 iletmiyor; macOS 26 ve sonrası aynı adaptörle iletiyor). Okuma / yazma hataları sayılıyor."
+            "value" : "SMART verisi burada USB üzerinden gelmiyor: ya USB adaptörü iletmiyor ya da bu macOS sürümü (macOS 11 ve 13 iletmiyor; macOS 26 ve sonrası aynı adaptörle iletiyor). Okuma / yazma hataları sayılıyor."
           }
         }
       }
@@ -7068,6 +7168,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "SSD kalan ömrü"
+          }
+        }
+      }
+    },
+    "SSD life left (raw value)" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "SSD kalan ömür (ham değer)"
           }
         }
       }
@@ -8732,6 +8842,26 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Yazılan toplam LBA"
+          }
+        }
+      }
+    },
+    "Total bad blocks" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Toplam bozuk blok"
+          }
+        }
+      }
+    },
+    "Total erase count" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Toplam silme sayısı"
           }
         }
       }

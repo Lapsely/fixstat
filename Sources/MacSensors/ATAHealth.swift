@@ -35,6 +35,51 @@ public struct ATAHealth: Codable, Sendable, Equatable {
     /// NAND erase counts.
     public var isAppleAHCI: Bool { isAppleSanDisk || model?.hasPrefix("APPLE SSD SM") == true }
 
+    /// SSD families whose own wear counter FixStat knows. Each vendor keeps the life in a different
+    /// attribute, and some read the same id the other way round (Phison's 231 raw is the life left,
+    /// its normalized value the part used), so the life is only read for a known family; for any
+    /// other drive FixStat shows the evidence (erase counts, spare, errors) and no percentage.
+    /// Families and rules come from bench drives (2026-11): see each case.
+    public enum Family: String, Codable, Sendable {
+        /// Apple SM… / SD… AHCI: life = 173 normalized − threshold 100 (DriveDx agreed on 9 of 11).
+        case appleAHCI
+        /// Samsung: 177 Wear_Leveling_Count normalized = life, raw = average P/E cycles
+        /// (750 EVO 1 %, 860 PRO 69 %, 850 EVO 84 % / 96 %; DriveDx 1 / 69 / 85).
+        case samsung
+        /// Western Digital (Blue 3D, Marvell): 230 raw byte 1 = % of life used; 166 / 168 / 173 =
+        /// minimum / maximum / average erase count, 169 total bad blocks (WDS500G2B0A: byte 1 = 46, // privacy:allow (model number)
+        /// average erase 461, DriveDx 54 %; WDS100T2B0A: 13, 100). // privacy:allow (model number)
+        case westernDigital
+        /// Phison (Kingston A400 …): 231 raw = life left, normalized = part used; 244 / 245 / 246 =
+        /// average / maximum / total erase count (SA400S37960G: raw 97, normalized 3, average 24 of // privacy:allow (model number)
+        /// ≈ 1 000, DriveDx 98 %).
+        case phison
+        /// Silicon Motion: 231 normalized = life left (raw = part used); 206 / 207 / 208 = minimum /
+        /// maximum / average erase count (APS-SL3N-240: 91 / 9, average 85).
+        case siliconMotion
+        /// Kingston UV400 (Marvell): 231 normalized = life left, raw = part used (46 / 54).
+        case kingstonMarvell
+        /// Crucial / Micron: 202 Percent_Lifetime_Remain normalized = life left.
+        case crucial
+        /// Intel: 233 Media_Wearout_Indicator normalized = life left.
+        case intel
+
+        static func detect(model: String?, has: (Int) -> Bool) -> Family? {
+            let name = (model ?? "").uppercased()
+            if name.hasPrefix("APPLE SSD SM") || name.hasPrefix("APPLE SSD SD") { return .appleAHCI }
+            if name.hasPrefix("SAMSUNG"), has(177) { return .samsung }
+            if [230, 232, 233, 234].allSatisfy(has) || (name.hasPrefix("WDC") && has(230)) { return .westernDigital }
+            if has(231), [244, 245, 246].allSatisfy(has) { return .phison }
+            if [206, 207, 208].allSatisfy(has) { return .siliconMotion }
+            if name.hasPrefix("KINGSTON SUV400"), has(231) { return .kingstonMarvell }
+            if name.hasPrefix("CRUCIAL") || name.hasPrefix("CT") || name.hasPrefix("MICRON"), has(202) { return .crucial }
+            if name.hasPrefix("INTEL"), has(233) { return .intel }
+            return nil
+        }
+    }
+
+    public var family: Family? { Family.detect(model: model) { self.attribute($0) != nil } }
+
     /// Well-known attribute ids.
     public enum ID {
         public static let reallocated = 5
@@ -49,11 +94,6 @@ public struct ATAHealth: Codable, Sendable, Equatable {
         public static let crcErrors = 199
         public static let totalLBAsWritten = 241
         public static let totalLBAsRead = 242
-        /// Attributes whose normalized value is the remaining life in % on SSDs, in the order
-        /// they are trusted: SSD Life Left, Remaining Lifetime, Media Wearout Indicator,
-        /// Wear Leveling Count (Samsung, Apple SM…), Percent Lifetime Remaining (Crucial),
-        /// Average Erase Count / Wear Leveling (SanDisk, Toshiba, Apple SD… / TS…).
-        public static let lifeLeft = [231, 169, 233, 177, 202, 173]
     }
 
     /// Parses the 512-byte SMART data and threshold structures (ATA/ATAPI-6, 8.54):
@@ -136,6 +176,9 @@ public struct ATAHealth: Codable, Sendable, Equatable {
         // publish the minimum / maximum / average erase count in 206 / 207 / 208 and count host
         // writes in GiB (APS-SL3N-240, bench: 241 = 6 517 with 85 average erases on 240 GB).
         if [206, 207, 208].allSatisfy({ attribute($0) != nil }) { return .gibibytes }
+        // WD (Host_Writes_GiB, WDS500G2B0A: 68 782 = 74 TB beside 233 TLC NAND 233 377 GiB) and Phison // privacy:allow (model number)
+        // (Lifetime_Writes_GiB, SA400S37960G: 11 554, as DriveDx reads it). // privacy:allow (model number)
+        if family == .westernDigital || family == .phison { return .gibibytes }
         // Less than 10 GB in 100 hours or more: not LBAs.
         if let raw = attribute(ID.totalLBAsWritten)?.raw, raw > 0, Double(raw) * 512 < 10e9,
            let hours = powerOnHours, hours >= 100 {
@@ -170,27 +213,58 @@ public struct ATAHealth: Codable, Sendable, Equatable {
         return bytes(ID.totalLBAsRead)
     }
 
-    /// NAND erase counts of Apple's Samsung / SanDisk AHCI SSDs (attribute 173 raw: average,
-    /// maximum, minimum as 16-bit words from the low end).
-    public var eraseCounts: (average: Int, maximum: Int, minimum: Int)? {
-        guard isAppleAHCI, let a = attribute(173), a.raw > 0 else { return nil }
-        let word = { (shift: UInt64) in Int((a.raw >> shift) & 0xFFFF) }
-        return (word(0), word(16), word(32))
+    /// NAND erase (P/E) cycles per block: the physical wear behind the vendor's life figure.
+    public struct EraseCounts: Equatable, Sendable {
+        public var average: Int
+        public var maximum: Int?
+        public var minimum: Int?
     }
 
-    /// Remaining life in % from the first life attribute whose normalized value is a
-    /// percentage, and that attribute's id. A vendor estimate, like NVMe's percentage used.
-    /// Apple's Samsung / SanDisk AHCI SSDs: 173's normalized value minus its threshold 100 (the
-    /// same as DriveDx on 9 of 11 bench drives; their 169 stays at 100 or reads 232–253). DriveDx
-    /// showed 97.5 % on two SD0128F with 563 and 1 720 average erase cycles, where 173 gives 78 / 39 %.
+    /// Erase counts where the family publishes them: Apple 173 raw (average, maximum, minimum as
+    /// 16-bit words), Samsung 177 raw (average), WD 173 / 168 / 166, Phison 244 / 245, Silicon
+    /// Motion 208 / 207 / 206.
+    public var eraseCounts: EraseCounts? {
+        func raw(_ id: Int) -> Int? { attribute(id).map { Int($0.raw & 0xFFFF_FFFF) } }
+        switch family {
+        case .appleAHCI?:
+            guard let a = attribute(173), a.raw > 0 else { return nil }
+            let word = { (shift: UInt64) in Int((a.raw >> shift) & 0xFFFF) }
+            return EraseCounts(average: word(0), maximum: word(16), minimum: word(32))
+        case .samsung?: return raw(177).map { EraseCounts(average: $0) }
+        case .westernDigital?: return raw(173).map { EraseCounts(average: $0, maximum: raw(168), minimum: raw(166)) }
+        case .phison?: return raw(244).map { EraseCounts(average: $0, maximum: raw(245)) }
+        case .siliconMotion?: return raw(208).map { EraseCounts(average: $0, maximum: raw(207), minimum: raw(206)) }
+        default: return nil
+        }
+    }
+
+    /// Remaining life in % from the family's own wear counter, and that attribute's id; nil for a
+    /// drive whose family FixStat does not know (no guessing from attribute ids: WD's 169 counts bad
+    /// blocks and read "100 %", Phison's 231 normalized is the part used and read "3 %"). A vendor
+    /// estimate of the rated endurance left, like NVMe's percentage used.
     public var lifeLeft: (percent: Int, attribute: Int)? {
-        if isAppleAHCI, let a = attribute(173), a.threshold == 100, (100...200).contains(a.current) {
+        func normalized(_ id: Int) -> (Int, Int)? {
+            attribute(id).flatMap { (0...100).contains($0.current) ? ($0.current, id) : nil }
+        }
+        switch family {
+        case .appleAHCI?:
+            // 173 runs from 200 down to its threshold 100. DriveDx showed 97.5 % on two SD0128F with
+            // 563 and 1 720 average erase cycles, where 173 gives 78 / 39 %.
+            guard let a = attribute(173), a.threshold == 100, (100...200).contains(a.current) else { return nil }
             return (a.current - 100, 173)
+        case .samsung?: return normalized(177)
+        case .westernDigital?:
+            guard let a = attribute(230) else { return nil }
+            let used = Int((a.raw >> 8) & 0xFF)
+            return used <= 100 ? (100 - used, 230) : nil
+        case .phison?:
+            guard let a = attribute(231), a.raw <= 100 else { return nil }
+            return (Int(a.raw), 231)
+        case .siliconMotion?, .kingstonMarvell?: return normalized(231)
+        case .crucial?: return normalized(202)
+        case .intel?: return normalized(233)
+        case nil: return nil
         }
-        for id in ID.lifeLeft {
-            if let a = attribute(id), (1...100).contains(a.current) { return (a.current, id) }
-        }
-        return nil
     }
 
     /// Attributes below their failure threshold.

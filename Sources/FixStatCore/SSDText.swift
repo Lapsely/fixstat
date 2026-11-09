@@ -41,8 +41,13 @@ public enum SSDText {
     }
 
     /// "Health 97 %" with what it is based on.
+    /// An SSD whose vendor wear counter FixStat does not know: no percentage is guessed.
+    public static var lifeUnknown: String {
+        L("Life left not known for this drive model: its wear counter is not documented. Judge it by the erase cycles, spare blocks and errors.")
+    }
+
     public static func healthSummary(_ info: SSDInfo) -> String? {
-        guard let percent = info.healthPercent else { return nil }
+        guard let percent = info.healthPercent else { return info.ata == nil ? nil : lifeUnknown }
         if let health = info.health {
             return L("Health %@ (%@ of the rated endurance used)", Format.percent(Double(percent)),
                      Format.percent(Double(health.percentageUsed)))
@@ -150,8 +155,12 @@ public enum SSDText {
         }
         if let read = h.bytesRead, unit != .lba { rows.append((L("Data read"), Format.bytes(read))) }
         if let erase = h.eraseCounts {
-            rows.append((L("NAND erase cycles"), L("average %1$lld (lowest %2$lld, highest %3$lld)",
-                                                     erase.average, erase.minimum, erase.maximum)))
+            if let minimum = erase.minimum, let maximum = erase.maximum {
+                rows.append((L("NAND erase cycles"), L("average %1$lld (lowest %2$lld, highest %3$lld)",
+                                                         erase.average, minimum, maximum)))
+            } else {
+                rows.append((L("NAND erase cycles"), Format.number(Double(erase.average))))
+            }
         }
         if let temperature = h.temperature { rows.append((L("Temperature"), Format.temperature(temperature, digits: 0))) }
         return rows
@@ -160,7 +169,8 @@ public enum SSDText {
     /// All attributes: id, name, current, worst, threshold, raw.
     public static func ataTable(_ h: ATAHealth) -> [[String]] {
         h.attributes.map { a in
-            [String(a.id), attributeName(a.id, appleSanDisk: h.isAppleSanDisk, unit: h.dataUnit), String(a.current), String(a.worst),
+            [String(a.id), attributeName(a.id, appleSanDisk: h.isAppleSanDisk, unit: h.dataUnit, family: h.family),
+             String(a.current), String(a.worst),
              a.threshold > 0 ? String(a.threshold) : "–", String(a.raw)]
         }
     }
@@ -169,7 +179,25 @@ public enum SSDText {
         [L("ID"), L("Attribute"), L("Value"), L("Worst"), L("Threshold"), L("Raw")]
     }
 
-    public static func attributeName(_ id: Int, appleSanDisk: Bool = false, unit: ATAHealth.DataUnit = .lba) -> String {
+    public static func attributeName(_ id: Int, appleSanDisk: Bool = false, unit: ATAHealth.DataUnit = .lba,
+                                     family: ATAHealth.Family? = nil) -> String {
+        switch (family, id) {
+        case (.appleAHCI?, 173): return L("Erase count (average, highest, lowest)")
+        case (.westernDigital?, 165), (.phison?, 246): return L("Total erase count")
+        case (.westernDigital?, 166), (.siliconMotion?, 206): return L("Lowest erase count")
+        case (.westernDigital?, 167): return L("Fewest bad blocks per die")
+        case (.westernDigital?, 168), (.phison?, 245), (.siliconMotion?, 207): return L("Highest erase count")
+        case (.westernDigital?, 169): return L("Total bad blocks")
+        case (.westernDigital?, 170): return L("Grown bad blocks")
+        case (.westernDigital?, 173), (.phison?, 244), (.siliconMotion?, 208): return L("Average erase count")
+        case (.westernDigital?, 230): return L("Media wearout indicator")
+        case (.westernDigital?, 232): return L("Available reserved space")
+        case (.westernDigital?, 233): return L("NAND writes, TLC (GiB)")
+        case (.westernDigital?, 234): return L("NAND writes, SLC (GiB)")
+        case (.phison?, 233): return L("NAND writes (GiB)")
+        case (.phison?, 231): return L("SSD life left (raw value)")
+        default: break
+        }
         switch (id, unit) {
         case (241, .gibibytes): return L("Host writes (GiB)")
         case (242, .gibibytes): return L("Host reads (GiB)")
@@ -280,7 +308,8 @@ public enum SSDText {
 
     public static func externalHealthSummary(_ drive: ATADrive) -> String? {
         if let h = drive.nvmeHealth { return healthSummary(h) }
-        return drive.health.flatMap(healthSummary)
+        guard let h = drive.health else { return nil }
+        return healthSummary(h) ?? (drive.isSolidState ? lifeUnknown : nil)
     }
 
     public static func externalHealthRows(_ drive: ATADrive) -> [(String, String)] {
@@ -307,8 +336,9 @@ public enum SSDText {
     }
 
     /// macOS passes ATA SMART through USB–SATA adapters from this major version on: 26 and 27 do
-    /// (owner, bench), 11 does not (the same ASMedia enclosure and UAS driver chain, no "SMART
-    /// Capable" on Big Sur); 12 – 15 are not known yet (macOS 14 did not in 2024, Eclectic Light).
+    /// (owner, bench), 11 and 13 do not (the same ASMedia enclosure and UAS driver chain, no "SMART
+    /// Capable" on MacBookAir6,1 / 11.7 and iMac18,3 / 13.5); 14 / 15 are not known yet (macOS 14 did
+    /// not in 2024, Eclectic Light).
     static let usbSMARTKnownFrom = 26
 
     /// Why an external drive shows no SMART data; nil when it has SMART.
@@ -322,7 +352,7 @@ public enum SSDText {
             return L("This drive does not offer SMART data. Read / write errors are counted.")
         }
         if macOSMajor < usbSMARTKnownFrom {
-            return L("SMART data does not come through USB here: the USB adapter does not pass it on, or this macOS version does not (macOS 11 does not; macOS 26 and later do with the same adapter). Read / write errors are counted.")
+            return L("SMART data does not come through USB here: the USB adapter does not pass it on, or this macOS version does not (macOS 11 and 13 do not; macOS 26 and later do with the same adapter). Read / write errors are counted.")
         }
         return L("The USB adapter does not pass SMART data on (common with USB–NVMe adapters, memory sticks and card readers). Read / write errors are counted.")
     }

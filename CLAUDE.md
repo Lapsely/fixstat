@@ -289,7 +289,14 @@ individual cores. Never name them per core ("P-core 1"). Use ids like
   → `ATAHealth`; Apple's SanDisk SSDs ("APPLE SSD SD…"): 174 / 175 = host reads / writes in
   MiB; Apple's Samsung (SM…) and SanDisk (SD…) AHCI SSDs: 173 raw = erase counts (average, maximum,
   minimum 16-bit words), life = 173 normalized − its threshold 100 (matches DriveDx on 9 of 11 bench
-  drives; 169 stays at 100 on SanDisk, 232–253 on Samsung);
+  drives; 169 stays at 100 on SanDisk, 232–253 on Samsung). Life is read only for a known family
+  (`ATAHealth.Family`: Apple AHCI 173, Samsung 177, WD 230 raw byte 1 = % used, Phison 231 RAW = life
+  left (normalized = used), Silicon Motion / Kingston UV400 231 normalized, Crucial 202, Intel 233); the
+  same ids mean different things per vendor (WD 169 = bad blocks read "100 %", Phison 231 normalized
+  read "3 %"), so an unknown SSD gets no percentage but "life not known for this model" and its
+  evidence. Erase counts per family (WD 166 / 168 / 173, Phison 244 / 245, SMI 206 / 207 / 208,
+  Samsung 177 raw). From 2026-11 bench drives cross-checked with DriveDx (the owner wants the vendor's
+  own value, not DriveDx's: SD0128F differs on purpose);
   every internal ATA drive is read (`ATADrive`, e.g. a Fusion Drive's hard disk). External drives
   (`ATADrive.readExternal`, `SSDInfo.externalDrives`; "External drives" in the SSD window, PDF / CSV):
   every block storage device with location "External" and media (disk images left out), with its USB

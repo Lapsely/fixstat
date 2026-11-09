@@ -47,7 +47,8 @@ import FixStatCore
         let (data, limits) = Self.smart([(9, 95, 95, 0x0012_0000_1F40), (12, 99, 99, 1503), (177, 97, 97, 112),
                                          (194, 70, 55, 0x0028_0015_001E), (241, 99, 99, 20_000_000_000)],
                                         thresholds: [177: 0, 9: 0])
-        let health = try #require(ATAHealth.parse(data: data, thresholds: limits, exceeded: 0))
+        var health = try #require(ATAHealth.parse(data: data, thresholds: limits, exceeded: 0))
+        health.model = "Samsung SSD 860 EVO 500GB"
         #expect(health.powerOnHours == 8000)
         #expect(health.powerCycles == 1503)
         #expect(health.temperature == 30)
@@ -59,12 +60,16 @@ import FixStatCore
         #expect(health.failingAttributes.isEmpty)
     }
 
-    @Test func lifeAttributePriority() throws {
-        // 231 (SSD Life Left) wins over 173; values above 100 are no percentage.
-        let (data, limits) = Self.smart([(173, 88, 88, 900), (231, 92, 92, 0), (233, 200, 200, 0)])
-        #expect(ATAHealth.parse(data: data, thresholds: limits, exceeded: -1)?.lifeLeft?.attribute == 231)
-        let (only173, none) = Self.smart([(173, 88, 88, 900), (233, 200, 200, 0)])
-        #expect(ATAHealth.parse(data: only173, thresholds: none, exceeded: -1)?.lifeLeft?.attribute == 173)
+    @Test func noLifeWithoutAFamily() throws {
+        // The same ids mean different things per vendor: without a known family no life is guessed,
+        // whatever attribute looks like a percentage.
+        let (data, limits) = Self.smart([(169, 100, 100, 191), (173, 88, 88, 900), (231, 92, 92, 0), (233, 99, 99, 0)])
+        var health = try #require(ATAHealth.parse(data: data, thresholds: limits, exceeded: -1))
+        #expect(health.family == nil)
+        #expect(health.lifeLeft == nil)
+        health.model = "INTEL SSDSC2BW240A4"
+        #expect(health.family == .intel)
+        #expect(health.lifeLeft?.attribute == 233)
     }
 
     @Test func failingAttributeAndDriveVerdict() throws {
@@ -91,6 +96,7 @@ import FixStatCore
         var ata = SSDInfo()
         let (data, limits) = Self.smart([(177, 91, 91, 0)])
         ata.ata = ATAHealth.parse(data: data, thresholds: limits, exceeded: 0)
+        ata.ata?.model = "Samsung SSD 850 EVO 1TB"
         #expect(ata.healthPercent == 91)
     }
 }
@@ -138,7 +144,37 @@ import FixStatCore
         var health = try #require(ATAHealth.parse(data: data, thresholds: limits, exceeded: 0))
         health.model = "Samsung SSD 860 EVO 250GB"
         #expect(health.lifeLeft?.attribute == 177)
-        #expect(health.eraseCounts == nil)
+        #expect(health.eraseCounts?.average == 108)
+        // An unknown family gets no life figure at all (no guessing from attribute ids).
+        health.model = "Unknown SSD"
+        #expect(health.lifeLeft == nil)
+    }
+}
+
+@Suite struct FamilyLifeTests {
+    /// Kingston A400 (Phison, iMac18,3 bench): 231 raw 97 = life left, normalized 3 = used.
+    @Test func phisonReadsTheRawValue() throws {
+        let (data, limits) = ATAHealthTests.smart([(231, 3, 3, 97), (241, 100, 100, 11554), (244, 100, 100, 24),
+                                                   (245, 100, 100, 108), (246, 100, 100, 2_167_904)])
+        var health = try #require(ATAHealth.parse(data: data, thresholds: limits, exceeded: 0))
+        health.model = "KINGSTON SA400S37960G" // privacy:allow (model number)
+        #expect(health.family == .phison)
+        #expect(health.lifeLeft?.percent == 97)
+        #expect(health.eraseCounts?.average == 24 && health.eraseCounts?.maximum == 108)
+        #expect(health.bytesWritten == 11554.0 * 1_073_741_824)
+    }
+
+    /// WD Blue 3D (WDS500G2B0A bench): 230 raw byte 1 = 46 % used; 169 = bad blocks, not life. // privacy:allow (model number)
+    @Test func westernDigitalReads230() throws {
+        let (data, limits) = ATAHealthTests.smart([(166, 100, 100, 431), (168, 100, 100, 502), (169, 100, 100, 191),
+                                                   (173, 100, 100, 461), (230, 100, 100, 0x2933_2E0A_2E0A),
+                                                   (232, 100, 100, 100), (233, 100, 100, 233_377), (234, 100, 100, 251_649)])
+        var health = try #require(ATAHealth.parse(data: data, thresholds: limits, exceeded: 0))
+        health.model = "WDC WDS500G2B0A-00SM50" // privacy:allow (model number)
+        #expect(health.family == .westernDigital)
+        #expect(health.lifeLeft?.percent == 54)
+        #expect(health.lifeLeft?.attribute == 230)
+        #expect(health.eraseCounts == ATAHealth.EraseCounts(average: 461, maximum: 502, minimum: 431))
     }
 }
 
