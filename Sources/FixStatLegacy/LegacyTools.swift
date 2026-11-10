@@ -208,7 +208,7 @@ final class LegacyBatteryDetails {
         return [
             originality(battery),
             cells(battery),
-            .columns([[pack(battery)], [lifetime(battery.lifetime)]]),
+            .columns([[pack(battery)], [lifetime(battery)]]),
             .columns([[charger(battery)], [powerDelivery(battery)]]),
         ]
     }
@@ -277,6 +277,8 @@ final class LegacyBatteryDetails {
             DocRow(title: L("Cycles"), value: BatteryDetailText.cycles(b)),
             DocRow(title: L("Health"), value: b.healthPercent.map { Format.percent($0, digits: 1) }),
             DocRow(title: L("Nominal health"), value: b.nominalHealthPercent.map { Format.percent($0, digits: 1) }),
+            DocRow(title: L("Capacity last measured"), value: BatteryDetailText.qmaxMeasured(b),
+                   tone: PackHistory(battery: b).qmaxStale ? .bad : nil),
             DocRow(title: L("Permanent failure"), value: BatteryDetailText.hex(b.permanentFailureStatus),
                    tone: (b.permanentFailureStatus ?? 0) != 0 ? .bad : nil),
             DocRow(title: L("Cell disconnects"), value: b.cellDisconnectCount.map { Format.number(Double($0)) },
@@ -286,8 +288,10 @@ final class LegacyBatteryDetails {
         ], labelWidth: nil)])
     }
 
-    private func lifetime(_ l: BatteryLifetime?) -> Block {
-        .group(L("Lifetime (gauge)"), [.rows([
+    private func lifetime(_ b: BatteryInfo) -> Block {
+        let l = b.lifetime
+        let findings = BatteryDetailText.historyFindings(b).map { Block.status($0, .bad) }
+        return .group(L("Lifetime (gauge)"), [.rows([
             DocRow(title: L("Operating time"), value: l?.totalOperatingTime.map(BatteryDetailText.hours)),
             DocRow(title: L("Highest temperature"), value: l?.maximumTemperature.map { Format.temperature($0) }),
             DocRow(title: L("Average temperature"), value: l?.averageTemperature.map { Format.temperature($0) }),
@@ -295,8 +299,9 @@ final class LegacyBatteryDetails {
             DocRow(title: L("Highest charge current"), value: l?.maximumChargeCurrent.map { Format.milliamps($0) }),
             DocRow(title: L("Highest discharge current"), value: l?.maximumDischargeCurrent.map { Format.milliamps($0) }),
             DocRow(title: L("Highest pack voltage"), value: l?.maximumPackVoltage.map { Format.volts(millivolts: $0) }),
-            DocRow(title: L("Lowest pack voltage"), value: l?.minimumPackVoltage.map { Format.volts(millivolts: $0) }),
-        ], labelWidth: nil)])
+            DocRow(title: L("Lowest pack voltage"), value: BatteryDetailText.lowestPackVoltage(b),
+                   tone: PackHistory(battery: b).lowVoltageRecorded ? .bad : nil),
+        ], labelWidth: nil)] + findings)
     }
 
     private func charger(_ b: BatteryInfo) -> Block {

@@ -232,9 +232,15 @@ enum LegacyAppearance {
 }
 
 /// `--legacy-ui --snapshot out.png [--technician] [--settings 0|1|2] [--max-height N]
-/// [--tool device|history|details|crash|sleep|stress|memory|ssd|capacity|hardware|power|live [--wait SECONDS] [--range 0…6] [--start-test SECONDS] [--item NAME]]`: renders the AppKit
+/// [--tool device|history|details|crash|sleep|stress|memory|ssd|capacity|hardware|power|live [--wait SECONDS] [--range 0…6] [--start-test SECONDS] [--item NAME] [--full]]`: renders the AppKit
 /// panel or a Settings tab to PNG and exits (UI checks without clicking).
 enum LegacySnapshot {
+    static func firstScrollView(in view: NSView) -> NSScrollView? {
+        if let scroll = view as? NSScrollView { return scroll }
+        for sub in view.subviews { if let found = firstScrollView(in: sub) { return found } }
+        return nil
+    }
+
     static func runIfRequested(core: MonitorCore, panel: LegacyPanelController, tools: LegacyTools,
                                settings: () -> LegacySettingsController) -> Bool {
         let arguments = CommandLine.arguments
@@ -270,7 +276,7 @@ enum LegacySnapshot {
         core.panelVisible = true
 
         // The captured view draws its own window background (light or dark).
-        let capture: NSView
+        var capture: NSView
         let window: NSWindow
         var fitsContent = false
         let toolNames: [String: LegacyTools.Tool] = ["device": .deviceInfo, "details": .batteryDetails,
@@ -300,6 +306,11 @@ enum LegacySnapshot {
             guard let w = toolWindow.window, let frame = w.contentView?.superview else { exit(1) }
             window = w
             capture = frame
+            // `--full`: the whole scrolling document instead of the visible part of the window.
+            if arguments.contains("--full"), let content = w.contentView,
+               let document = Self.firstScrollView(in: content)?.documentView {
+                capture = document
+            }
         } else if let i = arguments.firstIndex(of: "--settings"), i + 1 < arguments.count, let tab = Int(arguments[i + 1]) {
             let controller = settings()
             controller.select(tab: tab)

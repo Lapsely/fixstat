@@ -299,6 +299,16 @@
         }
       }
     },
+    "%@ per cell" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "hücre başına %@"
+          }
+        }
+      }
+    },
     "%@ per hour" : {
       "localizations" : {
         "tr" : {
@@ -1788,6 +1798,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Vazgeç"
+          }
+        }
+      }
+    },
+    "Capacity last measured" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kapasite en son ölçüldü"
           }
         }
       }
@@ -4542,6 +4562,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Ömür boyu (gauge)"
+          }
+        }
+      }
+    },
+    "Lifetime record identical to the one clone gauges ship with: the gauge does not keep its own history" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ömür kaydı klon gauge'ların fabrikadan geldiği kayıtla birebir aynı: gauge kendi geçmişini tutmuyor"
           }
         }
       }
@@ -8490,6 +8520,26 @@
         }
       }
     },
+    "The gauge last measured the cell capacities %lld cycles ago, so the health value may be out of date. It measures again after the Mac has rested unused for a few hours at two very different charge levels (for example full, and low after a long discharge)." : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Gauge hücre kapasitelerini en son %lld döngü önce ölçmüş, bu yüzden sağlık değeri güncel olmayabilir. Mac çok farklı iki şarj seviyesinde (örneğin dolu ve uzun bir deşarjdan sonra düşük) birkaç saat kullanılmadan beklediğinde yeniden ölçer."
+          }
+        }
+      }
+    },
+    "The gauge recorded %1$@ per cell at some point, below %2$@. Either the pack was over-discharged (such cells lose capacity and can swell) or it was measured while disconnected during a repair: ask about the Mac's history." : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Gauge bir noktada hücre başına %1$@ kaydetmiş, %2$@ altında. Ya paket aşırı deşarj olmuş (böyle hücreler kapasite kaybeder ve şişebilir) ya da bir onarım sırasında bağlantısı sökülüyken ölçülmüş: cihazın geçmişini sorun."
+          }
+        }
+      }
+    },
     "The gauge's remaining capacity changed differently from the charge delivered (%@). The gauge counts incorrectly or needs calibration." : {
       "localizations" : {
         "tr" : {
@@ -9688,6 +9738,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "adaptör"
+          }
+        }
+      }
+    },
+    "at cycle %@" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@. döngüde"
           }
         }
       }

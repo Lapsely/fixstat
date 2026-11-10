@@ -116,6 +116,27 @@ public struct PartCheck: Codable, Sendable, Equatable {
     /// Genuine samples of a model before an unknown chemistry ID makes a pack suspicious.
     static let chemistryMinimumSamples = 5
 
+    /// Lifetime records that clone gauges ship with. A genuine gauge keeps counting (operating hours,
+    /// average temperature, time at a high charge), so its record differs from pack to pack; these
+    /// came from aftermarket packs of four different Intel MacBook Pros (13,1, 14,1, 14,2, 14,3) whose
+    /// whole lifetime block, the 64-byte `Raw` data included, was identical.
+    struct CloneLifetime {
+        let operatingTime: Int
+        let averageTemperature: Double
+        let timeAtHighSoc: String
+    }
+
+    static let cloneLifetimes = [
+        CloneLifetime(operatingTime: 28160, averageTemperature: 27.3, timeAtHighSoc: "00000000230500001200000000000000"),
+    ]
+
+    static func isCloneLifetime(_ life: BatteryLifetime) -> Bool {
+        cloneLifetimes.contains { clone in
+            life.totalOperatingTime == clone.operatingTime && life.timeAtHighSoc == clone.timeAtHighSoc
+                && life.averageTemperature.map { abs($0 - clone.averageTemperature) < 0.05 } == true
+        }
+    }
+
     public static func battery(_ b: BatteryInfo, model: String, reference: PartsReference) -> PartCheck {
         var items: [Item] = []
         let ref = reference.batteries[model]
@@ -170,6 +191,9 @@ public struct PartCheck: Codable, Sendable, Equatable {
         items.append(Item(id: "serial", status: serialLength >= 10 ? .pass : .warn, detail: ""))
         if let cycles = b.cycleCount, let hours = b.lifetime?.totalOperatingTime, cycles < 5, hours > 500 {
             items.append(Item(id: "cycleReset", status: .warn, detail: "\(cycles) / \(hours) h"))
+        }
+        if let life = b.lifetime, isCloneLifetime(life) {
+            items.append(Item(id: "cloneLifetime", status: .warn, detail: life.totalOperatingTime.map { "\($0) h" } ?? ""))
         }
         return PartCheck(verdict: verdict(for: items), items: items)
     }

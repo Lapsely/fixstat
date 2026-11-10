@@ -496,6 +496,15 @@ TR = {
     "Very low cycle count despite long operating time (reset or new pack?)":
         "Uzun çalışma süresine rağmen çok düşük döngü sayısı (sıfırlanmış veya yeni paket?)",
     "macOS battery condition: %@": "macOS batarya durumu: %@",
+    "Lifetime record identical to the one clone gauges ship with: the gauge does not keep its own history":
+        "Ömür kaydı klon gauge'ların fabrikadan geldiği kayıtla birebir aynı: gauge kendi geçmişini tutmuyor",
+    "%@ per cell": "hücre başına %@",
+    "at cycle %@": "%@. döngüde",
+    "Capacity last measured": "Kapasite en son ölçüldü",
+    "The gauge recorded %1$@ per cell at some point, below %2$@. Either the pack was over-discharged (such cells lose capacity and can swell) or it was measured while disconnected during a repair: ask about the Mac's history.":
+        "Gauge bir noktada hücre başına %1$@ kaydetmiş, %2$@ altında. Ya paket aşırı deşarj olmuş (böyle hücreler kapasite kaybeder ve şişebilir) ya da bir onarım sırasında bağlantısı sökülüyken ölçülmüş: cihazın geçmişini sorun.",
+    "The gauge last measured the cell capacities %lld cycles ago, so the health value may be out of date. It measures again after the Mac has rested unused for a few hours at two very different charge levels (for example full, and low after a long discharge).":
+        "Gauge hücre kapasitelerini en son %lld döngü önce ölçmüş, bu yüzden sağlık değeri güncel olmayabilir. Mac çok farklı iki şarj seviyesinde (örneğin dolu ve uzun bir deşarjdan sonra düşük) birkaç saat kullanılmadan beklediğinde yeniden ölçer.",
     "macOS condition": "macOS durumu",
     "macOS has no genuine-part flag for Mac batteries and clones can copy digital data, so this is a consistency check against known genuine parts, not proof.":
         "macOS'ta Mac bataryaları için orijinal parça bayrağı yoktur ve kopyalar dijital verileri taklit edebilir; bu nedenle bu, bilinen orijinal parçalarla bir tutarlılık kontrolüdür, kesin kanıt değildir.",

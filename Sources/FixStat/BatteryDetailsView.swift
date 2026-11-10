@@ -19,7 +19,7 @@ struct BatteryDetailsView: View {
                     CellsSection(battery: battery)
                     HStack(alignment: .top, spacing: Design.cardSpacing) {
                         PackSection(battery: battery)
-                        LifetimeSection(lifetime: battery.lifetime)
+                        LifetimeSection(battery: battery)
                     }
                     HStack(alignment: .top, spacing: Design.cardSpacing) {
                         ChargingSection(battery: battery)
@@ -232,6 +232,8 @@ private struct PackSection: View {
             DetailRow(title: "Cycles", value: BatteryDetailText.cycles(battery))
             DetailRow(title: "Health", value: battery.healthPercent.map { Format.percent($0, digits: 1) })
             DetailRow(title: "Nominal health", value: battery.nominalHealthPercent.map { Format.percent($0, digits: 1) })
+            DetailRow(title: "Capacity last measured", value: BatteryDetailText.qmaxMeasured(battery),
+                      highlight: PackHistory(battery: battery).qmaxStale)
             DetailRow(title: "Permanent failure", value: BatteryDetailText.hex(battery.permanentFailureStatus),
                       highlight: (battery.permanentFailureStatus ?? 0) != 0)
             DetailRow(title: "Cell disconnects", value: battery.cellDisconnectCount.map { Format.number(Double($0)) },
@@ -247,9 +249,10 @@ private struct PackSection: View {
 
 @available(macOS 14.0, *)
 private struct LifetimeSection: View {
-    let lifetime: BatteryLifetime?
+    let battery: BatteryInfo
 
     var body: some View {
+        let lifetime = battery.lifetime
         DetailGroup(title: "Lifetime (gauge)", systemImage: "clock.arrow.circlepath") {
             DetailRow(title: "Operating time", value: lifetime?.totalOperatingTime.map(BatteryDetailText.hours))
             DetailRow(title: "Highest temperature", value: lifetime?.maximumTemperature.map { Format.temperature($0) })
@@ -258,7 +261,16 @@ private struct LifetimeSection: View {
             DetailRow(title: "Highest charge current", value: lifetime?.maximumChargeCurrent.map { Format.milliamps($0) })
             DetailRow(title: "Highest discharge current", value: lifetime?.maximumDischargeCurrent.map { Format.milliamps($0) })
             DetailRow(title: "Highest pack voltage", value: lifetime?.maximumPackVoltage.map { Format.volts(millivolts: $0) })
-            DetailRow(title: "Lowest pack voltage", value: lifetime?.minimumPackVoltage.map { Format.volts(millivolts: $0) })
+            DetailRow(title: "Lowest pack voltage", value: BatteryDetailText.lowestPackVoltage(battery),
+                      highlight: PackHistory(battery: battery).lowVoltageRecorded)
+            ForEach(BatteryDetailText.historyFindings(battery), id: \.self) { finding in
+                Label {
+                    Text(finding).fixedSize(horizontal: false, vertical: true)
+                } icon: {
+                    Image(systemName: "exclamationmark.triangle.fill")
+                }
+                .foregroundStyle(TemperatureColor.hot)
+            }
         }
     }
 }

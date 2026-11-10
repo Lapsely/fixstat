@@ -153,6 +153,14 @@ individual cores. Never name them per core ("P-core 1"). Use ids like
   adapter). `-FixStatSampleCells 300,3600,3600` fakes cell voltages for checking the panels.
 - Cell spread grows while charging near the top of charge (≈ 100 mV is possible on an aged
   pack), hence the default imbalance warning threshold of 50 mV.
+- `LifetimeData` temperatures: maximum / minimum are tenths of a degree on some gauges (M1, Mac14,7,
+  Intel) and whole degrees on others (Mac14,2, Mac15,x, Mac16,1, Mac17,3); the maximum decides
+  (> 100 = tenths). The average is tenths everywhere; implausible ones (1 on Intel, a wrapped
+  negative on MacBookPro17,1) are dropped. `CycleCountLastQmax` lives in `LifetimeData`.
+- `PackHistory`: lifetime `MinimumPackVoltage` / series cells below 2.5 V is shown as either a deep
+  discharge or a reading taken while the pack was disconnected in a repair (the gauge keeps one pack
+  voltage; never-opened bench Macs read ≥ 2.85 V, only repaired ones lower); Qmax measured ≥ 30
+  cycles ago = the health value may be stale (bench: 0 – 7 cycles).
 
 ## App architecture (`Sources/FixStat`)
 
@@ -339,6 +347,9 @@ individual cores. Never name them per core ("P-core 1"). Use ids like
   community knowledge, labeled as such.
 - Originality check: `SensorMaps/parts.json` (known-genuine reference values) +
   evidence rules in `PartCheck`; verdicts consistent / suspicious / unknown, never "proof".
+  Clone gauge fingerprint (`PartCheck.cloneLifetimes`): aftermarket packs of four Intel MacBook Pros
+  (13,1 / 14,1 / 14,2 / 14,3) carried the same frozen lifetime record (28160 h, 27.3 °C,
+  `TimeAtHighSoc`, the whole `Raw` block); a genuine gauge keeps counting.
   macOS' own condition comes from `system_profiler SPPowerDataType -json`.
 - Sleep / wake (`SleepAnalysis`, `SleepView`): parses `pmset -g log` (about a week; lines
   are "date +zone Domain(20 cols)\tmessage"; Sleep lines end with the time asleep, charge
@@ -536,7 +547,8 @@ build/FixStat.app/Contents/MacOS/FixStat --snapshot out.png [--technician] [--se
 build/FixStat.app/Contents/MacOS/FixStat --legacy-ui --snapshot out.png [--technician] [--settings 0|1|2] \
     [--max-height N] [--dark|--light]      # --max-height: as on a small screen (11" Air: 722)
 build/FixStat.app/Contents/MacOS/FixStat --legacy-ui --snapshot out.png --tool device|history|details|crash|sleep|hardware \
-    [--item keyboard…lid] [--wait SECONDS] [--range 0…6] [--start-test SECONDS]   # also stress|memory|ssd|capacity
+    [--item keyboard…lid] [--wait SECONDS] [--range 0…6] [--start-test SECONDS] [--full]   # also stress|memory|ssd|capacity
+    # --full: the whole scrolling document (use with --light: card backgrounds are not drawn)
 # One checklist pane (README; --height N for a taller window): --check-item sensors [--sensor-check --wait 26 -FixStatSensorCheckSeconds 10
 #   -FixStatSampleSensorFault YES]; live monitor: --live-window --wait 36 -FixStatLiveChannels "smc:PSTR,smc:PP0b,hid:Tp2i"
 #   -FixStatLiveMarkAfter 14 (put a CPU load on the Mac after the marker for moving lines)

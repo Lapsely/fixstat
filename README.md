@@ -55,7 +55,7 @@ battery gauge data you normally dig out of `ioreg`.
   plus a daily health log that is kept indefinitely.
 - **Diagnostics in one app.** Post-repair stress test, SSD health in % (NVMe and AHCI / SATA SMART, capacity and free space; also SATA drives in USB enclosures) with a
   write–verify stress test and an optional full surface scan, memory test, kernel panic
-  and shutdown cause history, battery and power adapter originality check, battery
+  and shutdown cause history, battery and power adapter originality check (including the frozen lifetime record of clone gauges), battery
   capacity (discharge) test, sleep / wake analysis with battery drain while asleep and
   while shut down, live power analysis (system total, CPU / GPU power, every power rail's
   voltage and current on Apple Silicon, without root), a live monitor that charts up to six SMC

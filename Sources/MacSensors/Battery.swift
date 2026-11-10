@@ -69,6 +69,33 @@ public struct BatteryLifetime: Codable, Sendable, Equatable {
     /// mV
     public var maximumPackVoltage: Int? = nil
     public var minimumPackVoltage: Int? = nil
+    /// `TimeAtHighSoc` as hex (an undocumented counter block; part of the clone fingerprint).
+    public var timeAtHighSoc: String? = nil
+
+    /// Reads `LifetimeData`. The temperature unit differs per gauge: the maximum and minimum are
+    /// tenths of a degree on some (M1, Mac14,7, Intel: 456 = 45.6 °C) and whole degrees on others
+    /// (Mac14,2, Mac15,x, Mac16,1, Mac17,3: 54 = 54 °C); the average is in tenths everywhere. A pack
+    /// is never hotter than 100 °C and its lifetime maximum is never below 10 °C, so the maximum
+    /// tells the unit. Values outside what a pack can see (an average of 0.1 °C on Intel gauges, a
+    /// wrapped negative one on MacBookPro17,1) are left out.
+    public static func parse(_ life: [String: Any]) -> BatteryLifetime {
+        let maxRaw = life.int("MaximumTemperature")
+        let scale = (maxRaw ?? 101) > 100 ? 10.0 : 1.0
+        func plausible(_ value: Double?, _ range: ClosedRange<Double>) -> Double? {
+            value.flatMap { range.contains($0) ? $0 : nil }
+        }
+        return BatteryLifetime(
+            totalOperatingTime: life.int("TotalOperatingTime"),
+            maximumTemperature: plausible(maxRaw.map { Double($0) / scale }, 10...100),
+            minimumTemperature: plausible(life.int("MinimumTemperature").map { Double($0) / scale }, -40...50),
+            averageTemperature: plausible(life.int("AverageTemperature").map { Double($0) / 10 }, 5...60),
+            maximumChargeCurrent: life.int("MaximumChargeCurrent"),
+            maximumDischargeCurrent: life.int("MaximumDischargeCurrent"),
+            maximumPackVoltage: life.int("MaximumPackVoltage"),
+            minimumPackVoltage: life.int("MinimumPackVoltage"),
+            timeAtHighSoc: (life["TimeAtHighSoc"] as? Data).map { $0.map { String(format: "%02x", $0) }.joined() }
+        )
+    }
 }
 
 /// Pack identification that is not a serial number.
@@ -170,6 +197,9 @@ public struct BatteryInfo: Codable, Sendable, Equatable {
     public var charger: ChargerInfo?
     public var powerDelivery: PowerDeliveryInfo?
     public var lifetime: BatteryLifetime?
+    /// Cycle count at which the gauge last measured the cell capacities
+    /// (`LifetimeData.CycleCountLastQmax`; Apple Silicon only).
+    public var cycleCountLastQmax: Int?
     public var identity: BatteryIdentity?
     /// Pack serial number; masked unless serial output is explicitly requested.
     public var serial: String?
@@ -303,18 +333,11 @@ public enum BatteryReader {
         info.cellQmax = data.intArray("Qmax")
         info.cellResistance = data.intArray("WeightedRa")
         if let tables = data["RaTableRaw"] as? [Any], !tables.isEmpty { info.cellResistanceTables = tables.count }
-        if let life = data.dict("LifetimeData") {
-            info.lifetime = BatteryLifetime(
-                totalOperatingTime: life.int("TotalOperatingTime"),
-                maximumTemperature: life.int("MaximumTemperature").map { Double($0) / 10 },
-                minimumTemperature: life.int("MinimumTemperature").map { Double($0) / 10 },
-                averageTemperature: life.int("AverageTemperature").map { Double($0) / 10 },
-                maximumChargeCurrent: life.int("MaximumChargeCurrent"),
-                maximumDischargeCurrent: life.int("MaximumDischargeCurrent"),
-                maximumPackVoltage: life.int("MaximumPackVoltage"),
-                minimumPackVoltage: life.int("MinimumPackVoltage")
-            )
+        let life = data.dict("LifetimeData")
+        if let life {
+            info.lifetime = BatteryLifetime.parse(life)
         }
+        info.cycleCountLastQmax = life?.int("CycleCountLastQmax") ?? data.int("CycleCountLastQmax")
         let manufacturerData = (props["ManufacturerData"] as? Data) ?? (data["MfgData"] as? Data)
         info.identity = BatteryIdentity(
             chemistryID: data.int("ChemID"),

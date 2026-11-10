@@ -215,6 +215,10 @@ private final class ReportWriter {
         ]
         if let condition = data.macOSHealth?.condition { left.append((L("macOS condition"), PartText.condition(condition))) }
         if let check = data.batteryCheck { left.append((L("Originality check"), PartText.verdict(check.verdict))) }
+        let history = PackHistory(battery: b)
+        if history.lowVoltageRecorded { left.append((L("Lowest pack voltage"), BatteryDetailText.lowestPackVoltage(b))) }
+        if history.qmaxStale { left.append((L("Capacity last measured"), BatteryDetailText.qmaxMeasured(b))) }
+        let findings = BatteryDetailText.historyFindings(b)
         let rowHeight: CGFloat = 15
         ensure(18 + CGFloat(max(left.count, analysis.cells.count + 2)) * rowHeight)
         group(L("Battery"))
@@ -257,6 +261,10 @@ private final class ReportWriter {
             }
         }
         y = max(leftY, rightY)
+        for finding in findings {
+            ensure(2 * rowHeight)
+            y += draw("⚠︎ " + finding, at: margin, width: width, font: bold, top: y) + 3
+        }
         endGroup()
     }
 

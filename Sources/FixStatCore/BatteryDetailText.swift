@@ -25,6 +25,38 @@ public enum BatteryDetailText {
         L("%@ h", Format.number(Double(value)))
     }
 
+    // MARK: Pack history
+
+    /// "5.52 V · 1.84 V per cell"
+    public static func lowestPackVoltage(_ battery: BatteryInfo) -> String? {
+        guard let pack = battery.lifetime?.minimumPackVoltage else { return nil }
+        let total = Format.volts(millivolts: pack)
+        guard let cell = PackHistory(battery: battery).lowestCellVoltage else { return total }
+        return total + " · " + L("%@ per cell", Format.volts(millivolts: cell, digits: 2))
+    }
+
+    /// "at cycle 478"
+    public static func qmaxMeasured(_ battery: BatteryInfo) -> String? {
+        guard let last = battery.cycleCountLastQmax, last > 0 else { return nil }
+        return L("at cycle %@", Format.number(Double(last)))
+    }
+
+    /// Findings from the gauge's own records (empty when there are none).
+    public static func historyFindings(_ battery: BatteryInfo) -> [String] {
+        let history = PackHistory(battery: battery)
+        var findings: [String] = []
+        if history.lowVoltageRecorded, let cell = history.lowestCellVoltage {
+            findings.append(L("The gauge recorded %1$@ per cell at some point, below %2$@. Either the pack was over-discharged (such cells lose capacity and can swell) or it was measured while disconnected during a repair: ask about the Mac's history.",
+                              Format.volts(millivolts: cell, digits: 2),
+                              Format.volts(millivolts: CellAnalysis.minimumVoltage, digits: 1)))
+        }
+        if history.qmaxStale, let cycles = history.cyclesSinceQmax {
+            findings.append(L("The gauge last measured the cell capacities %lld cycles ago, so the health value may be out of date. It measures again after the Mac has rested unused for a few hours at two very different charge levels (for example full, and low after a long discharge).",
+                              cycles))
+        }
+        return findings
+    }
+
     // MARK: Cells
 
     public static func deviation(_ cell: CellAnalysis.Cell) -> String {

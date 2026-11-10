@@ -46,6 +46,7 @@ public enum PartText {
         case "serial": L("Pack serial number present")
         case "qmax": L("Cell capacity (Qmax) plausible for the design capacity")
         case "cycleReset": L("Very low cycle count despite long operating time (reset or new pack?)")
+        case "cloneLifetime": L("Lifetime record identical to the one clone gauges ship with: the gauge does not keep its own history")
         case "adapter.manufacturer": L("Manufacturer reported as Apple")
         case "adapter.nameWatts": L("Rated power matches the name")
         case "adapter.serial": L("Adapter serial number present")
