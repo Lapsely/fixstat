@@ -68,6 +68,11 @@ public final class TemperatureSampler {
         smc?.systemPower()
     }
 
+    /// Intel CPU package and integrated graphics power from the SMC (W).
+    public func packagePower() -> (cpu: Double?, gpu: Double?) {
+        smc?.packagePower() ?? (nil, nil)
+    }
+
     /// Only the HID sensors (one IPC call), keyed by uid. Cheaper than `sample()`.
     public func sampleHID() -> [String: Double] {
         var values: [String: Double] = [:]

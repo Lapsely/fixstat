@@ -64,6 +64,17 @@ public extension SMC {
         return value
     }
 
+    /// Intel CPU package power in W: `PCPT` (package total, cores + graphics + uncore) or `PCPC`
+    /// (cores), and the integrated graphics `PCPG` (MacBookPro11,3 / 14,1 / 15,1 dumps). Apple
+    /// Silicon has no such keys (its SoC power comes from IOReport). nil when missing or implausible.
+    func packagePower() -> (cpu: Double?, gpu: Double?) {
+        func watts(_ key: String) -> Double? {
+            guard let value = (try? read(FourCC(key)))?.doubleValue, value >= 0, value < 300 else { return nil }
+            return value
+        }
+        return (watts("PCPT") ?? watts("PCPC"), watts("PCPG"))
+    }
+
     /// Fans reported by `FNum`. Empty on fanless Macs.
     func fans() -> [FanReading] {
         guard let count = try? read("FNum").doubleValue, count > 0 else { return [] }

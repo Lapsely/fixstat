@@ -31,6 +31,11 @@ public struct SensorRecording: Codable, Sendable {
         public var cpuUser: Double?
         public var cpuSystem: Double?
         public var ownCPU: Double?
+        /// CPU and GPU power in W: IOReport on Apple Silicon (the CPU clusters, the GPU), the SMC's
+        /// package keys on Intel (`PCPT` / `PCPC`, `PCPG`). nil in older recordings. With the
+        /// temperatures they give °C per W of the cooling (thermal paste, heatsink seating).
+        public var cpuPower: Double? = nil
+        public var gpuPower: Double? = nil
     }
 
     public var tool = "sensormap"
@@ -79,6 +84,22 @@ public final class SensorRecorder {
     public var now: Double { Date().timeIntervalSince(start) }
 
     private let stats = SystemStats()
+    /// SoC component power on Apple Silicon (the first reading only starts the count).
+    private lazy var energy: EnergySampler? = recording.system.isAppleSilicon ? EnergySampler() : nil
+
+    /// CPU and GPU power for one sample, W, rounded to 10 mW.
+    func componentPower() -> (cpu: Double?, gpu: Double?) {
+        func rounded(_ value: Double?) -> Double? { value.map { ($0 * 100).rounded() / 100 } }
+        if let energy {
+            let components = energy.sample()
+            func watts(_ kind: String) -> Double? {
+                components.first { EnergySampler.kind($0.name) == kind }?.watts
+            }
+            return (rounded(watts("cpu")), rounded(watts("gpu")))
+        }
+        let package = sampler.packagePower()
+        return (rounded(package.cpu), rounded(package.gpu))
+    }
     private var lastOwnCPU: (time: Double, at: Date)?
 
     public func takeSample() {
@@ -103,6 +124,7 @@ public final class SensorRecorder {
                                             cpuSystem: load.map { ($0.system * 1000).rounded() / 1000 },
                                             ownCPU: own.map { (min(1, $0) * 1000).rounded() / 1000 })
         if !fanReadings.isEmpty { sample.fanTargets = fanReadings.map(\.target) }
+        (sample.cpuPower, sample.gpuPower) = componentPower()
         recording.samples.append(sample)
         onSample(sample)
     }
