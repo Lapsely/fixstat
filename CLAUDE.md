@@ -78,7 +78,9 @@ individual cores. Never name them per core ("P-core 1"). Use ids like
 ## Sensor mapping tool (`sensormap`)
 
 - `sensormap record`: idle baseline, single/all-core CPU, Metal GPU, SSD write/read and a
-  charger unplug/replug test; samples every HID and SMC temperature at 1 Hz; recordings go
+  charger unplug/replug test; samples every HID and SMC temperature at 1 Hz, and CPU / GPU power
+  (`Sample.cpuPower` / `gpuPower`: IOReport on Apple Silicon, SMC `PCPT` / `PCPC` / `PCPG` on Intel; the
+  lab turns them into the cooling's °C per W, references first); recordings go
   to git-ignored `local/sensormap/`. `--quick` (all cores, GPU, SSD, 30 s each, ≈ 3 min)
   gave the same ids for all 64 sensors of the M1 Air and verified 14 of 16 (the other two
   are charger sensors).
