@@ -153,7 +153,7 @@ final class LegacyDeviceInfo {
     }
 
     private var healthRows: [(String, String, Bool)] {
-        DeviceText.healthRows(battery: core.battery, model: core.system.model, reference: core.partsReference,
+        DeviceText.healthRows(battery: core.battery, model: core.system.model, modelYear: core.system.modelYear, reference: core.partsReference,
                               ssd: ssd, panics: panics, hardwareCheck: core.hardwareCheck)
     }
 
@@ -214,7 +214,7 @@ final class LegacyBatteryDetails {
     }
 
     private func originality(_ battery: BatteryInfo) -> Block {
-        let batteryCheck = PartCheck.battery(battery, model: core.system.model, reference: core.partsReference)
+        let batteryCheck = PartCheck.battery(battery, model: core.system.model, modelYear: core.system.modelYear, reference: core.partsReference)
         var adapterColumn: [Block]
         if let adapterCheck = PartCheck.adapter(battery, reference: core.partsReference) {
             adapterColumn = partColumn(L("Power adapter"), adapterCheck)
@@ -292,7 +292,7 @@ final class LegacyBatteryDetails {
         let l = b.lifetime
         let findings = BatteryDetailText.historyFindings(b).map { Block.status($0, .bad) }
         return .group(L("Lifetime (gauge)"), [.rows([
-            DocRow(title: L("Operating time"), value: l?.totalOperatingTime.map(BatteryDetailText.hours)),
+            DocRow(title: L("Operating time"), value: BatteryDetailText.operatingTime(l)),
             DocRow(title: L("Highest temperature"), value: l?.maximumTemperature.map { Format.temperature($0) }),
             DocRow(title: L("Average temperature"), value: l?.averageTemperature.map { Format.temperature($0) }),
             DocRow(title: L("Lowest temperature"), value: l?.minimumTemperature.map { Format.temperature($0) }),

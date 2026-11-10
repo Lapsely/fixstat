@@ -61,11 +61,11 @@ public enum DeviceText {
     }
 
     /// Health summary of the device card: (title, value, needs attention).
-    public static func healthRows(battery: BatteryInfo?, model: String, reference: PartsReference, ssd: SSDInfo?,
+    public static func healthRows(battery: BatteryInfo?, model: String, modelYear: Int? = nil, reference: PartsReference, ssd: SSDInfo?,
                                   panics: [PanicReport]?, hardwareCheck: HardwareCheck) -> [(String, String, Bool)] {
         var rows: [(String, String, Bool)] = []
         if let b = battery {
-            let check = PartCheck.battery(b, model: model, reference: reference)
+            let check = PartCheck.battery(b, model: model, modelYear: modelYear, reference: reference)
             var parts = [b.healthPercent.map { Format.percent($0, digits: 1) },
                          b.cycleCount.map { L("%lld cycles", $0) }].compactMap { $0 }
             parts.append(PartText.verdict(check.verdict))

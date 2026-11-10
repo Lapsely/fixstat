@@ -432,6 +432,16 @@
         }
       }
     },
+    "%@ years" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ yıl"
+          }
+        }
+      }
+    },
     "%@ · balanced" : {
       "localizations" : {
         "tr" : {
@@ -3678,6 +3688,26 @@
         }
       }
     },
+    "Gauge counters agree with each other (16 temperature samples per operating hour)" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Gauge sayaçları birbiriyle uyumlu (çalışma saati başına 16 sıcaklık örneği)"
+          }
+        }
+      }
+    },
+    "Gauge counters do not agree with each other: the lifetime record was not kept by a genuine gauge" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Gauge sayaçları birbiriyle uyuşmuyor: ömür kaydını orijinal bir gauge tutmamış"
+          }
+        }
+      }
+    },
     "Gauge full charge capacity" : {
       "localizations" : {
         "tr" : {
@@ -5974,6 +6004,26 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Paket"
+          }
+        }
+      }
+    },
+    "Pack age" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Paket yaşı"
+          }
+        }
+      }
+    },
+    "Pack is older than this Mac model (years: pack / model): a used pack, or a made-up record" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Paket bu Mac modelinden daha eski (yıl: paket / model): kullanılmış bir paket ya da uydurma bir kayıt"
           }
         }
       }

@@ -71,6 +71,14 @@ public struct BatteryLifetime: Codable, Sendable, Equatable {
     public var minimumPackVoltage: Int? = nil
     /// `TimeAtHighSoc` as hex (an undocumented counter block; part of the clone fingerprint).
     public var timeAtHighSoc: String? = nil
+    /// Temperature readings taken over the pack's life (Apple Silicon gauges sample 16 times an hour).
+    public var temperatureSamples: Int? = nil
+
+    /// Years the gauge has been powered: it counts from the pack's assembly, also while the Mac is
+    /// off, so this is the pack's age (bench Macs: an M5 Air 0.8 years, M2 Airs 2.3 – 4 years).
+    public var packAgeYears: Double? {
+        totalOperatingTime.flatMap { $0 > 0 ? Double($0) / (24 * 365.25) : nil }
+    }
 
     /// Reads `LifetimeData`. The temperature unit differs per gauge: the maximum and minimum are
     /// tenths of a degree on some (M1, Mac14,7, Intel: 456 = 45.6 °C) and whole degrees on others
@@ -93,7 +101,8 @@ public struct BatteryLifetime: Codable, Sendable, Equatable {
             maximumDischargeCurrent: life.int("MaximumDischargeCurrent"),
             maximumPackVoltage: life.int("MaximumPackVoltage"),
             minimumPackVoltage: life.int("MinimumPackVoltage"),
-            timeAtHighSoc: (life["TimeAtHighSoc"] as? Data).map { $0.map { String(format: "%02x", $0) }.joined() }
+            timeAtHighSoc: (life["TimeAtHighSoc"] as? Data).map { $0.map { String(format: "%02x", $0) }.joined() },
+            temperatureSamples: life.int("TemperatureSamples")
         )
     }
 }

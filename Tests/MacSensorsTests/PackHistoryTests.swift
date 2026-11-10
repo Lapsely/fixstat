@@ -101,3 +101,47 @@ import Testing
         #expect(!check.items.contains { $0.id == "cloneLifetime" })
     }
 }
+
+@Suite struct PackAgeTests {
+    static let now = Calendar(identifier: .gregorian).date(from: DateComponents(year: 2026, month: 11, day: 10))!
+
+    static func battery(hours: Int, samples: Int?) -> BatteryInfo {
+        var b = PartsCheckTests.genuineBattery
+        b.lifetime = BatteryLifetime(totalOperatingTime: hours, temperatureSamples: samples)
+        return b
+    }
+
+    @Test func yearFromTheMarketingName() {
+        #expect(SystemInfo.year(in: "MacBook Air (M1, 2020)") == 2020)
+        #expect(SystemInfo.year(in: "MacBook Pro (13-inch, 2017, Four Thunderbolt 3 Ports)") == 2017)
+        #expect(SystemInfo.year(in: "Mac mini") == nil)
+    }
+
+    @Test func packAgeFromOperatingTime() {
+        // This M1 Air: 34,109 h.
+        #expect(abs((BatteryLifetime(totalOperatingTime: 34109).packAgeYears ?? 0) - 3.89) < 0.01)
+    }
+
+    @Test func packOlderThanTheModelIsFlagged() {
+        // A 2024 Mac with a pack that ran 4 years.
+        let check = PartCheck.battery(Self.battery(hours: 35064, samples: 561024), model: "MacBookAir10,1",
+                                      modelYear: 2024, reference: PartsCheckTests.reference, now: Self.now)
+        #expect(check.items.contains { $0.id == "packAge" && $0.status == .warn })
+        let fine = PartCheck.battery(Self.battery(hours: 34109, samples: 545746), model: "MacBookAir10,1",
+                                     modelYear: 2020, reference: PartsCheckTests.reference, now: Self.now)
+        #expect(!fine.items.contains { $0.id == "packAge" })
+    }
+
+    @Test func gaugeCountersMustAgree() {
+        let genuine = PartCheck.battery(Self.battery(hours: 34109, samples: 545746), model: "MacBookAir10,1",
+                                        reference: PartsCheckTests.reference)
+        #expect(genuine.items.contains { $0.id == "gaugeCounters" && $0.status == .pass })
+        let made = PartCheck.battery(Self.battery(hours: 34109, samples: 120000), model: "MacBookAir10,1",
+                                     reference: PartsCheckTests.reference)
+        #expect(made.items.contains { $0.id == "gaugeCounters" && $0.status == .warn })
+        // Intel gauges publish no sample count: no item.
+        let intel = PartCheck.battery(Self.battery(hours: 62923, samples: nil), model: "MacBookAir10,1",
+                                      reference: PartsCheckTests.reference)
+        #expect(!intel.items.contains { $0.id == "gaugeCounters" })
+    }
+}

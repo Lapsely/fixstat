@@ -350,6 +350,10 @@ individual cores. Never name them per core ("P-core 1"). Use ids like
   Clone gauge fingerprint (`PartCheck.cloneLifetimes`): aftermarket packs of four Intel MacBook Pros
   (13,1 / 14,1 / 14,2 / 14,3) carried the same frozen lifetime record (28160 h, 27.3 °C,
   `TimeAtHighSoc`, the whole `Raw` block); a genuine gauge keeps counting.
+  Pack age = `TotalOperatingTime` (the gauge counts from the pack's assembly, also while off; matched
+  every bench Mac): older than the model year of the marketing name + 1 year = used pack or made-up
+  record. Genuine Apple Silicon gauges take 16.000 `TemperatureSamples` per operating hour (M1 – M5);
+  another ratio = a record not kept by a genuine gauge (Intel gauges publish no sample count).
   macOS' own condition comes from `system_profiler SPPowerDataType -json`.
 - Sleep / wake (`SleepAnalysis`, `SleepView`): parses `pmset -g log` (about a week; lines
   are "date +zone Domain(20 cols)\tmessage"; Sleep lines end with the time asleep, charge

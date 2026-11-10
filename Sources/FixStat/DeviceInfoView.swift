@@ -87,7 +87,7 @@ struct DeviceInfoView: View {
 
     /// (title, value, needs attention)
     private var healthRows: [(String, String, Bool)] {
-        DeviceText.healthRows(battery: monitor.battery, model: monitor.system.model, reference: monitor.partsReference,
+        DeviceText.healthRows(battery: monitor.battery, model: monitor.system.model, modelYear: monitor.system.modelYear, reference: monitor.partsReference,
                               ssd: ssd, panics: panics, hardwareCheck: monitor.hardwareCheck)
     }
 }

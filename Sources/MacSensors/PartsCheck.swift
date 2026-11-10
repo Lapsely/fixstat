@@ -137,7 +137,16 @@ public struct PartCheck: Codable, Sendable, Equatable {
         }
     }
 
-    public static func battery(_ b: BatteryInfo, model: String, reference: PartsReference) -> PartCheck {
+    /// Temperature samples per operating hour of a genuine Apple Silicon gauge (16.000 on every bench
+    /// pack, M1 to M5).
+    static let temperatureSamplesPerHour = 16.0
+    /// Margin for a pack assembled before the model was introduced, and for a model introduced late in
+    /// the year its name gives.
+    static let packAgeMarginYears = 1.0
+
+    /// `modelYear`: the year of the Mac's marketing name (`SystemInfo.modelYear`).
+    public static func battery(_ b: BatteryInfo, model: String, modelYear: Int? = nil, reference: PartsReference,
+                               now: Date = Date()) -> PartCheck {
         var items: [Item] = []
         let ref = reference.batteries[model]
         let gauge = b.gaugeDeviceName ?? ""
@@ -191,6 +200,24 @@ public struct PartCheck: Codable, Sendable, Equatable {
         items.append(Item(id: "serial", status: serialLength >= 10 ? .pass : .warn, detail: ""))
         if let cycles = b.cycleCount, let hours = b.lifetime?.totalOperatingTime, cycles < 5, hours > 500 {
             items.append(Item(id: "cycleReset", status: .warn, detail: "\(cycles) / \(hours) h"))
+        }
+        // The gauge counts from the pack's assembly: a pack older than the Mac model is a used pack or
+        // carries a made-up record.
+        if let age = b.lifetime?.packAgeYears, let year = modelYear,
+           let introduced = Calendar(identifier: .gregorian).date(from: DateComponents(year: year, month: 1, day: 1)) {
+            let modelAge = now.timeIntervalSince(introduced) / (365.25 * 86400)
+            if age > modelAge + packAgeMarginYears {
+                items.append(Item(id: "packAge", status: .warn,
+                                  detail: String(format: "%.1f / %.1f", age, max(0, modelAge))))
+            }
+        }
+        // Genuine gauges sample the temperature 16 times an hour, and both counters run from the same
+        // clock: a record that breaks the ratio was not kept by such a gauge.
+        if let samples = b.lifetime?.temperatureSamples, let hours = b.lifetime?.totalOperatingTime, hours >= 100 {
+            let ratio = Double(samples) / Double(hours)
+            let consistent = abs(ratio - temperatureSamplesPerHour) <= 0.2
+            items.append(Item(id: "gaugeCounters", status: consistent ? .pass : .warn,
+                              detail: String(format: "%.2f / h", ratio)))
         }
         if let life = b.lifetime, isCloneLifetime(life) {
             items.append(Item(id: "cloneLifetime", status: .warn, detail: life.totalOperatingTime.map { "\($0) h" } ?? ""))

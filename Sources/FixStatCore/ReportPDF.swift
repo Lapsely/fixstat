@@ -43,7 +43,7 @@ public struct ReportData {
         panics = monitor.lastCrashScan?.panics ?? CrashHistory.panics()
         shutdowns = monitor.lastCrashScan?.shutdowns
         memoryResult = monitor.lastMemoryResult
-        batteryCheck = battery.map { PartCheck.battery($0, model: monitor.system.model, reference: monitor.partsReference) }
+        batteryCheck = battery.map { PartCheck.battery($0, model: monitor.system.model, modelYear: monitor.system.modelYear, reference: monitor.partsReference) }
         adapterCheck = battery.flatMap { PartCheck.adapter($0, reference: monitor.partsReference) }
         macOSHealth = MacOSBatteryHealth.read()
         // The device card in the app is always masked: read again for full serials.
@@ -211,6 +211,7 @@ private final class ReportWriter {
             (L("Design capacity"), b.designCapacity.map(Format.milliampHours)),
             (L("Maximum capacity"), b.rawMaxCapacity.map(Format.milliampHours)),
             (L("Temperature"), b.temperature.map { Format.temperature($0) }),
+            (L("Pack age"), b.lifetime?.packAgeYears.map(BatteryDetailText.packAge)),
             (L("Serial"), b.serial),
         ]
         if let condition = data.macOSHealth?.condition { left.append((L("macOS condition"), PartText.condition(condition))) }

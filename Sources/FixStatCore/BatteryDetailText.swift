@@ -27,6 +27,18 @@ public enum BatteryDetailText {
 
     // MARK: Pack history
 
+    /// "34,109 h · 3.9 years": the gauge's operating time is the pack's age.
+    public static func operatingTime(_ lifetime: BatteryLifetime?) -> String? {
+        guard let hours = lifetime?.totalOperatingTime else { return nil }
+        guard let years = lifetime?.packAgeYears else { return BatteryDetailText.hours(hours) }
+        return BatteryDetailText.hours(hours) + " · " + packAge(years)
+    }
+
+    /// "3.9 years"
+    public static func packAge(_ years: Double) -> String {
+        L("%@ years", Format.number(years, digits: 1))
+    }
+
     /// "5.52 V · 1.84 V per cell"
     public static func lowestPackVoltage(_ battery: BatteryInfo) -> String? {
         guard let pack = battery.lifetime?.minimumPackVoltage else { return nil }

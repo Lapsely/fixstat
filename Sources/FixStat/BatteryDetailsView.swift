@@ -14,7 +14,7 @@ struct BatteryDetailsView: View {
         ScrollView {
             if let battery = monitor.battery {
                 VStack(alignment: .leading, spacing: 12) {
-                    OriginalitySection(battery: battery, model: monitor.system.model,
+                    OriginalitySection(battery: battery, model: monitor.system.model, modelYear: monitor.system.modelYear,
                                        reference: monitor.partsReference, macOSHealth: macOSHealth)
                     CellsSection(battery: battery)
                     HStack(alignment: .top, spacing: Design.cardSpacing) {
@@ -86,11 +86,12 @@ private struct DetailRow: View {
 private struct OriginalitySection: View {
     let battery: BatteryInfo
     let model: String
+    let modelYear: Int?
     let reference: PartsReference
     let macOSHealth: MacOSBatteryHealth?
 
     var body: some View {
-        let batteryCheck = PartCheck.battery(battery, model: model, reference: reference)
+        let batteryCheck = PartCheck.battery(battery, model: model, modelYear: modelYear, reference: reference)
         let adapterCheck = PartCheck.adapter(battery, reference: reference)
         DetailGroup(title: "Originality check", systemImage: "checkmark.shield") {
             HStack(alignment: .top, spacing: 18) {
@@ -254,7 +255,7 @@ private struct LifetimeSection: View {
     var body: some View {
         let lifetime = battery.lifetime
         DetailGroup(title: "Lifetime (gauge)", systemImage: "clock.arrow.circlepath") {
-            DetailRow(title: "Operating time", value: lifetime?.totalOperatingTime.map(BatteryDetailText.hours))
+            DetailRow(title: "Operating time", value: BatteryDetailText.operatingTime(lifetime))
             DetailRow(title: "Highest temperature", value: lifetime?.maximumTemperature.map { Format.temperature($0) })
             DetailRow(title: "Average temperature", value: lifetime?.averageTemperature.map { Format.temperature($0) })
             DetailRow(title: "Lowest temperature", value: lifetime?.minimumTemperature.map { Format.temperature($0) })

@@ -499,6 +499,14 @@ TR = {
     "Lifetime record identical to the one clone gauges ship with: the gauge does not keep its own history":
         "Ömür kaydı klon gauge'ların fabrikadan geldiği kayıtla birebir aynı: gauge kendi geçmişini tutmuyor",
     "%@ per cell": "hücre başına %@",
+    "%@ years": "%@ yıl",
+    "Pack age": "Paket yaşı",
+    "Gauge counters do not agree with each other: the lifetime record was not kept by a genuine gauge":
+        "Gauge sayaçları birbiriyle uyuşmuyor: ömür kaydını orijinal bir gauge tutmamış",
+    "Gauge counters agree with each other (16 temperature samples per operating hour)":
+        "Gauge sayaçları birbiriyle uyumlu (çalışma saati başına 16 sıcaklık örneği)",
+    "Pack is older than this Mac model (years: pack / model): a used pack, or a made-up record":
+        "Paket bu Mac modelinden daha eski (yıl: paket / model): kullanılmış bir paket ya da uydurma bir kayıt",
     "at cycle %@": "%@. döngüde",
     "Capacity last measured": "Kapasite en son ölçüldü",
     "The gauge recorded %1$@ per cell at some point, below %2$@. Either the pack was over-discharged (such cells lose capacity and can swell) or it was measured while disconnected during a repair: ask about the Mac's history.":

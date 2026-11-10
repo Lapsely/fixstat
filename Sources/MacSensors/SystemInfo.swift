@@ -17,6 +17,15 @@ public struct SystemInfo: Codable, Sendable, Equatable {
     /// e.g. "26.6.2 (25G83)"
     public var osVersion: String
 
+    /// The year in the marketing name ("MacBook Air (M1, 2020)" → 2020): the model's introduction.
+    public var modelYear: Int? { Self.year(in: marketingName) }
+
+    static func year(in name: String?) -> Int? {
+        guard let name else { return nil }
+        let years = name.split(whereSeparator: { !$0.isNumber }).compactMap { Int($0) }.filter { (2005...2100).contains($0) }
+        return years.last
+    }
+
     public static func current() -> SystemInfo {
         let arch = sysctlString("hw.machine") ?? "unknown"
         let translated = sysctlInt("sysctl.proc_translated") == 1
