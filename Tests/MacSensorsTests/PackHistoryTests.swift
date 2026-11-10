@@ -117,9 +117,31 @@ import Testing
         #expect(SystemInfo.year(in: "Mac mini") == nil)
     }
 
-    @Test func packAgeFromOperatingTime() {
+    @Test func operatingYears() {
         // This M1 Air: 34,109 h.
-        #expect(abs((BatteryLifetime(totalOperatingTime: 34109).packAgeYears ?? 0) - 3.89) < 0.01)
+        #expect(abs((BatteryLifetime(totalOperatingTime: 34109).operatingYears ?? 0) - 3.89) < 0.01)
+    }
+
+    @Test func manufactureDateDecoding() {
+        let utc = { (y: Int, m: Int, d: Int) -> Date in
+            var c = Calendar(identifier: .gregorian); c.timeZone = TimeZone(identifier: "UTC")!
+            return c.date(from: DateComponents(year: y, month: m, day: d, hour: 12))!
+        }
+        #expect(BatteryIdentity.manufactureDate(57381605159475) == utc(2024, 12, 4))  // MacBook Air M4
+        #expect(BatteryIdentity.manufactureDate(59589184796722) == utc(2020, 10, 26)) // this M1 Air
+        #expect(BatteryIdentity.manufactureDate(61779634894642) == utc(2019, 11, 8))  // MacBookAir8,2
+        #expect(BatteryIdentity.manufactureDate(0) == nil)
+        #expect(BatteryIdentity.manufactureDate(12345) == nil)
+    }
+
+    @Test func gaugeCannotCountLongerThanThePackExists() {
+        var b = Self.battery(hours: 34109, samples: 545746)
+        b.identity?.manufactureDate = BatteryIdentity.manufactureDate(57381605159475) // Dec 2024: 1.9 years before now
+        let check = PartCheck.battery(b, model: "MacBookAir10,1", reference: PartsCheckTests.reference, now: Self.now)
+        #expect(check.items.contains { $0.id == "gaugeClock" && $0.status == .warn })
+        b.identity?.manufactureDate = BatteryIdentity.manufactureDate(59589184796722) // Oct 2020
+        let fine = PartCheck.battery(b, model: "MacBookAir10,1", modelYear: 2020, reference: PartsCheckTests.reference, now: Self.now)
+        #expect(!fine.items.contains { $0.id == "gaugeClock" || $0.id == "packAge" })
     }
 
     @Test func packOlderThanTheModelIsFlagged() {

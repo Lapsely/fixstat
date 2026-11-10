@@ -201,15 +201,22 @@ public struct PartCheck: Codable, Sendable, Equatable {
         if let cycles = b.cycleCount, let hours = b.lifetime?.totalOperatingTime, cycles < 5, hours > 500 {
             items.append(Item(id: "cycleReset", status: .warn, detail: "\(cycles) / \(hours) h"))
         }
-        // The gauge counts from the pack's assembly: a pack older than the Mac model is a used pack or
-        // carries a made-up record.
-        if let age = b.lifetime?.packAgeYears, let year = modelYear,
-           let introduced = Calendar(identifier: .gregorian).date(from: DateComponents(year: year, month: 1, day: 1)) {
-            let modelAge = now.timeIntervalSince(introduced) / (365.25 * 86400)
+        // A pack older than the Mac model is a used pack or carries a made-up record: its manufacture
+        // date, or else the gauge's operating time (which can only be shorter than the pack's age).
+        let year = 365.25 * 86400
+        let madeYears = b.identity?.manufactureDate.map { now.timeIntervalSince($0) / year }
+        if let age = madeYears ?? b.lifetime?.operatingYears, let modelYear,
+           let introduced = Calendar(identifier: .gregorian).date(from: DateComponents(year: modelYear, month: 1, day: 1)) {
+            let modelAge = now.timeIntervalSince(introduced) / year
             if age > modelAge + packAgeMarginYears {
                 items.append(Item(id: "packAge", status: .warn,
                                   detail: String(format: "%.1f / %.1f", age, max(0, modelAge))))
             }
+        }
+        // The gauge cannot have counted longer than the pack exists (a month of margin: one bench gauge
+        // started four days before its date).
+        if let made = madeYears, let operating = b.lifetime?.operatingYears, operating > made + 30.0 / 365.25 {
+            items.append(Item(id: "gaugeClock", status: .warn, detail: String(format: "%.1f / %.1f", operating, made)))
         }
         // Genuine gauges sample the temperature 16 times an hour, and both counters run from the same
         // clock: a record that breaks the ratio was not kept by such a gauge.

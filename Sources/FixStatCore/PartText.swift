@@ -18,6 +18,7 @@ public enum PartText {
         case ("gaugeData", .warn): return L("Gauge learning data missing (Qmax, resistance, lifetime)")
         case ("gaugeData", .info): return L("Gauge learning data could not be read on this macOS version")
         case ("serial", .warn): return L("Pack serial number missing or too short")
+        case ("gaugeClock", .warn): return L("The gauge has counted longer than the pack exists (years: counted / since it was made): a made-up record")
         case ("gaugeCounters", .warn): return L("Gauge counters do not agree with each other: the lifetime record was not kept by a genuine gauge")
         case ("adapter.serial", .warn): return L("Adapter serial number missing")
         case ("qmax", .warn): return L("Cell capacity (Qmax) far above the design capacity: made-up gauge data")

@@ -452,6 +452,16 @@
         }
       }
     },
+    "%@ years ago" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ yıl önce"
+          }
+        }
+      }
+    },
     "%@ · balanced" : {
       "localizations" : {
         "tr" : {
@@ -6028,22 +6038,22 @@
         }
       }
     },
-    "Pack age" : {
-      "localizations" : {
-        "tr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Paket yaşı"
-          }
-        }
-      }
-    },
     "Pack is older than this Mac model (years: pack / model): a used pack, or a made-up record" : {
       "localizations" : {
         "tr" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Paket bu Mac modelinden daha eski (yıl: paket / model): kullanılmış bir paket ya da uydurma bir kayıt"
+          }
+        }
+      }
+    },
+    "Pack made" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Paket üretimi"
           }
         }
       }
@@ -8596,6 +8606,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Fener görülmedi. Kameraya daha yakın tutun."
+          }
+        }
+      }
+    },
+    "The gauge has counted longer than the pack exists (years: counted / since it was made): a made-up record" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Gauge, paketin var olduğundan daha uzun saymış (yıl: sayılan / üretimden beri): uydurma bir kayıt"
           }
         }
       }

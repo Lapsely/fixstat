@@ -506,7 +506,10 @@ TR = {
     "TRIM is off: macOS turns it on by itself only for Apple's SSDs. Without it the SSD gets slower and wears faster. Turn it on in Terminal with “sudo trimforce enable” (the Mac restarts).":
         "TRIM kapalı: macOS onu kendiliğinden yalnızca Apple'ın SSD'lerinde açar. TRIM olmadan SSD yavaşlar ve daha hızlı aşınır. Terminal'de “sudo trimforce enable” ile açın (Mac yeniden başlar).",
     "%@ years": "%@ yıl",
-    "Pack age": "Paket yaşı",
+    "Pack made": "Paket üretimi",
+    "%@ years ago": "%@ yıl önce",
+    "The gauge has counted longer than the pack exists (years: counted / since it was made): a made-up record":
+        "Gauge, paketin var olduğundan daha uzun saymış (yıl: sayılan / üretimden beri): uydurma bir kayıt",
     "Gauge counters do not agree with each other: the lifetime record was not kept by a genuine gauge":
         "Gauge sayaçları birbiriyle uyuşmuyor: ömür kaydını orijinal bir gauge tutmamış",
     "Gauge counters agree with each other (16 temperature samples per operating hour)":

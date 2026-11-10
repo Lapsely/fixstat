@@ -229,6 +229,7 @@ private struct PackSection: View {
         DetailGroup(title: "Pack", systemImage: "battery.100percent") {
             DetailRow(title: "Gauge", value: battery.gaugeDeviceName)
             DetailRow(title: "Chemistry ID", value: battery.identity?.chemistryID.map { String($0) })
+            DetailRow(title: "Pack made", value: BatteryDetailText.manufactured(battery))
             DetailRow(title: "Manufacturer data", value: BatteryDetailText.manufacturer(battery))
             DetailRow(title: "Cycles", value: BatteryDetailText.cycles(battery))
             DetailRow(title: "Health", value: battery.healthPercent.map { Format.percent($0, digits: 1) })

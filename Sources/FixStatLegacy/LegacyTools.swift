@@ -273,6 +273,7 @@ final class LegacyBatteryDetails {
         .group(L("Pack"), [.rows([
             DocRow(title: L("Gauge"), value: b.gaugeDeviceName),
             DocRow(title: L("Chemistry ID"), value: b.identity?.chemistryID.map { String($0) }),
+            DocRow(title: L("Pack made"), value: BatteryDetailText.manufactured(b)),
             DocRow(title: L("Manufacturer data"), value: BatteryDetailText.manufacturer(b)),
             DocRow(title: L("Cycles"), value: BatteryDetailText.cycles(b)),
             DocRow(title: L("Health"), value: b.healthPercent.map { Format.percent($0, digits: 1) }),

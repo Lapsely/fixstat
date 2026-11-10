@@ -211,7 +211,7 @@ private final class ReportWriter {
             (L("Design capacity"), b.designCapacity.map(Format.milliampHours)),
             (L("Maximum capacity"), b.rawMaxCapacity.map(Format.milliampHours)),
             (L("Temperature"), b.temperature.map { Format.temperature($0) }),
-            (L("Pack age"), b.lifetime?.packAgeYears.map(BatteryDetailText.packAge)),
+            (L("Pack made"), BatteryDetailText.manufactured(b)),
             (L("Serial"), b.serial),
         ]
         if let condition = data.macOSHealth?.condition { left.append((L("macOS condition"), PartText.condition(condition))) }

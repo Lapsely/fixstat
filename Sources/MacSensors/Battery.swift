@@ -74,9 +74,10 @@ public struct BatteryLifetime: Codable, Sendable, Equatable {
     /// Temperature readings taken over the pack's life (Apple Silicon gauges sample 16 times an hour).
     public var temperatureSamples: Int? = nil
 
-    /// Years the gauge has been powered: it counts from the pack's assembly, also while the Mac is
-    /// off, so this is the pack's age (bench Macs: an M5 Air 0.8 years, M2 Airs 2.3 – 4 years).
-    public var packAgeYears: Double? {
+    /// Years the gauge has counted. It counts while the Mac is off too, but not while the pack sits
+    /// in shipping mode or is disconnected, so it can be far below the pack's age (this M1 Air: 3.9
+    /// years of a pack made in October 2020); `BatteryIdentity.manufactureDate` is the age.
+    public var operatingYears: Double? {
         totalOperatingTime.flatMap { $0 > 0 ? Double($0) / (24 * 365.25) : nil }
     }
 
@@ -115,6 +116,29 @@ public struct BatteryIdentity: Codable, Sendable, Equatable {
     public var manufacturerStrings: [String]
     /// Gauge data flash write count.
     public var dataFlashWriteCount: Int?
+    /// When the pack was made (`ManufactureDate`; Apple Silicon and T2 Intel MacBooks).
+    public var manufactureDate: Date? = nil
+
+    /// `ManufactureDate` holds six ASCII digits, least significant byte first: read backwards they
+    /// are YYMMDD with the year counted from 1992 (57381605159475 = ASCII "402123" → "321204" →
+    /// 4 December 2024, a MacBook Air M4).
+    /// Checked on 13 bench packs from 2019 to 2025: each date lies before the day its gauge started
+    /// counting, mostly by a few weeks. nil for anything else (older Intel gauges publish no date).
+    public static func manufactureDate(_ value: Int) -> Date? {
+        guard value > 0 else { return nil }
+        var bytes: [UInt8] = []
+        var v = value
+        while v > 0 { bytes.append(UInt8(v & 0xff)); v >>= 8 }
+        // `bytes` is least significant first, which is the reading order.
+        let text = String(decoding: bytes, as: UTF8.self)
+        guard text.count == 6, text.allSatisfy({ $0.isASCII && $0.isNumber }) else { return nil }
+        let digits = text.compactMap { Int(String($0)) }
+        let year = 1992 + digits[0] * 10 + digits[1], month = digits[2] * 10 + digits[3], day = digits[4] * 10 + digits[5]
+        guard (2005...2100).contains(year), (1...12).contains(month), (1...31).contains(day) else { return nil }
+        var calendar = Calendar(identifier: .gregorian)
+        calendar.timeZone = TimeZone(identifier: "UTC") ?? calendar.timeZone
+        return calendar.date(from: DateComponents(year: year, month: month, day: day, hour: 12))
+    }
 
     /// Length-prefixed text fields (2…16 letters, digits, space or dash) in the
     /// manufacturer data block. Single bytes are not treated as text.
@@ -351,7 +375,8 @@ public enum BatteryReader {
         info.identity = BatteryIdentity(
             chemistryID: data.int("ChemID"),
             manufacturerStrings: manufacturerData.map(BatteryIdentity.strings) ?? [],
-            dataFlashWriteCount: data.int("DataFlashWriteCount")
+            dataFlashWriteCount: data.int("DataFlashWriteCount"),
+            manufactureDate: (data.int("ManufactureDate") ?? props.int("ManufactureDate")).flatMap(BatteryIdentity.manufactureDate)
         )
         if let ports = props["PortControllerInfo"] as? [[String: Any]] {
             info.powerDelivery = PowerDeliveryInfo.parse(ports)
