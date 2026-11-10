@@ -29,3 +29,17 @@ import Testing
         #expect(history.slowLane(Self.port(1, speed: nil)) == nil)
     }
 }
+
+/// macOS 27: USB devices are tied to USB-C ports through the ports' USB transports.
+@Suite struct TransportPortTests {
+    @Test func matchesTheOnlyPortWithThatDevice() {
+        let transports = [(port: 2, vendor: 0x174C, product: 0x1153), (port: 2, vendor: 0x174C, product: 0x1153)]
+        #expect(PortReader.port(attached: (0x174C, 0x1153), transports: transports) == 2)
+        #expect(PortReader.port(attached: (0x05AC, 0x1234), transports: transports) == nil)
+    }
+
+    @Test func twoIdenticalDevicesGetNoPort() {
+        let transports = [(port: 1, vendor: 0x0781, product: 0x5581), (port: 2, vendor: 0x0781, product: 0x5581)]
+        #expect(PortReader.port(attached: (0x0781, 0x5581), transports: transports) == nil)
+    }
+}

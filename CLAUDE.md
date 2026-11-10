@@ -489,6 +489,9 @@ individual cores. Never name them per core ("P-core 1"). Use ids like
   the Thunderbolt controller (USB 3); lanes with the same `UsbCPortNumber` form one port (numbered
   like Apple's), unnumbered USB-C lanes join their controller's numbered ones in order, and on a
   notebook with numbered USB-C ports the ACPI Type-A root ports (HS04, never connected) are hidden.
+  macOS 27 publishes no `UsbCPortNumber`: a device is tied to its USB-C port through the port's USB transport
+  (`IOPortTransportStateUSB3` / `USB2` below "Port-USB-C@N" name the attached device's Vendor / Product ID; the
+  topmost USB device above a service is matched, two ports with the same device → no port).
   `PortHistory` keeps each device's fastest link per port: a device seen at ≥ 5 Gb/s elsewhere
   but ≤ 480 Mb/s on a port flags that port's USB 3 lane (Air 2014: USB-A 1). `-FixStatSampleUSBA YES` shows two made-up ports.
   USB drive speed (`USBVolumes`, `USBSpeedRunner`, `USBSpeedText`): mounted writable volumes are

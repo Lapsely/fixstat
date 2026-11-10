@@ -368,21 +368,56 @@ public enum PortReader {
     }
 
     /// Walks up the service plane until an XHCI port with `UsbCPortNumber`.
+    /// The USB-C port a USB device (or anything below one) hangs off. Up to macOS 26 an ancestor
+    /// carries `UsbCPortNumber`; macOS 27 publishes none, but each port's USB transport state
+    /// (`IOPortTransportStateUSB3` / `USB2` below "Port-USB-C@N") names the device attached to it
+    /// (Vendor ID / Product ID), so the topmost USB device above `service` is matched to that.
     static func usbCPortNumber(above service: io_registry_entry_t) -> Int? {
         var current = service
         IOObjectRetain(current)
         defer { IOObjectRelease(current) }
-        for _ in 0..<12 {
+        var topmost: (vendor: Int, product: Int)?
+        if IOObjectConformsTo(service, "IOUSBHostDevice") != 0 { topmost = usbIDs(of: service) }
+        for _ in 0..<16 {
             var parent: io_registry_entry_t = IO_OBJECT_NULL
-            guard IORegistryEntryGetParentEntry(current, kIOServicePlane, &parent) == KERN_SUCCESS else { return nil }
+            guard IORegistryEntryGetParentEntry(current, kIOServicePlane, &parent) == KERN_SUCCESS else { break }
             IOObjectRelease(current)
             current = parent
             if let value = IORegistryEntryCreateCFProperty(current, "UsbCPortNumber" as CFString, kCFAllocatorDefault, 0)?
                 .takeRetainedValue() as? NSNumber {
                 return value.intValue
             }
+            if IOObjectConformsTo(current, "IOUSBHostDevice") != 0, let ids = usbIDs(of: current) { topmost = ids }
         }
-        return nil
+        guard let topmost else { return nil }
+        return port(attached: topmost, transports: transportDevices())
+    }
+
+    /// The only USB-C port whose transport names this device; nil when none does, or when two
+    /// ports have the same device (two identical sticks): better no port than the wrong one.
+    static func port(attached ids: (vendor: Int, product: Int), transports: [(port: Int, vendor: Int, product: Int)]) -> Int? {
+        let ports = Set(transports.filter { $0.vendor == ids.vendor && $0.product == ids.product }.map(\.port))
+        return ports.count == 1 ? ports.first : nil
+    }
+
+    static func usbIDs(of service: io_registry_entry_t) -> (vendor: Int, product: Int)? {
+        guard let p = Registry.properties(of: service), let vendor = p.int("idVendor"), let product = p.int("idProduct")
+        else { return nil }
+        return (vendor, product)
+    }
+
+    /// Devices named by the USB transports of the built-in USB-C ports (macOS 27).
+    static func transportDevices() -> [(port: Int, vendor: Int, product: Int)] {
+        var result: [(port: Int, vendor: Int, product: Int)] = []
+        for className in ["IOPortTransportStateUSB3", "IOPortTransportStateUSB2"] {
+            forEachService(matching: className) { _, p in
+                guard p.string("ParentPortTypeDescription") == "USB-C", p.bool("ParentPortBuiltIn") != false,
+                      let port = p.int("ParentBuiltInPortNumber") ?? p.int("ParentPortNumber"),
+                      let vendor = p.int("Vendor ID"), let product = p.int("Product ID") else { return }
+                result.append((port, vendor, product))
+            }
+        }
+        return result
     }
 
     static func forEachService(matching className: String, _ body: (io_registry_entry_t, [String: Any]) -> Void) {
