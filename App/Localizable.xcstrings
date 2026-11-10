@@ -21,6 +21,16 @@
         }
       }
     },
+    "%1$@ of %2$@ power-ups followed a power loss without a proper shutdown (%3$@): forced shutdowns or a battery that ran flat, or for a drive in an enclosure, unplugging it without ejecting. Each one puts the data being written at risk." : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%2$@ açılışın %1$@ tanesi düzgün kapanmadan elektriği kesildikten sonra olmuş (%3$@): zorla kapatma ya da biten pil, kutudaki bir diskte ise çıkarmadan sökmek. Her biri o sırada yazılan veriyi riske atar."
+          }
+        }
+      }
+    },
     "%1$@ read %2$@ in %3$@ but %4$@ in %5$@: check %3$@ (connector, pins, USB 3 lane)." : {
       "localizations" : {
         "tr" : {
@@ -3046,6 +3056,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Kasa"
+          }
+        }
+      }
+    },
+    "Endurance left (estimate)" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kalan dayanıklılık (tahmin)"
           }
         }
       }
@@ -8134,6 +8154,16 @@
         }
       }
     },
+    "TRIM is off: macOS turns it on by itself only for Apple's SSDs. Without it the SSD gets slower and wears faster. Turn it on in Terminal with “sudo trimforce enable” (the Mac restarts)." : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "TRIM kapalı: macOS onu kendiliğinden yalnızca Apple'ın SSD'lerinde açar. TRIM olmadan SSD yavaşlar ve daha hızlı aşınır. Terminal'de “sudo trimforce enable” ile açın (Mac yeniden başlar)."
+          }
+        }
+      }
+    },
     "Technician" : {
       "localizations" : {
         "tr" : {
@@ -9778,6 +9808,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Sıfır"
+          }
+        }
+      }
+    },
+    "about %@ more at the wear so far" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "şimdiye kadarki aşınmayla yaklaşık %@ daha"
           }
         }
       }

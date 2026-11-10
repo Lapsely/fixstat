@@ -277,3 +277,33 @@ import FixStatCore
         #expect(SSDText.externalFindings(drive).count == 1, "most of the rated endurance used")
     }
 }
+
+/// Wear estimate, power loss share and TRIM (bench drives, 2026-11-09).
+@Suite struct SSDWearTextTests {
+    @Test func enduranceNeedsEnoughWear() {
+        // WD Blue 500 GB: 46 % used after 68,782 GiB.
+        let written = 68_782.0 * 1_073_741_824
+        let left = SSDText.remainingEndurance(usedPercent: 46, written: written)
+        #expect(left.map { abs($0 / written - 54.0 / 46.0) < 0.001 } == true)
+        // 3 % (this Mac's Apple NVMe): too coarse to project.
+        #expect(SSDText.remainingEndurance(usedPercent: 3, written: written) == nil)
+        #expect(SSDText.remainingEndurance(usedPercent: 100, written: written) == nil)
+    }
+
+    @Test func powerLossShare() {
+        #expect(SSDText.unsafeShutdownFinding(432, of: 529) != nil)     // Apacer, 82 %
+        #expect(SSDText.unsafeShutdownFinding(2_382, of: 4_834) != nil) // Kingston in a USB box, 49 %
+        #expect(SSDText.unsafeShutdownFinding(103, of: 722) == nil)     // Apple NVMe, 14 %
+        #expect(SSDText.unsafeShutdownFinding(820, of: 3_473) == nil)   // WD Blue, 24 %
+        #expect(SSDText.unsafeShutdownFinding(10, of: 12) == nil)       // too few to say
+    }
+
+    @Test func trimOffIsAFinding() {
+        var h = ATAHealth(attributes: [], thresholdExceeded: false, model: "KINGSTON SA400S37960G") // privacy:allow (model number)
+        h.trimEnabled = false
+        #expect(SSDText.ataFindings(h).contains(SSDText.trimOff))
+        #expect(SSDText.ataRows(h).contains { $0.0 == "TRIM" })
+        h.trimEnabled = nil
+        #expect(!SSDText.ataFindings(h).contains(SSDText.trimOff))
+    }
+}

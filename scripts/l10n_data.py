@@ -499,6 +499,12 @@ TR = {
     "Lifetime record identical to the one clone gauges ship with: the gauge does not keep its own history":
         "Ömür kaydı klon gauge'ların fabrikadan geldiği kayıtla birebir aynı: gauge kendi geçmişini tutmuyor",
     "%@ per cell": "hücre başına %@",
+    "Endurance left (estimate)": "Kalan dayanıklılık (tahmin)",
+    "about %@ more at the wear so far": "şimdiye kadarki aşınmayla yaklaşık %@ daha",
+    "%1$@ of %2$@ power-ups followed a power loss without a proper shutdown (%3$@): forced shutdowns or a battery that ran flat, or for a drive in an enclosure, unplugging it without ejecting. Each one puts the data being written at risk.":
+        "%2$@ açılışın %1$@ tanesi düzgün kapanmadan elektriği kesildikten sonra olmuş (%3$@): zorla kapatma ya da biten pil, kutudaki bir diskte ise çıkarmadan sökmek. Her biri o sırada yazılan veriyi riske atar.",
+    "TRIM is off: macOS turns it on by itself only for Apple's SSDs. Without it the SSD gets slower and wears faster. Turn it on in Terminal with “sudo trimforce enable” (the Mac restarts).":
+        "TRIM kapalı: macOS onu kendiliğinden yalnızca Apple'ın SSD'lerinde açar. TRIM olmadan SSD yavaşlar ve daha hızlı aşınır. Terminal'de “sudo trimforce enable” ile açın (Mac yeniden başlar).",
     "%@ years": "%@ yıl",
     "Pack age": "Paket yaşı",
     "Gauge counters do not agree with each other: the lifetime record was not kept by a genuine gauge":

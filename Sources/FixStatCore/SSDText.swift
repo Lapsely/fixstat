@@ -22,14 +22,49 @@ public enum SSDText {
         if h.mediaErrors > 0 {
             findings.append(L("%@ media / data integrity errors recorded.", Format.number(h.mediaErrors)))
         }
+        if let finding = unsafeShutdownFinding(h.unsafeShutdowns, of: h.powerCycles) { findings.append(finding) }
         return findings
     }
 
+    // MARK: Wear and power loss
+
+    /// A remaining endurance is estimated from this much wear on (the percentage has 1 % steps).
+    static let enduranceEstimateFrom = 5
+    /// Power losses are reported from this share of power-ups, and at least `unsafeShutdownMinimum`.
+    static let unsafeShutdownShare = 0.3
+    static let unsafeShutdownMinimum = 50.0
+
+    /// Data that can still be written before the rated endurance is reached, at the wear rate so far:
+    /// written × (100 − used) / used.
+    public static func remainingEndurance(usedPercent: Int, written: Double?) -> Double? {
+        guard let written, written > 0, usedPercent >= enduranceEstimateFrom, usedPercent < 100 else { return nil }
+        return written * Double(100 - usedPercent) / Double(usedPercent)
+    }
+
+    static func enduranceRow(usedPercent: Int?, written: Double?) -> (String, String)? {
+        guard let used = usedPercent, let left = remainingEndurance(usedPercent: used, written: written) else { return nil }
+        return (L("Endurance left (estimate)"), L("about %@ more at the wear so far", Format.bytes(left)))
+    }
+
+    /// Unsafe shutdowns that make up a large share of the power cycles (bench: an Apple NVMe 14 %, a
+    /// Kingston in a USB enclosure 49 %, an Apacer pulled from a used Mac 82 %).
+    public static func unsafeShutdownFinding(_ unsafe: Double?, of cycles: Double?) -> String? {
+        guard let unsafe, let cycles, cycles > 0, unsafe >= unsafeShutdownMinimum,
+              unsafe / cycles >= unsafeShutdownShare else { return nil }
+        return L("%1$@ of %2$@ power-ups followed a power loss without a proper shutdown (%3$@): forced shutdowns or a battery that ran flat, or for a drive in an enclosure, unplugging it without ejecting. Each one puts the data being written at risk.",
+                 Format.number(unsafe), Format.number(cycles), Format.percent(unsafe / cycles * 100))
+    }
+
+    public static var trimOff: String {
+        L("TRIM is off: macOS turns it on by itself only for Apple's SSDs. Without it the SSD gets slower and wears faster. Turn it on in Terminal with “sudo trimforce enable” (the Mac restarts).")
+    }
+
     public static func healthRows(_ h: NVMeHealth) -> [(String, String)] {
-        [
+        let rows: [(String, String)?] = [
             (L("Endurance used"), Format.percent(Double(h.percentageUsed))),
             (L("Available spare"), Format.percent(Double(h.availableSpare))),
             (L("Data written"), Format.bytes(h.bytesWritten)),
+            enduranceRow(usedPercent: h.percentageUsed, written: h.bytesWritten),
             (L("Data read"), Format.bytes(h.bytesRead)),
             (L("Power-on hours"), Format.number(h.powerOnHours)),
             (L("Power cycles"), Format.number(h.powerCycles)),
@@ -38,6 +73,7 @@ public enum SSDText {
             (L("Error log entries"), Format.number(h.errorLogEntries)),
             (L("Temperature"), h.temperature.map { Format.temperature($0, digits: 0) } ?? "–"),
         ]
+        return rows.compactMap { $0 }
     }
 
     /// "Health 97 %" with what it is based on.
@@ -131,6 +167,8 @@ public enum SSDText {
         if let count = h.crcErrors, count > 0 {
             findings.append(L("%@ interface CRC errors: check the SATA cable / flex and the connector.", Format.number(count)))
         }
+        if let finding = unsafeShutdownFinding(h.unsafeShutdowns, of: h.powerCycles) { findings.append(finding) }
+        if h.trimEnabled == false { findings.append(trimOff) }
         return findings
     }
 
@@ -153,7 +191,11 @@ public enum SSDText {
         } else if unit == .unknown, let raw = h.attribute(ATAHealth.ID.totalLBAsWritten)?.raw {
             rows.append((L("Data written"), L("unit unknown (raw value %@)", Format.number(Double(raw)))))
         }
+        if let life = h.lifeLeft, let row = enduranceRow(usedPercent: 100 - life.percent, written: h.bytesWritten) {
+            rows.append(row)
+        }
         if let read = h.bytesRead, unit != .lba { rows.append((L("Data read"), Format.bytes(read))) }
+        if let trim = h.trimEnabled { rows.append(("TRIM", trim ? L("On") : L("Off"))) }
         if let erase = h.eraseCounts {
             if let minimum = erase.minimum, let maximum = erase.maximum {
                 rows.append((L("NAND erase cycles"), L("average %1$lld (lowest %2$lld, highest %3$lld)",

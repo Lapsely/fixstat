@@ -219,6 +219,7 @@ extension SSDInfo {
         info.ata = health([(1, 200, 200, 0, 0), (5, 100, 100, 10, 0), (9, 98, 98, 0, 6_120), (12, 98, 98, 0, 2_311),
                            (177, 93, 93, 0, 61), (179, 100, 100, 10, 0), (181, 100, 100, 10, 0), (182, 100, 100, 10, 0),
                            (194, 71, 49, 0, 29), (199, 200, 200, 0, 0), (241, 99, 99, 0, 21_474_836_480)])
+        info.ata?.trimEnabled = true
         // privacy:allow on the next line: a Seagate model number, not a serial.
         info.otherDrives = [ATADrive(model: "ST1000DM003-1ER162", firmware: "CC43", serial: nil, medium: "Rotational", // privacy:allow
                                      interconnect: "SATA", capacity: 1_000_204_886_016,

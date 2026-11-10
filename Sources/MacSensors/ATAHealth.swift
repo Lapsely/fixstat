@@ -25,6 +25,10 @@ public struct ATAHealth: Codable, Sendable, Equatable {
     public var thresholdExceeded: Bool?
     /// Product name, for vendor specific attributes (set by the reader).
     public var model: String?
+    /// macOS sends TRIM (unmap) to this drive (`IOStorageFeatures.Unmap` below the device; set by the
+    /// reader for internal solid state drives). macOS turns it on by itself only for Apple's SSDs: a
+    /// third-party SATA SSD runs without it until `trimforce enable` (an iMac18,3 with a Kingston A400).
+    public var trimEnabled: Bool?
 
     /// Apple's SanDisk based AHCI SSDs ("APPLE SSD SD0128F" …): 174 / 175 count host reads /
     /// writes in MiB (DriveDx names 175 "Host Writes MiB"), 173 packs erase counts.
@@ -376,6 +380,7 @@ public struct ATADrive: Codable, Sendable, Equatable {
             if result == KERN_SUCCESS {
                 drive.health = ATAHealth.parse(data: data, thresholds: thresholds, exceeded: exceeded)
                 drive.health?.model = drive.model
+                if !external, drive.isSolidState { drive.health?.trimEnabled = Self.unmapSupported(below: service) }
                 if drive.health == nil { drive.smartError = "empty attribute table" }
             } else {
                 drive.smartError = Self.describe(steps: steps)
@@ -441,6 +446,14 @@ public struct ATADrive: Codable, Sendable, Equatable {
     }
 
     /// Size of the whole-disk IOMedia below a block storage device.
+    /// Whether the storage stack below a block storage device accepts unmap (TRIM) requests.
+    static func unmapSupported(below service: io_service_t) -> Bool {
+        let features = IORegistryEntrySearchCFProperty(service, kIOServicePlane, "IOStorageFeatures" as CFString,
+                                                       kCFAllocatorDefault, IOOptionBits(kIORegistryIterateRecursively))
+            as? [String: Any]
+        return (features?["Unmap"] as? NSNumber)?.boolValue == true
+    }
+
     static func mediaSize(below service: io_service_t) -> Double? {
         guard let size = IORegistryEntrySearchCFProperty(service, kIOServicePlane, "Size" as CFString, kCFAllocatorDefault,
                                                          IOOptionBits(kIORegistryIterateRecursively)) as? NSNumber

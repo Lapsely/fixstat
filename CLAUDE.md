@@ -325,7 +325,12 @@ individual cores. Never name them per core ("P-core 1"). Use ids like
   100 − NVMe percentage used, or the normalized value of the first ATA life attribute
   (231, 169, 233, 177, 202, 173; vendor specific, to be confirmed with bench recordings). Startup
   volume space from `URLResourceValues` (important-usage capacity, like Finder).
-  `-FixStatSampleATA YES` shows a made-up AHCI SSD + hard disk. Read / write errors and
+  `-FixStatSampleATA YES` shows a made-up AHCI SSD + hard disk. TRIM: `ATAHealth.trimEnabled` from `IOStorageFeatures.Unmap`
+  below internal solid state ATA drives; macOS enables it only for Apple SSDs (an iMac18,3 Kingston A400 had
+  none) → finding with `trimforce enable`. Endurance left = written × (100 − used) / used, only from 5 % used
+  (1 % steps). Unsafe shutdowns ≥ 30 % of power cycles and ≥ 50 → power-loss finding (bench: Apple NVMe
+  14 %, WD 24 %, Kingston in a USB box 49 %, Apacer 82 %). Write amplification is not shown: WD counts SLC
+  and TLC NAND writes separately (both ≈ 3× host writes), so the meaning is unclear. Read / write errors and
   retries since startup from the IOBlockStorageDriver `Statistics` (`DiskIOStatistics`, no
   SMART, no root) for every drive. Write–verify stress test on
   free space (`SSDStressTest`, keeps 10 GB free, speeds from per-block I/O time).
