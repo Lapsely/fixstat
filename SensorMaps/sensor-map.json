@@ -4909,21 +4909,21 @@
           "note" : "SMC; Δall +0.7, Δgpu +0.7, Δssd -0.2"
         },
         {
-          "confidence" : "estimated",
+          "confidence" : "verified",
           "group" : "cpu",
           "id" : "cpu.ecluster.1",
           "key" : "Te05",
           "note" : "SMC; Δall +8.0, Δgpu +11.0, Δssd +1.4"
         },
         {
-          "confidence" : "estimated",
+          "confidence" : "verified",
           "group" : "cpu",
           "id" : "cpu.ecluster.2",
           "key" : "Te09",
           "note" : "SMC; Δall +8.0, Δgpu +10.6, Δssd +1.4"
         },
         {
-          "confidence" : "estimated",
+          "confidence" : "verified",
           "group" : "cpu",
           "id" : "cpu.ecluster.3",
           "key" : "Te0H",
@@ -4937,56 +4937,56 @@
           "note" : "SMC; Δall +5.6, Δgpu +11.5, Δssd +1.2"
         },
         {
-          "confidence" : "estimated",
+          "confidence" : "verified",
           "group" : "cpu",
           "id" : "cpu.pcluster.1",
           "key" : "Tp01",
           "note" : "SMC; Δall +7.7, Δgpu +10.4, Δssd +2.0"
         },
         {
-          "confidence" : "estimated",
+          "confidence" : "verified",
           "group" : "cpu",
           "id" : "cpu.pcluster.2",
           "key" : "Tp05",
           "note" : "SMC; Δall +7.8, Δgpu +10.3, Δssd +2.3"
         },
         {
-          "confidence" : "estimated",
+          "confidence" : "verified",
           "group" : "cpu",
           "id" : "cpu.pcluster.3",
           "key" : "Tp09",
           "note" : "SMC; Δall +7.7, Δgpu +13.2, Δssd +1.9"
         },
         {
-          "confidence" : "estimated",
+          "confidence" : "verified",
           "group" : "cpu",
           "id" : "cpu.pcluster.4",
           "key" : "Tp0D",
           "note" : "SMC; Δall +7.9, Δgpu +12.7, Δssd +1.7"
         },
         {
-          "confidence" : "estimated",
+          "confidence" : "verified",
           "group" : "cpu",
           "id" : "cpu.pcluster.5",
           "key" : "Tp0V",
           "note" : "SMC; Δall +7.6, Δgpu +10.8, Δssd +2.4"
         },
         {
-          "confidence" : "estimated",
+          "confidence" : "verified",
           "group" : "cpu",
           "id" : "cpu.pcluster.6",
           "key" : "Tp0Y",
           "note" : "SMC; Δall +7.7, Δgpu +10.9, Δssd +2.7"
         },
         {
-          "confidence" : "estimated",
+          "confidence" : "verified",
           "group" : "cpu",
           "id" : "cpu.pcluster.7",
           "key" : "Tp0b",
           "note" : "SMC; Δall +7.5, Δgpu +12.9, Δssd +2.1"
         },
         {
-          "confidence" : "estimated",
+          "confidence" : "verified",
           "group" : "cpu",
           "id" : "cpu.pcluster.8",
           "key" : "Tp0e",

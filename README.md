@@ -84,7 +84,7 @@ battery gauge data you normally dig out of `ioreg`.
 | `Mac15,12` | MacBook Air (13-inch, M3, 2024) | Apple M3 | J613 | 76 | 6 | 27.0 |
 | `Mac15,3` | MacBook Pro (14-inch, M3, Nov 2023) | Apple M3 | J504 | 75 | 20 | 27.0 |
 | `Mac16,1` | MacBook Pro (14-inch, M4, 2024) | Apple M4 | J604 | 74 | 12 | 26.2 |
-| `Mac16,12` | MacBook Air (13-inch, M4, 2025) | Apple M4 | J713 | 75 | 12 | 15.5 |
+| `Mac16,12` | MacBook Air (13-inch, M4, 2025) | Apple M4 | J713 | 75 | 23 | 15.5, 26.3 |
 | `MacBookAir10,1` | MacBook Air (M1, 2020) | Apple M1 | J313 | 64 | 17 | 26.6 |
 | `MacBookAir6,1` | MacBook Air (11-inch, Mid 2013 / Early 2014) | Intel Core i5 (Haswell) | – | 15 | 5 | 11.7 |
 | `MacBookPro11,3` | MacBook Pro (15-inch, Late 2013 / Mid 2014, discrete graphics) | Intel Core i7 (Haswell) | – | 18 | 11 | 11.4 |

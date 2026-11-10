@@ -52,11 +52,11 @@
     },
     "Mac16,12": {
       "designCapacity": [4629],
-      "chemistryIDs": [29845],
+      "chemistryIDs": [29845, 29961],
       "gauges": ["bq40z651"],
       "cellCount": 3,
-      "cellVendors": ["COS"],
-      "samples": 1
+      "cellVendors": ["COS", "ATL"],
+      "samples": 2
     },
     "Mac17,3": {
       "designCapacity": [4629],
@@ -155,7 +155,7 @@
       "watts": 94,
       "profiles": [[5000, 3000], [9000, 3000], [15000, 3000], [20000, 4700]],
       "firmware": ["01070051"],
-      "samples": 16
+      "samples": 17
     },
     {
       "id": "0x1656",
