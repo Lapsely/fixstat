@@ -265,6 +265,17 @@ private struct LifetimeSection: View {
             DetailRow(title: "Highest pack voltage", value: lifetime?.maximumPackVoltage.map { Format.volts(millivolts: $0) })
             DetailRow(title: "Lowest pack voltage", value: BatteryDetailText.lowestPackVoltage(battery),
                       highlight: PackHistory(battery: battery).lowVoltageRecorded)
+            let histogram = ChargeHistogram(lifetime: lifetime)
+            DetailRow(title: "Time at high charge", value: histogram.flatMap(ChargingText.highCharge))
+            if let bands = histogram.flatMap(ChargingText.bands) {
+                DetailRow(title: "Charge bands (low → high)", value: bands)
+            }
+            DetailRow(title: "Charge today", value: ChargingText.today(battery))
+            if let usage = ChargingText.usageFinding(battery) {
+                Label(usage, systemImage: "info.circle")
+                    .foregroundStyle(.secondary)
+                    .fixedSize(horizontal: false, vertical: true)
+            }
             ForEach(BatteryDetailText.historyFindings(battery), id: \.self) { finding in
                 Label {
                     Text(finding).fixedSize(horizontal: false, vertical: true)
@@ -288,6 +299,14 @@ private struct ChargingSection: View {
         let telemetry = battery.powerTelemetry
         DetailGroup(title: "Charger", systemImage: "bolt") {
             DetailRow(title: "State", value: BatteryText.state(battery))
+            if let why = ChargingText.notCharging(battery) {
+                Label {
+                    Text(why.text).fixedSize(horizontal: false, vertical: true)
+                } icon: {
+                    Image(systemName: why.problem ? "exclamationmark.triangle.fill" : "info.circle")
+                }
+                .foregroundStyle(why.problem ? AnyShapeStyle(TemperatureColor.hot) : AnyShapeStyle(.secondary))
+            }
             DetailRow(title: "Battery current", value: battery.amperage.map { Format.milliamps($0) })
             DetailRow(title: "Charger target current", value: charger?.chargingCurrent.map { Format.milliamps($0, signed: false) })
             DetailRow(title: "Charger target voltage", value: charger?.chargingVoltage.map { Format.volts(millivolts: $0, digits: 3) })

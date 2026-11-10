@@ -1,5 +1,6 @@
 import Foundation
 import IOKit
+import IOKit.ps
 
 /// Power adapter as reported in `AdapterDetails`.
 public struct AdapterInfo: Codable, Sendable, Equatable {
@@ -167,6 +168,42 @@ public struct BatteryIdentity: Codable, Sendable, Equatable {
 }
 
 /// Snapshot of `AppleSmartBattery`.
+/// What macOS' power source API says about charging (`IOPSCopyPowerSourcesInfo`): the documented
+/// reasons, besides the gauge's undocumented `NotChargingReason` bits.
+public struct PowerSourceState: Codable, Sendable, Equatable {
+    /// `Is Charged`: on the adapter and full (macOS counts ≥ 95 % without charging as charged).
+    public var isCharged: Bool?
+    /// `Is Finishing Charge`: topping off after reaching 100 %.
+    public var isFinishingCharge: Bool?
+    /// `BatteryFailureModes`: what the pack reports as failed ("Charge Over-Temperature",
+    /// "Charge FET", "Cell Imbalance", "Open Thermistor", …); any of them can stop charging.
+    public var failureModes: [String] = []
+    /// `BatteryHealthCondition` ("Check Battery", "Permanent Battery Failure").
+    public var healthCondition: String?
+
+    public init(isCharged: Bool? = nil, isFinishingCharge: Bool? = nil, failureModes: [String] = [], healthCondition: String? = nil) {
+        self.isCharged = isCharged
+        self.isFinishingCharge = isFinishingCharge
+        self.failureModes = failureModes
+        self.healthCondition = healthCondition
+    }
+
+    /// The internal battery's entry.
+    public static func read() -> PowerSourceState? {
+        guard let info = IOPSCopyPowerSourcesInfo()?.takeRetainedValue(),
+              let list = IOPSCopyPowerSourcesList(info)?.takeRetainedValue() as? [CFTypeRef] else { return nil }
+        for source in list {
+            guard let d = IOPSGetPowerSourceDescription(info, source)?.takeUnretainedValue() as? [String: Any],
+                  d["Type"] as? String == "InternalBattery" else { continue }
+            return PowerSourceState(isCharged: (d["Is Charged"] as? NSNumber)?.boolValue,
+                                    isFinishingCharge: (d["Is Finishing Charge"] as? NSNumber)?.boolValue,
+                                    failureModes: d["BatteryFailureModes"] as? [String] ?? [],
+                                    healthCondition: d["BatteryHealthCondition"] as? String)
+        }
+        return nil
+    }
+}
+
 public struct BatteryInfo: Codable, Sendable, Equatable {
     public var gaugeDeviceName: String?
     public var cycleCount: Int?
@@ -230,6 +267,11 @@ public struct BatteryInfo: Codable, Sendable, Equatable {
     public var charger: ChargerInfo?
     public var powerDelivery: PowerDeliveryInfo?
     public var lifetime: BatteryLifetime?
+    /// Lowest and highest charge (%) the gauge saw today (`DailyMinSoc` / `DailyMaxSoc`, Apple Silicon).
+    public var dailyMinSoc: Int?
+    public var dailyMaxSoc: Int?
+    /// macOS' power source view of charging (not part of the registry; set by `read`).
+    public var powerSource: PowerSourceState?
     /// Cycle count at which the gauge last measured the cell capacities
     /// (`LifetimeData.CycleCountLastQmax`; Apple Silicon only).
     public var cycleCountLastQmax: Int?
@@ -261,7 +303,9 @@ public enum BatteryReader {
 
     public static func read(includeSerial: Bool = false) -> BatteryInfo? {
         guard let props = properties() else { return nil }
-        return parse(props, includeSerial: includeSerial)
+        var info = parse(props, includeSerial: includeSerial)
+        info.powerSource = PowerSourceState.read()
+        return info
     }
 
     static let packKey = "AppleSmartBatteryPack"
@@ -303,6 +347,12 @@ public enum BatteryReader {
                 let values = bankData.compactMap { $0.int(key) }
                 if values.count == bankData.count { data[key] = values.map { NSNumber(value: $0) } }
             }
+        }
+        // M1 on macOS 27: the gauge's time-at-high-charge counters sit in each bank's own LifetimeData
+        // (all alike), not in the pack's.
+        if data["TimeAtHighSoc"] == nil,
+           let block = bankData.first?.dict("LifetimeData")?["TimeAtHighSoc"] ?? bankData.first?["TimeAtHighSoc"] {
+            data["TimeAtHighSoc"] = block
         }
         for key in movedTopLevelKeys where props[key] == nil {
             if let value = data[key] { props[key] = value }
@@ -370,7 +420,14 @@ public enum BatteryReader {
         if let life {
             info.lifetime = BatteryLifetime.parse(life)
         }
+        // macOS 27 on M1 keeps TimeAtHighSoc beside LifetimeData (in the banks), not inside it.
+        if info.lifetime != nil, info.lifetime?.timeAtHighSoc == nil,
+           let block = (data["TimeAtHighSoc"] as? Data) ?? (props["TimeAtHighSoc"] as? Data) {
+            info.lifetime?.timeAtHighSoc = block.map { String(format: "%02x", $0) }.joined()
+        }
         info.cycleCountLastQmax = life?.int("CycleCountLastQmax") ?? data.int("CycleCountLastQmax")
+        info.dailyMinSoc = data.int("DailyMinSoc") ?? props.int("DailyMinSoc")
+        info.dailyMaxSoc = data.int("DailyMaxSoc") ?? props.int("DailyMaxSoc")
         let manufacturerData = (props["ManufacturerData"] as? Data) ?? (data["MfgData"] as? Data)
         info.identity = BatteryIdentity(
             chemistryID: data.int("ChemID"),

@@ -202,6 +202,10 @@ if let b = snapshot.battery {
             ("Max charge current", fmt(l.maximumChargeCurrent, unit: " mA")),
             ("Max discharge current", fmt(l.maximumDischargeCurrent, unit: " mA")),
             ("Pack voltage", "\(fmt(l.minimumPackVoltage)) … \(fmt(l.maximumPackVoltage, unit: " mV"))"),
+            ("Time at high charge", ChargeHistogram(lifetime: l).map { h in
+                "\(h.highChargeHours) of \(h.totalHours.map(String.init) ?? "?") h"
+                    + (h.bandHours.map { " (bands \($0.map(String.init).joined(separator: " / ")) h)" } ?? "")
+            } ?? (l.timeAtHighSoc.map { "raw \($0)" } ?? "-")),
         ])
     }
 

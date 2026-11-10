@@ -159,6 +159,16 @@ individual cores. Never name them per core ("P-core 1"). Use ids like
   Intel) and whole degrees on others (Mac14,2, Mac15,x, Mac16,1, Mac17,3); the maximum decides
   (> 100 = tenths). The average is tenths everywhere; implausible ones (1 on Intel, a wrapped
   negative on MacBookPro17,1) are dropped. `CycleCountLastQmax` lives in `LifetimeData`.
+- `TimeAtHighSoc` (`ChargeHistogram`): 32-bit LE hour counters. M2 and later gauges: 28 counters adding up to the
+  operating time, read as 4 charge bands × 7 temperature bins, the last band the highest charge (most hours on every
+  bench Mac; band limits unknown, not confirmed); M1 / Intel: 4 counters of time at a high charge. macOS 27 on M1
+  keeps it in each bank's `LifetimeData`. ≥ 80 % of the life at a high charge = "kept on the adapter" advice.
+  `DailyMinSoc` / `DailyMaxSoc` = today's range.
+- Not charging (`ChargingText.notCharging`, adapter connected, not charging): macOS' power source API first
+  (`BatteryFailureModes`, `BatteryHealthCondition`, `Is Charged`; `PowerSourceState`), then the permanent failure
+  flag, full, an adapter at ≥ 90 % of its rating, a hold at 75 – 85 % (probably Optimized Charging / a charge
+  limit), a battery ≥ 40 °C, else the raw `NotChargingReason`. Seen bits: Apple Silicon 0x80 = no adapter,
+  0x400001 = full; Intel 1 = no adapter, 4 = full (bits differ between the two).
 - `PackHistory`: lifetime `MinimumPackVoltage` / series cells below 2.5 V is shown as either a deep
   discharge or a reading taken while the pack was disconnected in a repair (the gauge keeps one pack
   voltage; never-opened bench Macs read ≥ 2.85 V, only repaired ones lower); Qmax measured ≥ 30

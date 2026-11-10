@@ -272,6 +272,10 @@ private final class ReportWriter {
     private func powerSection(_ b: BatteryInfo) {
         group(L("Power"))
         row(L("State"), BatteryText.state(b))
+        if let why = ChargingText.notCharging(b) { row(L("Not charging because"), why.text) }
+        if let high = ChargeHistogram(lifetime: b.lifetime).flatMap(ChargingText.highCharge) {
+            row(L("Time at high charge"), high)
+        }
         if let adapter = b.adapter {
             row(L("Power adapter"), [adapter.name, adapter.ratedWatts.map { Format.watts(Double($0)) }]
                 .compactMap { $0 }.joined(separator: " · "))

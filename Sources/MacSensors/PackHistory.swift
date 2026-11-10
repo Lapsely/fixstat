@@ -36,3 +36,52 @@ public struct PackHistory: Sendable, Equatable {
         qmaxStale = (cyclesSinceQmax ?? 0) >= Self.staleQmaxCycles
     }
 }
+
+/// How long the pack sat at a high charge, from the gauge's `TimeAtHighSoc` block of 32-bit counters
+/// (hours). M2 and later gauges (bq40z651) keep 28 counters that add up to the operating time
+/// (Mac14,2: 34,570 of 34,568 h; MacBook Air M5: 7,400 of 7,402 h): four groups of seven, read here
+/// as four charge bands of seven temperature bins each, the last group being the highest charge
+/// (it holds most of the hours on every bench Mac, 68 – 93 %; the band limits are not published).
+/// Older gauges (M1, Intel) keep four counters of time at a high charge only.
+public struct ChargeHistogram: Sendable, Equatable {
+    /// Hours per charge band, lowest first (28-counter gauges only).
+    public let bandHours: [Int]?
+    /// Hours at a high charge: the highest band, or every counter of the older layout.
+    public let highChargeHours: Int
+    /// The hours the counters cover (28 counters: their sum; older layout: the operating time).
+    public let totalHours: Int?
+
+    public var highChargeShare: Double? {
+        guard let total = totalHours, total > 0 else { return nil }
+        return Double(highChargeHours) / Double(total)
+    }
+
+    /// Reported from this share of the operating time: "kept plugged in at full charge".
+    public static let mostlyFullShare = 0.8
+
+    public init?(lifetime: BatteryLifetime?) {
+        guard let hex = lifetime?.timeAtHighSoc, hex.count % 8 == 0, !hex.isEmpty else { return nil }
+        var words: [Int] = []
+        var index = hex.startIndex
+        while index < hex.endIndex {
+            let next = hex.index(index, offsetBy: 8)
+            guard let value = UInt32(hex[index..<next], radix: 16) else { return nil }
+            words.append(Int(value.byteSwapped)) // little endian in the block
+            index = next
+        }
+        if words.count == 28 {
+            let bands = stride(from: 0, to: 28, by: 7).map { words[$0..<($0 + 7)].reduce(0, +) }
+            bandHours = bands
+            highChargeHours = bands[3]
+            totalHours = bands.reduce(0, +)
+        } else if words.count == 4 {
+            bandHours = nil
+            highChargeHours = words.reduce(0, +)
+            totalHours = lifetime?.totalOperatingTime
+        } else {
+            return nil
+        }
+        // A wrapped or made-up block (MacBookPro13,2: 291 million hours) says nothing.
+        guard let total = totalHours, total > 0, total < 200_000, highChargeHours <= total + 24 else { return nil }
+    }
+}

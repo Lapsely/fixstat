@@ -1,6 +1,7 @@
 import Foundation
 import Testing
 @testable import MacSensors
+import FixStatCore
 
 /// Values from bench dumps (lab records).
 @Suite struct LifetimeTemperatureTests {
@@ -165,5 +166,87 @@ import Testing
         let intel = PartCheck.battery(Self.battery(hours: 62923, samples: nil), model: "MacBookAir10,1",
                                       reference: PartsCheckTests.reference)
         #expect(!intel.items.contains { $0.id == "gaugeCounters" })
+    }
+}
+
+/// TimeAtHighSoc from bench dumps.
+@Suite struct ChargeHistogramTests {
+    @Test func twentyEightCountersAddUpToTheOperatingTime() {
+        // MacBook Air M5 (Mac17,3): 7,402 operating hours.
+        let words = [0, 125, 11, 0, 0, 0, 0, 0, 40, 8, 0, 0, 0, 0, 0, 263, 4, 0, 0, 0, 0, 0, 6872, 77, 0, 0, 0, 0]
+        let hex = words.map { String(format: "%08x", UInt32($0).byteSwapped) }.joined()
+        let h = ChargeHistogram(lifetime: BatteryLifetime(totalOperatingTime: 7402, timeAtHighSoc: hex))
+        #expect(h?.bandHours == [136, 48, 267, 6949])
+        #expect(h?.totalHours == 7400)
+        #expect(h.flatMap(\.highChargeShare).map { abs($0 - 0.939) < 0.001 } == true)
+    }
+
+    @Test func fourCountersAreTimeAtAHighChargeOnly() {
+        // MacBookAir10,1 32360: 39,782 h, 6 / 2614 / 34 / 0.
+        let h = ChargeHistogram(lifetime: BatteryLifetime(totalOperatingTime: 39782,
+                                                          timeAtHighSoc: "06000000360a00002200000000000000"))
+        #expect(h?.bandHours == nil)
+        #expect(h?.highChargeHours == 2654)
+        #expect(h?.totalHours == 39782)
+    }
+
+    @Test func implausibleBlocksAreDropped() {
+        // MacBookPro13,2: 291 million operating hours.
+        #expect(ChargeHistogram(lifetime: BatteryLifetime(totalOperatingTime: 291_417_542,
+                                                          timeAtHighSoc: "dbe007001415c10132ef140000000000")) == nil)
+    }
+}
+
+@Suite struct NotChargingTextTests {
+    static func plugged() -> BatteryInfo {
+        var b = BatteryInfo()
+        b.externalConnected = true
+        b.isCharging = false
+        b.stateOfCharge = 60
+        b.amperage = 0
+        return b
+    }
+
+    @Test func failureModesComeFirst() {
+        var b = Self.plugged()
+        b.powerSource = PowerSourceState(failureModes: ["Charge FET"])
+        #expect(ChargingText.notCharging(b)?.problem == true)
+    }
+
+    @Test func fullIsNormal() {
+        var b = Self.plugged()
+        b.fullyCharged = true
+        #expect(ChargingText.notCharging(b)?.problem == false)
+    }
+
+    @Test func anAdapterAtItsLimit() {
+        var b = Self.plugged()
+        var adapter = AdapterInfo()
+        adapter.ratedWatts = 30
+        b.adapter = adapter
+        var telemetry = PowerTelemetry()
+        telemetry.systemPowerIn = 29_000
+        b.powerTelemetry = telemetry
+        #expect(ChargingText.notCharging(b)?.problem == true)
+    }
+
+    @Test func chargingOrOnBatteryNeedsNoReason() {
+        var b = Self.plugged()
+        b.isCharging = true
+        #expect(ChargingText.notCharging(b) == nil)
+        b.externalConnected = false
+        b.isCharging = false
+        #expect(ChargingText.notCharging(b) == nil)
+    }
+}
+
+@Suite struct BankLifetimeTests {
+    @Test func timeAtHighSocFromTheBanks() {
+        // MacBookAir10,1 on macOS 27: the block is in each bank's LifetimeData.
+        let block = Data(hexString: "000000006b1b00000500000000000000")
+        let top: [String: Any] = ["CycleCount": 382, "BatteryData": ["LifetimeData": ["TotalOperatingTime": 34109]] as [String: Any]]
+        let banks: [[String: Any]] = (0..<3).map { ["BankID": $0, "BatteryData": ["LifetimeData": ["TimeAtHighSoc": block]] as [String: Any]] }
+        let b = BatteryReader.parse(BatteryReader.merged(top, pack: nil, banks: banks), includeSerial: false)
+        #expect(ChargeHistogram(lifetime: b.lifetime)?.highChargeHours == 7024)
     }
 }

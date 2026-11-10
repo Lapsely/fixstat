@@ -2132,6 +2132,26 @@
         }
       }
     },
+    "Charge bands (low → high)" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Şarj bantları (düşük → yüksek)"
+          }
+        }
+      }
+    },
+    "Charge today" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bugünkü şarj aralığı"
+          }
+        }
+      }
+    },
     "Charger" : {
       "localizations" : {
         "tr" : {
@@ -3684,6 +3704,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Tam metin"
+          }
+        }
+      }
+    },
+    "Full: macOS tops it up again only after the charge has dropped a few percent." : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dolu: macOS şarj birkaç yüzde düşmeden yeniden doldurmaz."
           }
         }
       }
@@ -5648,6 +5678,16 @@
         }
       }
     },
+    "Not charging because" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Şarj olmama nedeni (açıklama)"
+          }
+        }
+      }
+    },
     "Not charging reason" : {
       "localizations" : {
         "tr" : {
@@ -6646,6 +6686,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Önceki kapanma nedenleri (son 30 gün)"
+          }
+        }
+      }
+    },
+    "Probably held at about 80 %%: Optimized Battery Charging or a charge limit (Battery settings) finishes the charge later." : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Büyük ihtimalle %%80 civarında bekletiliyor: Optimize Edilmiş Pil Şarjı ya da şarj sınırı (Pil ayarları) şarjı sonra tamamlar."
           }
         }
       }
@@ -8520,6 +8570,16 @@
         }
       }
     },
+    "The adapter delivers all it can (%1$@ of %2$@) to the Mac: nothing is left for the battery. Use a stronger adapter, or check the adapter and its cable." : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Adaptör verebildiği her şeyi (%2$@ içinden %1$@) Mac'e veriyor: bataryaya bir şey kalmıyor. Daha güçlü bir adaptör kullanın ya da adaptörü ve kablosunu kontrol edin."
+          }
+        }
+      }
+    },
     "The ambient light sensor responds correctly." : {
       "localizations" : {
         "tr" : {
@@ -8540,12 +8600,42 @@
         }
       }
     },
+    "The battery is warm (%@): macOS probably pauses charging until it cools down." : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Batarya sıcak (%@): macOS büyük ihtimalle soğuyana kadar şarjı durduruyor."
+          }
+        }
+      }
+    },
     "The battery ran empty %lld times (macOS forced sleep at a few percent)." : {
       "localizations" : {
         "tr" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Batarya %lld kez bitti (macOS birkaç yüzdede zorla uyuttu)."
+          }
+        }
+      }
+    },
+    "The battery reports %@: it may not be charged until that is fixed." : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Batarya şunu bildiriyor: %@. Bu düzelene kadar şarj edilmeyebilir."
+          }
+        }
+      }
+    },
+    "The battery reports a permanent failure: it is not charged any more." : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Batarya kalıcı arıza bildiriyor: artık şarj edilmiyor."
           }
         }
       }
@@ -8776,6 +8866,16 @@
         }
       }
     },
+    "The pack spent %@ of its life at a high charge: it was mostly kept on the adapter, which ages a battery faster. Optimized Battery Charging or a charge limit (Battery settings) helps." : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Paket ömrünün %@ kadarını yüksek şarjda geçirmiş: çoğunlukla adaptörde tutulmuş, bu bataryayı daha hızlı yaşlandırır. Optimize Edilmiş Pil Şarjı ya da şarj sınırı (Pil ayarları) yardımcı olur."
+          }
+        }
+      }
+    },
     "The power log covers only %@: macOS starts it again after the Mac is erased or its clock is changed." : {
       "localizations" : {
         "tr" : {
@@ -8992,6 +9092,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Zaman"
+          }
+        }
+      }
+    },
+    "Time at high charge" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Yüksek şarjda geçen süre"
           }
         }
       }
@@ -9982,6 +10092,16 @@
         }
       }
     },
+    "blown fuse" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "atmış sigorta"
+          }
+        }
+      }
+    },
     "both" : {
       "localizations" : {
         "tr" : {
@@ -9998,6 +10118,46 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "kablo algılandı"
+          }
+        }
+      }
+    },
+    "cell imbalance" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "hücre dengesizliği"
+          }
+        }
+      }
+    },
+    "cell monitor (AFE) communication fault" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "hücre izleyici (AFE) iletişim hatası"
+          }
+        }
+      }
+    },
+    "charge over-current" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "şarjda aşırı akım"
+          }
+        }
+      }
+    },
+    "charge switch (FET) failure" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "şarj anahtarı (FET) arızası"
           }
         }
       }
@@ -10044,6 +10204,26 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "kapalı"
+          }
+        }
+      }
+    },
+    "discharge over-current" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "deşarjda aşırı akım"
+          }
+        }
+      }
+    },
+    "discharge switch (FET) failure" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "deşarj anahtarı (FET) arızası"
           }
         }
       }
@@ -10114,6 +10294,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "günlükten, güç kesildi"
+          }
+        }
+      }
+    },
+    "gauge data fault" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "gauge veri hatası"
           }
         }
       }
@@ -10234,6 +10424,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "macOS, CPU sıcak olmadığı hâlde (%2$@) onu hızının %1$@ kadarında tutuyor. Sık görülen sebepler eksik veya bozuk bir sensör, pil ve güç adaptörü sorunlarıdır."
+          }
+        }
+      }
+    },
+    "macOS is not charging the battery (reason code %@, not documented by Apple)." : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "macOS bataryayı şarj etmiyor (neden kodu %@, Apple belgelememiş)."
           }
         }
       }
@@ -10398,12 +10598,32 @@
         }
       }
     },
+    "open thermistor" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "açık termistör"
+          }
+        }
+      }
+    },
     "over %@ shut down" : {
       "localizations" : {
         "tr" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "%@ kapalı sürede"
+          }
+        }
+      }
+    },
+    "over-voltage protection" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "aşırı gerilim koruması"
           }
         }
       }
@@ -10490,6 +10710,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "kaydırma"
+          }
+        }
+      }
+    },
+    "second-level protection triggered" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ikinci seviye koruma devreye girmiş"
           }
         }
       }
@@ -11218,12 +11448,42 @@
         }
       }
     },
+    "too hot to charge" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "şarj için fazla sıcak"
+          }
+        }
+      }
+    },
+    "too hot to discharge" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "deşarj için fazla sıcak"
+          }
+        }
+      }
+    },
     "touches also read from the Touch Bar sensor (whole strip, Esc area included)" : {
       "localizations" : {
         "tr" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "dokunmalar Touch Bar sensöründen de okunuyor (tüm şerit, Esc bölgesi dahil)"
+          }
+        }
+      }
+    },
+    "under-voltage protection" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "düşük gerilim koruması"
           }
         }
       }

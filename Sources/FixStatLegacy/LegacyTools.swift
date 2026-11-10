@@ -302,12 +302,16 @@ final class LegacyBatteryDetails {
             DocRow(title: L("Highest pack voltage"), value: l?.maximumPackVoltage.map { Format.volts(millivolts: $0) }),
             DocRow(title: L("Lowest pack voltage"), value: BatteryDetailText.lowestPackVoltage(b),
                    tone: PackHistory(battery: b).lowVoltageRecorded ? .bad : nil),
-        ], labelWidth: nil)] + findings)
+            DocRow(title: L("Time at high charge"), value: ChargeHistogram(lifetime: l).flatMap(ChargingText.highCharge)),
+            DocRow(title: L("Charge today"), value: ChargingText.today(b)),
+        ] + (ChargeHistogram(lifetime: l).flatMap(ChargingText.bands).map { [DocRow(title: L("Charge bands (low → high)"), value: $0)] } ?? []),
+                       labelWidth: nil)] + findings + [ChargingText.usageFinding(b).map { Block.status($0, .neutral) }].compactMap { $0 })
     }
 
     private func charger(_ b: BatteryInfo) -> Block {
         let c = b.charger
-        return .group(L("Charger"), [
+        let why = ChargingText.notCharging(b).map { Block.status($0.text, $0.problem ? .bad : .neutral) }
+        return .group(L("Charger"), [why].compactMap { $0 } + [
             .rows([
                 DocRow(title: L("State"), value: BatteryText.state(b)),
                 DocRow(title: L("Battery current"), value: b.amperage.map { Format.milliamps($0) }),
