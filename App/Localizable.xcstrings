@@ -1,6 +1,16 @@
 {
   "sourceLanguage" : "en",
   "strings" : {
+    "%1$@ charges at %2$@, %3$@ at %4$@ with the same adapter: check this port's connector and its port controller." : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%1$@ aynı adaptörle %2$@, %3$@ ise %4$@ ile şarj ediyor: bu portun soketini ve port kontrolcüsünü kontrol edin."
+          }
+        }
+      }
+    },
     "%1$@ hardly moved under load (%2$@) while the other sensors of its group heated up: stuck or badly placed sensor." : {
       "localizations" : {
         "tr" : {
@@ -101,6 +111,16 @@
         }
       }
     },
+    "%1$@: the port controller counted %2$lld faults (hard reset, short detection, input switch) while charging: check the port, the cable and the port controller." : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%1$@: şarj sırasında port kontrolcüsü %2$lld hata saydı (hard reset, kısa devre algılama, giriş anahtarı): portu, kabloyu ve port kontrolcüsünü kontrol edin."
+          }
+        }
+      }
+    },
     "%1$lld read / write errors, %2$lld retries" : {
       "localizations" : {
         "tr" : {
@@ -192,6 +212,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Bu modelin sağlam Mac'lerinden %1$@ fazla (%2$@ – %3$@, %4$lld Mac): meşgul bir işlem (CPU'ya bakın) veya enerjili bir rayda kaçak."
+          }
+        }
+      }
+    },
+    "%@ charges at 5 V only although the adapter offers more: the port's CC line, the port controller or the cable may be faulty." : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ adaptör daha fazlasını sunduğu halde yalnızca 5 V ile şarj ediyor: portun CC hattı, port kontrolcüsü ya da kablo arızalı olabilir."
           }
         }
       }
@@ -2152,6 +2182,16 @@
         }
       }
     },
+    "Charging per port" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Port başına şarj"
+          }
+        }
+      }
+    },
     "Charging · %@" : {
       "localizations" : {
         "tr" : {
@@ -2480,6 +2520,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Sözleşme"
+          }
+        }
+      }
+    },
+    "Contract: %@ · %@ (%@)." : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sözleşme: %@ · %@ (%@)."
           }
         }
       }
@@ -6288,6 +6338,16 @@
         }
       }
     },
+    "Plug the charger into each USB-C port in turn (a few seconds each). FixStat notes what every port negotiates and what the adapter delivers there; a port that charges clearly worse than another with the same adapter, only at 5 V, or with port controller faults points to its connector, CC line or port controller." : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Şarj aletini sırayla her USB-C porta takın (her birinde birkaç saniye). FixStat her portun pazarlık ettiği gücü ve adaptörün orada verdiğini not eder; aynı adaptörle başka bir porttan belirgin şekilde kötü, yalnızca 5 V ile ya da port kontrolcüsü hatalarıyla şarj eden port, soketine, CC hattına ya da port kontrolcüsüne işaret eder."
+          }
+        }
+      }
+    },
     "Plug-ins / removals" : {
       "localizations" : {
         "tr" : {
@@ -8304,6 +8364,16 @@
         }
       }
     },
+    "The %@ adapter is held at %@: the cable is probably a 3 A cable, use a 5 A (100 W or more) cable." : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ adaptör %@ ile sınırlı kalıyor: kablo büyük ihtimalle 3 A'lık, 5 A'lık (100 W ve üstü) bir kablo kullanın."
+          }
+        }
+      }
+    },
     "The CPU is held back for heat or power." : {
       "localizations" : {
         "tr" : {
@@ -8436,6 +8506,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "USB adaptörü SMART verisini iletmiyor (USB–NVMe adaptörlerde, USB belleklerde ve kart okuyucularda sık görülür). Okuma / yazma hataları sayılıyor."
+          }
+        }
+      }
+    },
+    "The adapter delivered at most %@." : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Adaptör en fazla %@ verdi."
           }
         }
       }
@@ -9852,6 +9932,16 @@
         }
       }
     },
+    "adapter delivered %@" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "adaptör %@ verdi"
+          }
+        }
+      }
+    },
     "at cycle %@" : {
       "localizations" : {
         "tr" : {
@@ -10264,6 +10354,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "yeterli boş alan yok"
+          }
+        }
+      }
+    },
+    "not tried yet" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "henüz denenmedi"
           }
         }
       }

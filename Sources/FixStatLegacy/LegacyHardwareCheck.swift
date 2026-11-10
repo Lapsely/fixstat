@@ -594,13 +594,17 @@ final class LegacyPortsPane: BlockPane, LegacySnapshotStartable {
     private func poll() {
         guard !reading else { return }
         reading = true
-        background({ (PortReader.read(), USBVolumes.mounted()) }, done: { [weak self] current, mounted in
+        background({ (PortReader.read(), USBVolumes.mounted(), BatteryReader.read()) }, done: { [weak self] result in
             guard let self else { return }
+            let (current, mounted, battery) = result
             reading = false
-            let changed = current != ports || mounted != volumes
+            var changed = current != ports || mounted != volumes
             ports = current
             volumes = mounted
-            if history.update(current) { recordCheck() }
+            if history.update(current, battery: battery) {
+                recordCheck()
+                changed = true
+            }
             if startWhenReady, let volume = volumes.first {
                 startWhenReady = false
                 speed.start(volume, port: volume.port(in: ports))
@@ -622,7 +626,19 @@ final class LegacyPortsPane: BlockPane, LegacySnapshotStartable {
         if ports.isEmpty {
             return [.secondary(L("This Mac does not publish its port state (IOPort). Check the ports by hand.")), speedGroup()]
         }
-        return ports.map(card) + [speedGroup()]
+        let charging = ports.contains { $0.controller != nil } ? [chargingGroup()] : []
+        return ports.map(card) + charging + [speedGroup()]
+    }
+
+    /// Charging per port: what each port negotiated with the same charger.
+    private func chargingGroup() -> Block {
+        var blocks: [Block] = [
+            .secondary(L("Plug the charger into each USB-C port in turn (a few seconds each). FixStat notes what every port negotiates and what the adapter delivers there; a port that charges clearly worse than another with the same adapter, only at 5 V, or with port controller faults points to its connector, CC line or port controller.")),
+            .rows(PortText.chargingRows(ports, history: history).map { DocRow(title: $0.0, value: $0.1, tone: $0.2 ? nil : .neutral) },
+                  labelWidth: nil),
+        ]
+        for finding in history.chargingFindings(ports) { blocks.append(.status(finding, .bad)) }
+        return .group(L("Charging per port"), blocks)
     }
 
     /// USB drive speed: write–verify a scratch file on a USB drive, per port.

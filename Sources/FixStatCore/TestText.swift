@@ -14,8 +14,22 @@ public enum TestText {
             return L("Cell %lld dropped to %@ under load (limit %@)", cell, Format.volts(millivolts: millivolts, digits: 3), Format.volts(millivolts: limit, digits: 1))
         case let .cellImbalance(millivolts, limit):
             return L("Cell spread reached %@ under load (limit %@)", Format.millivolts(millivolts), Format.millivolts(limit))
-        case let .adapterDeficit(average):
-            return L("On the power adapter the battery was still discharging (average %@) — adapter, cable or charging circuit may be weak", Format.milliamps(average))
+        case let .adapterDeficit(average, input, millivolts, milliamps, rated):
+            var text = L("On the power adapter the battery was still discharging (average %@) — adapter, cable or charging circuit may be weak", Format.milliamps(average))
+            if let input {
+                text += " " + L("The adapter delivered at most %@.", Format.watts(input, digits: 1))
+            }
+            if let millivolts, let milliamps {
+                let contract = Double(millivolts) * Double(milliamps) / 1_000_000
+                text += " " + L("Contract: %@ · %@ (%@).", Format.volts(millivolts: millivolts, digits: 0),
+                                Format.amps(milliamps: milliamps), Format.watts(contract))
+                // A USB-C cable without an e-marker carries 3 A: 20 V · 3 A = 60 W whatever the adapter.
+                if milliamps <= 3000, let rated, Double(rated) > contract + 5 {
+                    text += " " + L("The %@ adapter is held at %@: the cable is probably a 3 A cable, use a 5 A (100 W or more) cable.",
+                                    Format.watts(Double(rated)), Format.watts(contract))
+                }
+            }
+            return text
         case .stoppedEarly:
             return L("Test was stopped before the planned duration")
         }

@@ -280,6 +280,24 @@ public enum PortText {
         "\(port.type) \(port.number)"
     }
 
+    /// One row per port that can charge: name, what it did (or "not tried yet"), tried.
+    public static func chargingRows(_ ports: [PortStatus], history: PortHistory) -> [(String, String, Bool)] {
+        ports.filter { $0.controller != nil || $0.type.hasPrefix("MagSafe") }.map { port in
+            if let o = history.charging[port.id] { return (name(port), charging(o), true) }
+            return (name(port), L("not tried yet"), false)
+        }
+    }
+
+    /// "20 V · 3 A · 60 W · adapter delivered 45 W"
+    public static func charging(_ o: PortHistory.ChargeObservation) -> String {
+        var parts: [String] = []
+        if let mv = o.millivolts { parts.append(Format.volts(millivolts: mv, digits: mv % 1000 == 0 ? 0 : 1)) }
+        if let ma = o.milliamps { parts.append(Format.amps(milliamps: ma)) }
+        if let w = o.contractWatts { parts.append(Format.watts(w)) }
+        if let input = o.inputWatts { parts.append(L("adapter delivered %@", Format.watts(input, digits: 1))) }
+        return parts.joined(separator: " · ")
+    }
+
     /// "USB 3, DisplayPort · charging the Mac (96 W)"; empty for ports read from the XHCI
     /// root hub (no transports: the devices below tell what is plugged in).
     public static func activity(_ port: PortStatus) -> String {
@@ -333,12 +351,52 @@ public struct PortHistory {
     public private(set) var fastestOnPort: [String: [String: Int]] = [:]
     /// Device names for the messages.
     private var names: [String: String] = [:]
+    /// How each port charged the Mac (port id → the best seen there).
+    public private(set) var charging: [String: ChargeObservation] = [:]
+    /// Port controller fault counters when a port was first seen, to count what happens later.
+    private var faultBaseline: [String: Int] = [:]
 
     public init() {}
 
-    /// Adds what the ports show now; true if anything new was seen.
-    public mutating func update(_ ports: [PortStatus]) -> Bool {
+    /// What one port delivered while the charger was plugged into it.
+    public struct ChargeObservation: Equatable {
+        /// The USB-C contract in use (mV, mA) and its power (W).
+        public var millivolts: Int?
+        public var milliamps: Int?
+        public var contractWatts: Double?
+        /// Most the adapter delivered (`SystemPowerIn`, W) and the highest charge current (mA).
+        public var inputWatts: Double?
+        public var chargeMilliamps: Int?
+        /// The adapter's name and rating, to compare ports with the same adapter only.
+        public var adapter: String?
+        public var ratedWatts: Int?
+        /// Port controller faults (hard resets, short detection, input FET, I²C) counted while seen.
+        public var faults = 0
+        /// The adapter offers more than 5 V (its profile list).
+        public var higherVoltageOffered = false
+    }
+
+    /// Adds what the ports show now; true if anything new was seen. `battery` adds the charging
+    /// details of the port that charges (the contract, what the adapter delivered).
+    public mutating func update(_ ports: [PortStatus], battery: BatteryInfo? = nil) -> Bool {
         var changed = false
+        let chargingPorts = ports.filter { $0.powerIn == true }
+        for port in ports {
+            if let controller = port.controller {
+                let count = controller.shortDetect + controller.hardReset + controller.inputFETFailures + controller.i2cErrors
+                if let start = faultBaseline[port.id] {
+                    if count > start, port.powerIn == true {
+                        charging[port.id, default: ChargeObservation()].faults = count - start
+                        changed = true
+                    }
+                } else {
+                    faultBaseline[port.id] = count
+                }
+            }
+            // Only one port charges at a time: the battery's contract belongs to it.
+            if chargingPorts.count == 1, port.id == chargingPorts[0].id, let battery, battery.externalConnected == true,
+               observe(port, battery) { changed = true }
+        }
         for port in ports {
             var set = seen[port.id] ?? []
             let before = set
@@ -375,16 +433,72 @@ public struct PortHistory {
         return nil
     }
 
+    /// Records the contract and power of the charging port; true if it got better (a port is
+    /// judged by the best it did).
+    mutating func observe(_ port: PortStatus, _ battery: BatteryInfo) -> Bool {
+        var o = charging[port.id] ?? ChargeObservation()
+        let before = o
+        let pd = battery.powerDelivery
+        if let active = pd?.activeProfile, let mv = active.maxVoltage {
+            let ma = pd?.consistentContract?.operatingCurrent ?? active.maxCurrent
+            let watts = ma.map { Double(mv) * Double($0) / 1_000_000 } ?? port.controller?.maxPowerWatts
+            if (watts ?? 0) >= (o.contractWatts ?? -1) {
+                o.millivolts = mv
+                o.milliamps = ma
+                o.contractWatts = watts
+            }
+        } else if let watts = port.controller?.maxPowerWatts, watts > (o.contractWatts ?? -1) {
+            o.contractWatts = watts
+        }
+        o.higherVoltageOffered = o.higherVoltageOffered || (pd?.offeredProfiles.contains { ($0.maxVoltage ?? 0) > 5_500 } ?? false)
+        if let input = battery.powerTelemetry?.systemPowerIn, input > 0 {
+            o.inputWatts = max(o.inputWatts ?? 0, Double(input) / 1000)
+        }
+        if let amps = battery.amperage { o.chargeMilliamps = max(o.chargeMilliamps ?? Int.min, amps) }
+        o.adapter = battery.adapter?.name ?? o.adapter
+        o.ratedWatts = battery.adapter?.ratedWatts ?? o.ratedWatts
+        charging[port.id] = o
+        // Input power and charge current move all the time: only a better contract is news.
+        return o.contractWatts != before.contractWatts || o.faults != before.faults || before == ChargeObservation()
+    }
+
+    /// Ports that charge worse than another one with the same adapter, ports that only get 5 V,
+    /// and port controller faults while charging.
+    public func chargingFindings(_ ports: [PortStatus]) -> [String] {
+        var findings: [String] = []
+        let observed = ports.compactMap { port in charging[port.id].map { (port, $0) } }
+        for (port, o) in observed {
+            if o.faults > 0 {
+                findings.append(L("%1$@: the port controller counted %2$lld faults (hard reset, short detection, input switch) while charging: check the port, the cable and the port controller.",
+                                  PortText.name(port), o.faults))
+            }
+            if let mv = o.millivolts, mv <= 5_500, o.higherVoltageOffered {
+                findings.append(L("%@ charges at 5 V only although the adapter offers more: the port's CC line, the port controller or the cable may be faulty.",
+                                  PortText.name(port)))
+                continue
+            }
+            // The same adapter on another port did clearly better.
+            let others = observed.filter { $0.0.id != port.id && $0.1.adapter == o.adapter && $0.1.ratedWatts == o.ratedWatts }
+            if let here = o.contractWatts, let best = others.max(by: { ($0.1.contractWatts ?? 0) < ($1.1.contractWatts ?? 0) }),
+               let there = best.1.contractWatts, here < there * 0.6, there - here >= 10 {
+                findings.append(L("%1$@ charges at %2$@, %3$@ at %4$@ with the same adapter: check this port's connector and its port controller.",
+                                  PortText.name(port), Format.watts(here), PortText.name(best.0), Format.watts(there)))
+            }
+        }
+        return findings
+    }
+
     public func detail(_ ports: [PortStatus]) -> String {
         ports.map { port in
             "\(PortText.name(port)): " + PortText.seenSummary(seen[port.id] ?? [])
+                + (charging[port.id].map { " (" + PortText.charging($0) + ")" } ?? "")
                 + (slowLane(port) != nil ? " (" + L("USB 2 speed only") + ")" : "")
         }.joined(separator: " · ")
     }
 
     /// Every data port was tested and none linked a USB 3 device at USB 2 speed only.
     public func passed(_ ports: [PortStatus]) -> Bool {
-        allDataTested(ports) && ports.allSatisfy { slowLane($0) == nil }
+        allDataTested(ports) && ports.allSatisfy { slowLane($0) == nil } && chargingFindings(ports).isEmpty
     }
 
     /// Every USB-C / USB-A port carried data at least once.

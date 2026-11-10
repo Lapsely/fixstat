@@ -15,6 +15,13 @@ public struct StressSample: Codable, Sendable, Equatable {
     public var amperage: Int?
     public var stateOfCharge: Double?
     public var externalConnected: Bool?
+    /// What the adapter delivered (`SystemPowerIn`, W; Apple Silicon) and the USB-C contract in use
+    /// (mV / mA) with the adapter's rated power: why the battery had to help (a 3 A cable caps a
+    /// 20 V contract at 60 W). nil where not reported.
+    public var inputWatts: Double? = nil
+    public var contractMillivolts: Int? = nil
+    public var contractMilliamps: Int? = nil
+    public var adapterWatts: Int? = nil
 
     public init(time: Double, cpu: Double?, gpu: Double?, ssd: Double?, battery: Double?,
                 cellVoltages: [Int]?, amperage: Int?, stateOfCharge: Double?, externalConnected: Bool?) {
@@ -40,8 +47,10 @@ public struct StressTestResult: Codable, Sendable, Equatable {
         case cellVoltageSag(cell: Int, millivolts: Int, limit: Int)
         /// Cell spread exceeded `limit` mV under load.
         case cellImbalance(millivolts: Int, limit: Int)
-        /// On AC power the battery was still discharging (adapter cannot carry the load).
-        case adapterDeficit(averageMilliamps: Int)
+        /// On AC power the battery was still discharging (adapter cannot carry the load), with the
+        /// most the adapter delivered, the contract and the adapter's rating where known.
+        case adapterDeficit(averageMilliamps: Int, inputWatts: Double? = nil, contractMillivolts: Int? = nil,
+                            contractMilliamps: Int? = nil, adapterWatts: Int? = nil)
         /// The test was stopped before the planned duration.
         case stoppedEarly
     }
@@ -111,7 +120,16 @@ public struct StressTestResult: Codable, Sendable, Equatable {
         let onAC = samples.filter { $0.externalConnected == true }.compactMap(\.amperage)
         if onAC.count >= max(5, samples.count / 2) {
             let average = onAC.reduce(0, +) / onAC.count
-            if average < adapterDeficitLimit { findings.append(.adapterDeficit(averageMilliamps: average)) }
+            if average < adapterDeficitLimit {
+                let plugged = samples.filter { $0.externalConnected == true }
+                let input = plugged.compactMap(\.inputWatts).max().map { ($0 * 10).rounded() / 10 }
+                // The contract during most of the load (it can change while plugging in).
+                let contract = plugged.last { $0.contractMillivolts != nil }
+                findings.append(.adapterDeficit(averageMilliamps: average, inputWatts: input,
+                                                contractMillivolts: contract?.contractMillivolts,
+                                                contractMilliamps: contract?.contractMilliamps,
+                                                adapterWatts: plugged.compactMap(\.adapterWatts).last))
+            }
         }
         let duration = samples.last?.time ?? 0
         if duration + 5 < plannedDuration { findings.append(.stoppedEarly) }

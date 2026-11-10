@@ -492,6 +492,11 @@ individual cores. Never name them per core ("P-core 1"). Use ids like
   macOS 27 publishes no `UsbCPortNumber`: a device is tied to its USB-C port through the port's USB transport
   (`IOPortTransportStateUSB3` / `USB2` below "Port-USB-C@N" name the attached device's Vendor / Product ID; the
   topmost USB device above a service is matched, two ports with the same device → no port).
+  Charging per port (`PortHistory.charging`, Apple Silicon): while exactly one port charges, the battery's contract
+  (`activeProfile`, V / A / W), the most `SystemPowerIn` and port controller fault increases are kept for it; a port
+  below 60 % (and 10 W) of another with the same adapter, 5 V only while the adapter offers more, or faults while
+  charging is a finding. The stress test's `adapterDeficit` carries the delivered power, contract and rating (a
+  contract held at 3 A below the adapter's rating = probably a 3 A cable).
   `PortHistory` keeps each device's fastest link per port: a device seen at ≥ 5 Gb/s elsewhere
   but ≤ 480 Mb/s on a port flags that port's USB 3 lane (Air 2014: USB-A 1). `-FixStatSampleUSBA YES` shows two made-up ports.
   USB drive speed (`USBVolumes`, `USBSpeedRunner`, `USBSpeedText`): mounted writable volumes are

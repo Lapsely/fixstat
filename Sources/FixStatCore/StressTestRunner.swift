@@ -80,12 +80,19 @@ public final class StressTestRunner {
         func hottest(_ group: SensorMap.Group) -> Double? {
             monitor.sensors.filter { $0.group == group }.compactMap(monitor.value(of:)).max()
         }
-        let sample = StressSample(
+        var sample = StressSample(
             time: Date().timeIntervalSince(startedAt),
             cpu: hottest(.cpu), gpu: hottest(.gpu), ssd: hottest(.ssd), battery: battery?.temperature,
             cellVoltages: battery?.cellVoltages, amperage: battery?.amperage,
             stateOfCharge: battery?.stateOfCharge, externalConnected: battery?.externalConnected
         )
+        if battery?.externalConnected == true {
+            sample.inputWatts = battery?.powerTelemetry?.systemPowerIn.flatMap { $0 > 0 ? Double($0) / 1000 : nil }
+            let active = battery?.powerDelivery?.activeProfile
+            sample.contractMillivolts = active?.maxVoltage
+            sample.contractMilliamps = battery?.powerDelivery?.consistentContract?.operatingCurrent ?? active?.maxCurrent
+            sample.adapterWatts = battery?.adapter?.ratedWatts
+        }
         samples = samples + [sample]
     }
 

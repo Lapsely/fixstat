@@ -23,22 +23,46 @@ struct PortsTestView: View {
             ForEach(ports) { port in
                 portCard(port)
             }
+            if ports.contains(where: { $0.controller != nil }) { chargingCard }
             speedCard
         }
         .task {
             while !Task.isCancelled {
-                let (current, mounted) = await Task.detached { (PortReader.read(), USBVolumes.mounted()) }.value
+                let (current, mounted, battery) = await Task.detached {
+                    (PortReader.read(), USBVolumes.mounted(), BatteryReader.read())
+                }.value
                 if mounted != volumes { volumes = mounted }
-                update(current)
+                update(current, battery: battery)
                 try? await Task.sleep(for: .seconds(1))
             }
         }
     }
 
-    private func update(_ current: [PortStatus]) {
+    private func update(_ current: [PortStatus], battery: BatteryInfo?) {
         ports = current
-        guard history.update(current) else { return }
+        guard history.update(current, battery: battery) else { return }
         recordCheck()
+    }
+
+    // MARK: Charging
+
+    private var chargingCard: some View {
+        Card {
+            CardHeader("Charging per port", systemImage: "bolt")
+            Text("Plug the charger into each USB-C port in turn (a few seconds each). FixStat notes what every port negotiates and what the adapter delivers there; a port that charges clearly worse than another with the same adapter, only at 5 V, or with port controller faults points to its connector, CC line or port controller.")
+                .foregroundStyle(.secondary)
+                .fixedSize(horizontal: false, vertical: true)
+            ForEach(Array(PortText.chargingRows(ports, history: history).enumerated()), id: \.offset) { _, row in
+                HStack(alignment: .firstTextBaseline) {
+                    Text(verbatim: row.0).frame(width: 90, alignment: .leading)
+                    Text(verbatim: row.1).foregroundStyle(row.2 ? AnyShapeStyle(.primary) : AnyShapeStyle(.secondary))
+                }
+                .font(.callout)
+            }
+            ForEach(Array(history.chargingFindings(ports).enumerated()), id: \.offset) { _, finding in
+                FindingRow(text: finding)
+            }
+        }
     }
 
     private func recordCheck() {

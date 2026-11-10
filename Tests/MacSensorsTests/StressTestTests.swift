@@ -44,7 +44,7 @@ import Testing
 
     @Test func adapterDeficitOnlyOnAC() {
         let onAC = analyze((0...10).map { sample(Double($0), amperage: -600, ac: true) })
-        #expect(onAC.findings.contains(.adapterDeficit(averageMilliamps: -600)))
+        #expect(onAC.findings.contains { if case .adapterDeficit(averageMilliamps: -600, _, _, _, _) = $0 { true } else { false } })
         let charging = analyze((0...10).map { sample(Double($0), amperage: 800, ac: true) })
         #expect(charging.findings.isEmpty)
     }

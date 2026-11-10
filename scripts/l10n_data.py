@@ -499,6 +499,21 @@ TR = {
     "Lifetime record identical to the one clone gauges ship with: the gauge does not keep its own history":
         "Ömür kaydı klon gauge'ların fabrikadan geldiği kayıtla birebir aynı: gauge kendi geçmişini tutmuyor",
     "%@ per cell": "hücre başına %@",
+    "The adapter delivered at most %@.": "Adaptör en fazla %@ verdi.",
+    "Contract: %@ · %@ (%@).": "Sözleşme: %@ · %@ (%@).",
+    "The %@ adapter is held at %@: the cable is probably a 3 A cable, use a 5 A (100 W or more) cable.":
+        "%@ adaptör %@ ile sınırlı kalıyor: kablo büyük ihtimalle 3 A'lık, 5 A'lık (100 W ve üstü) bir kablo kullanın.",
+    "%1$@: the port controller counted %2$lld faults (hard reset, short detection, input switch) while charging: check the port, the cable and the port controller.":
+        "%1$@: şarj sırasında port kontrolcüsü %2$lld hata saydı (hard reset, kısa devre algılama, giriş anahtarı): portu, kabloyu ve port kontrolcüsünü kontrol edin.",
+    "%@ charges at 5 V only although the adapter offers more: the port's CC line, the port controller or the cable may be faulty.":
+        "%@ adaptör daha fazlasını sunduğu halde yalnızca 5 V ile şarj ediyor: portun CC hattı, port kontrolcüsü ya da kablo arızalı olabilir.",
+    "%1$@ charges at %2$@, %3$@ at %4$@ with the same adapter: check this port's connector and its port controller.":
+        "%1$@ aynı adaptörle %2$@, %3$@ ise %4$@ ile şarj ediyor: bu portun soketini ve port kontrolcüsünü kontrol edin.",
+    "adapter delivered %@": "adaptör %@ verdi",
+    "not tried yet": "henüz denenmedi",
+    "Charging per port": "Port başına şarj",
+    "Plug the charger into each USB-C port in turn (a few seconds each). FixStat notes what every port negotiates and what the adapter delivers there; a port that charges clearly worse than another with the same adapter, only at 5 V, or with port controller faults points to its connector, CC line or port controller.":
+        "Şarj aletini sırayla her USB-C porta takın (her birinde birkaç saniye). FixStat her portun pazarlık ettiği gücü ve adaptörün orada verdiğini not eder; aynı adaptörle başka bir porttan belirgin şekilde kötü, yalnızca 5 V ile ya da port kontrolcüsü hatalarıyla şarj eden port, soketine, CC hattına ya da port kontrolcüsüne işaret eder.",
     "Endurance left (estimate)": "Kalan dayanıklılık (tahmin)",
     "about %@ more at the wear so far": "şimdiye kadarki aşınmayla yaklaşık %@ daha",
     "%1$@ of %2$@ power-ups followed a power loss without a proper shutdown (%3$@): forced shutdowns or a battery that ran flat, or for a drive in an enclosure, unplugging it without ejecting. Each one puts the data being written at risk.":
