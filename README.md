@@ -126,7 +126,7 @@ In short:
 To build from source (macOS 14+ with Xcode 16 or later, no other tools):
 
 ```bash
-git clone https://github.com/BurakFixLab/fixstat.git
+git clone https://github.com/Lapsely/fixstat.git
 cd fixstat
 git config core.hooksPath .githooks   # privacy check before each commit
 scripts/build-app.sh                  # builds build/FixStat.app

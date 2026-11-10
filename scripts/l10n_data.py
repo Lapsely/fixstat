@@ -113,7 +113,7 @@ TR = {
     "Show full serial numbers in reports": "Raporlarda seri numaralarını tam göster",
     "Applies to PDF, CSV and JSON. Reports often reach customers or the internet, and a serial number reveals ownership and warranty details: keep it masked in reports you share publicly, e.g. in bug reports.":
         "PDF, CSV ve JSON için geçerlidir. Raporlar çoğu zaman müşteriye veya internete ulaşır ve seri numarası sahiplik ile garanti bilgilerini açığa çıkarır: herkese açık paylaştığınız raporlarda (ör. hata bildirimlerinde) maskeli bırakın.",
-    "Created with FixStat %@ — github.com/BurakFixLab/fixstat.": "FixStat %@ ile oluşturuldu — github.com/BurakFixLab/fixstat.",
+    "Created with FixStat %@ — github.com/Lapsely/fixstat.": "FixStat %@ ile oluşturuldu — github.com/Lapsely/fixstat.",
     "Always show the Dock icon": "Dock simgesini her zaman göster",
     "Otherwise the Dock icon appears while a FixStat window is open, so windows do not get lost behind other apps.":
         "Aksi halde Dock simgesi yalnızca bir FixStat penceresi açıkken görünür; böylece pencereler diğer uygulamaların arkasında kaybolmaz.",
@@ -551,8 +551,8 @@ TR = {
     "Unreadable areas": "Okunamayan bölgeler",
     "Write–verify on free space…": "Boş alanda yazma–doğrulama…",
     "Chip": "Çip",
-    "Created with FixStat %@ — github.com/BurakFixLab/fixstat. Serial numbers are masked.":
-        "FixStat %@ ile oluşturuldu — github.com/BurakFixLab/fixstat. Seri numaraları maskelenmiştir.",
+    "Created with FixStat %@ — github.com/Lapsely/fixstat. Serial numbers are masked.":
+        "FixStat %@ ile oluşturuldu — github.com/Lapsely/fixstat. Seri numaraları maskelenmiştir.",
     "Design capacity": "Tasarım kapasitesi",
     "Device": "Cihaz",
     "Highest temperature (lifetime)": "En yüksek sıcaklık (ömür boyu)",

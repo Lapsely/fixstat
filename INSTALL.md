@@ -109,7 +109,7 @@ Requires macOS 14 or later and Xcode 16 or later (Swift 6). No other tools. The 
 this way runs on macOS 10.13 and later like the released one.
 
 ```bash
-git clone https://github.com/BurakFixLab/fixstat.git
+git clone https://github.com/Lapsely/fixstat.git
 cd fixstat
 scripts/build-app.sh          # builds build/FixStat.app
 open build/FixStat.app

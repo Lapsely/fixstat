@@ -23,8 +23,8 @@ public final class UpdateChecker {
     /// Called on the main thread when `status` changed (one listener: the running interface).
     public var onChange: (() -> Void)?
 
-    public static let latestURL = URL(string: "https://api.github.com/repos/BurakFixLab/fixstat/releases/latest")!
-    public static let releasesURL = URL(string: "https://github.com/BurakFixLab/fixstat/releases")!
+    public static let latestURL = URL(string: "https://api.github.com/repos/Lapsely/fixstat/releases/latest")!
+    public static let releasesURL = URL(string: "https://github.com/Lapsely/fixstat/releases")!
     public static let interval: TimeInterval = 24 * 3600
 
     private enum Key {

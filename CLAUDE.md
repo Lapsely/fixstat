@@ -237,7 +237,7 @@ individual cores. Never name them per core ("P-core 1"). Use ids like
   Sierra iMac froze briefly at launch before); `--snapshot` / `--export` build synchronously.
 - Update check (`UpdateChecker`, both interfaces): the only network access. Once a day (first 60 s
   after launch, `Pref.checkForUpdates`, on by default) it reads
-  `api.github.com/repos/BurakFixLab/fixstat/releases/latest` (stable releases only), remembers
+  `api.github.com/repos/Lapsely/fixstat/releases/latest` (stable releases only), remembers
   the result (`update.*` defaults), notifies once per new version (`AlertManager.Kind
   .updateAvailable`, outside the alerts switch) and shows a "FixStat X is available · Download"
   line at the top of the panel; Settings has the switch, status and "Check now". Nothing is

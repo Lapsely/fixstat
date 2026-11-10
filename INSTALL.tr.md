@@ -125,7 +125,7 @@ macOS 14 veya üstü ve Xcode 16 veya üstü (Swift 6) gerekir. Başka araç ger
 derlenen uygulama da yayınlanan sürüm gibi macOS 10.13 ve üstünde çalışır.
 
 ```bash
-git clone https://github.com/BurakFixLab/fixstat.git
+git clone https://github.com/Lapsely/fixstat.git
 cd fixstat
 scripts/build-app.sh          # build/FixStat.app oluşturur
 open build/FixStat.app

@@ -14,8 +14,8 @@ import MacSensors
     }
 
     @Test func parsesTheReleasesAPI() throws {
-        // Shape of api.github.com/repos/BurakFixLab/fixstat/releases/latest (checked 2026-10-07).
-        let json = #"{"tag_name":"v1.2.1","html_url":"https://github.com/BurakFixLab/fixstat/releases/tag/v1.2.1","draft":false,"prerelease":false,"name":"FixStat 1.2.1"}"#
+        // Shape of api.github.com/repos/Lapsely/fixstat/releases/latest (checked 2026-10-07).
+        let json = #"{"tag_name":"v1.2.1","html_url":"https://github.com/Lapsely/fixstat/releases/tag/v1.2.1","draft":false,"prerelease":false,"name":"FixStat 1.2.1"}"#
         let release = try #require(UpdateChecker.parse(Data(json.utf8)))
         #expect(release.version == "1.2.1")
         #expect(release.url.absoluteString.hasSuffix("/v1.2.1"))

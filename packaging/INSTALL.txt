@@ -3,8 +3,8 @@ FixStat — installation / kurulum
 
 English below · Türkçesi aşağıda
 Full guide with pictures of each step / ayrıntılı rehber:
-https://github.com/BurakFixLab/fixstat/blob/main/INSTALL.md
-https://github.com/BurakFixLab/fixstat/blob/main/INSTALL.tr.md
+https://github.com/Lapsely/fixstat/blob/main/INSTALL.md
+https://github.com/Lapsely/fixstat/blob/main/INSTALL.tr.md
 
 
 ENGLISH

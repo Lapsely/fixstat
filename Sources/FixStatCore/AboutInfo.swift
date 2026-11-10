@@ -2,7 +2,7 @@ import AppKit
 
 /// Version information and the standard About panel.
 public enum AboutInfo {
-    public static let repositoryURL = URL(string: "https://github.com/BurakFixLab/fixstat")!
+    public static let repositoryURL = URL(string: "https://github.com/Lapsely/fixstat")!
 
     public static var version: String {
         Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as? String ?? "–"

@@ -130,7 +130,7 @@ Kısaca:
 Kaynaktan derlemek için (macOS 14+ ve Xcode 16 veya üstü, başka araç gerekmez):
 
 ```bash
-git clone https://github.com/BurakFixLab/fixstat.git
+git clone https://github.com/Lapsely/fixstat.git
 cd fixstat
 git config core.hooksPath .githooks   # her commit öncesi gizlilik kontrolü
 scripts/build-app.sh                  # build/FixStat.app oluşturur

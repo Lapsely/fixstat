@@ -2524,22 +2524,22 @@
         }
       }
     },
-    "Created with FixStat %@ — github.com/BurakFixLab/fixstat." : {
+    "Created with FixStat %@ — github.com/Lapsely/fixstat." : {
       "localizations" : {
         "tr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "FixStat %@ ile oluşturuldu — github.com/BurakFixLab/fixstat."
+            "value" : "FixStat %@ ile oluşturuldu — github.com/Lapsely/fixstat."
           }
         }
       }
     },
-    "Created with FixStat %@ — github.com/BurakFixLab/fixstat. Serial numbers are masked." : {
+    "Created with FixStat %@ — github.com/Lapsely/fixstat. Serial numbers are masked." : {
       "localizations" : {
         "tr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "FixStat %@ ile oluşturuldu — github.com/BurakFixLab/fixstat. Seri numaraları maskelenmiştir."
+            "value" : "FixStat %@ ile oluşturuldu — github.com/Lapsely/fixstat. Seri numaraları maskelenmiştir."
           }
         }
       }

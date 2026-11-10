@@ -154,8 +154,8 @@ private final class ReportWriter {
         }
         line(at: top)
         let credit = data.fullSerial
-            ? L("Created with FixStat %@ — github.com/BurakFixLab/fixstat.", AboutInfo.version)
-            : L("Created with FixStat %@ — github.com/BurakFixLab/fixstat. Serial numbers are masked.", AboutInfo.version)
+            ? L("Created with FixStat %@ — github.com/Lapsely/fixstat.", AboutInfo.version)
+            : L("Created with FixStat %@ — github.com/Lapsely/fixstat. Serial numbers are masked.", AboutInfo.version)
         _ = draw(credit,
                  at: margin, width: width, font: .systemFont(ofSize: 8), color: gray, top: top + 4)
     }
