@@ -397,6 +397,12 @@ individual cores. Never name them per core ("P-core 1"). Use ids like
   drain without wakes → hardware, `alwaysOn` when shutdowns drain too (G3H / AON) or only
   asleep (sleep rails). Rough levels until reference values exist: asleep 20 / 50 mA, shut
   down 10 / 30 mA. `-FixStatSampleDrain YES` adds a made-up night.
+- Model references (`ModelReferences` in MacSensors, `SensorMaps/model-reference.json`): written by the lab merge,
+  rebuilt from every healthy record each time (one value per Mac, its latest record that has it; untagged records of
+  one Mac grouped by battery / SSD identity and cycles within 40; a Mac with any faulty / liquid / repaired record is
+  left out): idle / load temperature per group, idle display-off power (on battery, else charging ≤ 500 mA, no
+  external display, CPU < 25 % busy), CPU load power, cooling °C/W, die above heatsink, idle rail amps, off-state
+  drain, each as n / median / low / high. FixStat judges against them from `ReferenceStat.minimumRecords` (3) Macs.
 - Idle power, display off (`IdlePowerRunner`, `DisplayPower`, `PowerReference`; in the drain
   detective): brightness 0 through DisplayServices (private) or the IODisplay brightness
   parameter, restored on every way out (also at the next launch after a crash, from the

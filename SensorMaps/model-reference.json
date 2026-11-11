@@ -1,0 +1,2121 @@
+{
+  "models" : {
+    "Mac14,2" : {
+      "idleDisplayOffW" : {
+        "high" : 4.3,
+        "low" : 4.3,
+        "median" : 4.3,
+        "n" : 1
+      },
+      "idleRailAmps" : {
+        "BLR" : {
+          "high" : 0,
+          "low" : 0,
+          "median" : 0,
+          "n" : 1
+        },
+        "BlR" : {
+          "high" : 0,
+          "low" : 0,
+          "median" : 0,
+          "n" : 1
+        },
+        "D0R" : {
+          "high" : 0.213,
+          "low" : 0.213,
+          "median" : 0.213,
+          "n" : 1
+        },
+        "KBC" : {
+          "high" : 0,
+          "low" : 0,
+          "median" : 0,
+          "n" : 1
+        },
+        "MVC" : {
+          "high" : 0.325,
+          "low" : 0.325,
+          "median" : 0.325,
+          "n" : 1
+        },
+        "O3R" : {
+          "high" : 0,
+          "low" : 0,
+          "median" : 0,
+          "n" : 1
+        },
+        "O5R" : {
+          "high" : 0,
+          "low" : 0,
+          "median" : 0,
+          "n" : 1
+        },
+        "P0b" : {
+          "high" : 0.084,
+          "low" : 0.084,
+          "median" : 0.084,
+          "n" : 1
+        },
+        "P1b" : {
+          "high" : 0.049,
+          "low" : 0.049,
+          "median" : 0.049,
+          "n" : 1
+        },
+        "P2b" : {
+          "high" : 0.054,
+          "low" : 0.054,
+          "median" : 0.054,
+          "n" : 1
+        },
+        "P2l" : {
+          "high" : 0,
+          "low" : 0,
+          "median" : 0,
+          "n" : 1
+        },
+        "P3b" : {
+          "high" : 0,
+          "low" : 0,
+          "median" : 0,
+          "n" : 1
+        },
+        "P4b" : {
+          "high" : 0.026,
+          "low" : 0.026,
+          "median" : 0.026,
+          "n" : 1
+        },
+        "P7b" : {
+          "high" : 0.019,
+          "low" : 0.019,
+          "median" : 0.019,
+          "n" : 1
+        },
+        "P7l" : {
+          "high" : 0.008,
+          "low" : 0.008,
+          "median" : 0.008,
+          "n" : 1
+        },
+        "P8l" : {
+          "high" : 0.024,
+          "low" : 0.024,
+          "median" : 0.024,
+          "n" : 1
+        },
+        "P9b" : {
+          "high" : 0.019,
+          "low" : 0.019,
+          "median" : 0.019,
+          "n" : 1
+        },
+        "P9l" : {
+          "high" : 0,
+          "low" : 0,
+          "median" : 0,
+          "n" : 1
+        },
+        "PBR" : {
+          "high" : 0.036,
+          "low" : 0.036,
+          "median" : 0.036,
+          "n" : 1
+        },
+        "Pbb" : {
+          "high" : 0.244,
+          "low" : 0.244,
+          "median" : 0.244,
+          "n" : 1
+        },
+        "Pdb" : {
+          "high" : 0,
+          "low" : 0,
+          "median" : 0,
+          "n" : 1
+        },
+        "Pkl" : {
+          "high" : 0.027,
+          "low" : 0.027,
+          "median" : 0.027,
+          "n" : 1
+        },
+        "R4l" : {
+          "high" : 0.018,
+          "low" : 0.018,
+          "median" : 0.018,
+          "n" : 1
+        },
+        "R5b" : {
+          "high" : 0.012,
+          "low" : 0.012,
+          "median" : 0.012,
+          "n" : 1
+        },
+        "R6b" : {
+          "high" : 0,
+          "low" : 0,
+          "median" : 0,
+          "n" : 1
+        },
+        "R8b" : {
+          "high" : 0.027,
+          "low" : 0.027,
+          "median" : 0.027,
+          "n" : 1
+        },
+        "Rab" : {
+          "high" : 0,
+          "low" : 0,
+          "median" : 0,
+          "n" : 1
+        },
+        "Rcb" : {
+          "high" : 0,
+          "low" : 0,
+          "median" : 0,
+          "n" : 1
+        },
+        "Rcl" : {
+          "high" : 0.039,
+          "low" : 0.039,
+          "median" : 0.039,
+          "n" : 1
+        },
+        "Reb" : {
+          "high" : 0,
+          "low" : 0,
+          "median" : 0,
+          "n" : 1
+        },
+        "T3C" : {
+          "high" : 0,
+          "low" : 0,
+          "median" : 0,
+          "n" : 1
+        },
+        "T5C" : {
+          "high" : 0,
+          "low" : 0,
+          "median" : 0,
+          "n" : 1
+        },
+        "TPR" : {
+          "high" : 0,
+          "low" : 0,
+          "median" : 0,
+          "n" : 1
+        },
+        "W3C" : {
+          "high" : 0,
+          "low" : 0,
+          "median" : 0,
+          "n" : 1
+        },
+        "b0f" : {
+          "high" : 0.034,
+          "low" : 0.034,
+          "median" : 0.034,
+          "n" : 1
+        }
+      },
+      "idleTemperature" : {
+        "battery" : {
+          "high" : 28.8,
+          "low" : 25.7,
+          "median" : 27.7,
+          "n" : 3
+        },
+        "chassis" : {
+          "high" : 41.3,
+          "low" : 28.9,
+          "median" : 34.8,
+          "n" : 3
+        },
+        "cpu" : {
+          "high" : 41.6,
+          "low" : 34.3,
+          "median" : 38,
+          "n" : 2
+        },
+        "gpu" : {
+          "high" : 39.4,
+          "low" : 33.1,
+          "median" : 36.3,
+          "n" : 2
+        },
+        "other" : {
+          "high" : 46.1,
+          "low" : 35,
+          "median" : 42.3,
+          "n" : 3
+        },
+        "ssd" : {
+          "high" : 34.8,
+          "low" : 27.6,
+          "median" : 33.9,
+          "n" : 3
+        }
+      },
+      "loadTemperature" : {
+        "battery" : {
+          "high" : 28.7,
+          "low" : 25.8,
+          "median" : 27.8,
+          "n" : 3
+        },
+        "chassis" : {
+          "high" : 50.9,
+          "low" : 46.9,
+          "median" : 50.1,
+          "n" : 3
+        },
+        "cpu" : {
+          "high" : 60.5,
+          "low" : 56.1,
+          "median" : 58.3,
+          "n" : 2
+        },
+        "gpu" : {
+          "high" : 51,
+          "low" : 47.3,
+          "median" : 49.2,
+          "n" : 2
+        },
+        "other" : {
+          "high" : 50.6,
+          "low" : 45.3,
+          "median" : 50.1,
+          "n" : 3
+        },
+        "ssd" : {
+          "high" : 35,
+          "low" : 31.1,
+          "median" : 34.6,
+          "n" : 3
+        }
+      },
+      "macs" : 3,
+      "offDrainMilliamps" : {
+        "high" : 0,
+        "low" : 0,
+        "median" : 0,
+        "n" : 1
+      }
+    },
+    "Mac14,7" : {
+      "idleRailAmps" : {
+        "ALR" : {
+          "high" : 0,
+          "low" : 0,
+          "median" : 0,
+          "n" : 1
+        },
+        "ARR" : {
+          "high" : 0,
+          "low" : 0,
+          "median" : 0,
+          "n" : 1
+        },
+        "BLR" : {
+          "high" : 0,
+          "low" : 0,
+          "median" : 0,
+          "n" : 1
+        },
+        "CMC" : {
+          "high" : 0,
+          "low" : 0,
+          "median" : 0,
+          "n" : 1
+        },
+        "D0R" : {
+          "high" : 0.004,
+          "low" : 0.004,
+          "median" : 0.004,
+          "n" : 1
+        },
+        "FDC" : {
+          "high" : 0,
+          "low" : 0,
+          "median" : 0,
+          "n" : 1
+        },
+        "IDR" : {
+          "high" : 0,
+          "low" : 0,
+          "median" : 0,
+          "n" : 1
+        },
+        "K2C" : {
+          "high" : 0,
+          "low" : 0,
+          "median" : 0,
+          "n" : 1
+        },
+        "K3C" : {
+          "high" : 0,
+          "low" : 0,
+          "median" : 0,
+          "n" : 1
+        },
+        "KBC" : {
+          "high" : 0,
+          "low" : 0,
+          "median" : 0,
+          "n" : 1
+        },
+        "L3C" : {
+          "high" : 0.187,
+          "low" : 0.187,
+          "median" : 0.187,
+          "n" : 1
+        },
+        "L5C" : {
+          "high" : 0,
+          "low" : 0,
+          "median" : 0,
+          "n" : 1
+        },
+        "MVR" : {
+          "high" : 0.106,
+          "low" : 0.106,
+          "median" : 0.106,
+          "n" : 1
+        },
+        "O3R" : {
+          "high" : 0.078,
+          "low" : 0.078,
+          "median" : 0.078,
+          "n" : 1
+        },
+        "O5R" : {
+          "high" : 0.033,
+          "low" : 0.033,
+          "median" : 0.033,
+          "n" : 1
+        },
+        "P0b" : {
+          "high" : 0.079,
+          "low" : 0.079,
+          "median" : 0.079,
+          "n" : 1
+        },
+        "P0l" : {
+          "high" : 0.006,
+          "low" : 0.006,
+          "median" : 0.006,
+          "n" : 1
+        },
+        "P1b" : {
+          "high" : 0,
+          "low" : 0,
+          "median" : 0,
+          "n" : 1
+        },
+        "P2b" : {
+          "high" : 0,
+          "low" : 0,
+          "median" : 0,
+          "n" : 1
+        },
+        "P3b" : {
+          "high" : 0,
+          "low" : 0,
+          "median" : 0,
+          "n" : 1
+        },
+        "P4b" : {
+          "high" : 0.069,
+          "low" : 0.069,
+          "median" : 0.069,
+          "n" : 1
+        },
+        "P7b" : {
+          "high" : 0.02,
+          "low" : 0.02,
+          "median" : 0.02,
+          "n" : 1
+        },
+        "P7l" : {
+          "high" : 0.003,
+          "low" : 0.003,
+          "median" : 0.003,
+          "n" : 1
+        },
+        "P8l" : {
+          "high" : 0.012,
+          "low" : 0.012,
+          "median" : 0.012,
+          "n" : 1
+        },
+        "P9b" : {
+          "high" : 0.017,
+          "low" : 0.017,
+          "median" : 0.017,
+          "n" : 1
+        },
+        "P9l" : {
+          "high" : 0,
+          "low" : 0,
+          "median" : 0,
+          "n" : 1
+        },
+        "PBR" : {
+          "high" : 0.385,
+          "low" : 0.385,
+          "median" : 0.385,
+          "n" : 1
+        },
+        "PMR" : {
+          "high" : 0.163,
+          "low" : 0.163,
+          "median" : 0.163,
+          "n" : 1
+        },
+        "PSR" : {
+          "high" : 0.039,
+          "low" : 0.039,
+          "median" : 0.039,
+          "n" : 1
+        },
+        "Pal" : {
+          "high" : 0,
+          "low" : 0,
+          "median" : 0,
+          "n" : 1
+        },
+        "Pbb" : {
+          "high" : 0.206,
+          "low" : 0.206,
+          "median" : 0.206,
+          "n" : 1
+        },
+        "Pbl" : {
+          "high" : 0.041,
+          "low" : 0.041,
+          "median" : 0.041,
+          "n" : 1
+        },
+        "Pcl" : {
+          "high" : 0,
+          "low" : 0,
+          "median" : 0,
+          "n" : 1
+        },
+        "Pdb" : {
+          "high" : 0,
+          "low" : 0,
+          "median" : 0,
+          "n" : 1
+        },
+        "Pkl" : {
+          "high" : 0.029,
+          "low" : 0.029,
+          "median" : 0.029,
+          "n" : 1
+        },
+        "R0l" : {
+          "high" : 0.002,
+          "low" : 0.002,
+          "median" : 0.002,
+          "n" : 1
+        },
+        "R4l" : {
+          "high" : 0.017,
+          "low" : 0.017,
+          "median" : 0.017,
+          "n" : 1
+        },
+        "R5b" : {
+          "high" : 0.017,
+          "low" : 0.017,
+          "median" : 0.017,
+          "n" : 1
+        },
+        "R6b" : {
+          "high" : 0.001,
+          "low" : 0.001,
+          "median" : 0.001,
+          "n" : 1
+        },
+        "R8b" : {
+          "high" : 0.028,
+          "low" : 0.028,
+          "median" : 0.028,
+          "n" : 1
+        },
+        "R9l" : {
+          "high" : 0,
+          "low" : 0,
+          "median" : 0,
+          "n" : 1
+        },
+        "Rab" : {
+          "high" : 0,
+          "low" : 0,
+          "median" : 0,
+          "n" : 1
+        },
+        "Ral" : {
+          "high" : 0,
+          "low" : 0,
+          "median" : 0,
+          "n" : 1
+        },
+        "Rcb" : {
+          "high" : 0,
+          "low" : 0,
+          "median" : 0,
+          "n" : 1
+        },
+        "Rcl" : {
+          "high" : 0.033,
+          "low" : 0.033,
+          "median" : 0.033,
+          "n" : 1
+        },
+        "Reb" : {
+          "high" : 0,
+          "low" : 0,
+          "median" : 0,
+          "n" : 1
+        },
+        "T3C" : {
+          "high" : 0,
+          "low" : 0,
+          "median" : 0,
+          "n" : 1
+        },
+        "T5C" : {
+          "high" : 0,
+          "low" : 0,
+          "median" : 0,
+          "n" : 1
+        },
+        "U2C" : {
+          "high" : 0,
+          "low" : 0,
+          "median" : 0,
+          "n" : 1
+        },
+        "U3C" : {
+          "high" : 0,
+          "low" : 0,
+          "median" : 0,
+          "n" : 1
+        },
+        "U5R" : {
+          "high" : 0.126,
+          "low" : 0.126,
+          "median" : 0.126,
+          "n" : 1
+        },
+        "ULR" : {
+          "high" : 0,
+          "low" : 0,
+          "median" : 0,
+          "n" : 1
+        },
+        "W2C" : {
+          "high" : 0,
+          "low" : 0,
+          "median" : 0,
+          "n" : 1
+        },
+        "W3C" : {
+          "high" : 0.06,
+          "low" : 0.06,
+          "median" : 0.06,
+          "n" : 1
+        },
+        "b0f" : {
+          "high" : 0.383,
+          "low" : 0.383,
+          "median" : 0.383,
+          "n" : 1
+        }
+      },
+      "idleTemperature" : {
+        "battery" : {
+          "high" : 26.9,
+          "low" : 26.7,
+          "median" : 26.8,
+          "n" : 2
+        },
+        "chassis" : {
+          "high" : 32.1,
+          "low" : 30.3,
+          "median" : 31.2,
+          "n" : 2
+        },
+        "cpu" : {
+          "high" : 39.2,
+          "low" : 37.2,
+          "median" : 38.2,
+          "n" : 2
+        },
+        "gpu" : {
+          "high" : 36.7,
+          "low" : 35.6,
+          "median" : 36.2,
+          "n" : 2
+        },
+        "other" : {
+          "high" : 40.4,
+          "low" : 37.4,
+          "median" : 38.9,
+          "n" : 2
+        },
+        "ssd" : {
+          "high" : 30.2,
+          "low" : 30.2,
+          "median" : 30.2,
+          "n" : 2
+        }
+      },
+      "loadTemperature" : {
+        "battery" : {
+          "high" : 27.3,
+          "low" : 27.1,
+          "median" : 27.2,
+          "n" : 2
+        },
+        "chassis" : {
+          "high" : 46.1,
+          "low" : 41.8,
+          "median" : 44,
+          "n" : 2
+        },
+        "cpu" : {
+          "high" : 56,
+          "low" : 51.9,
+          "median" : 54,
+          "n" : 2
+        },
+        "gpu" : {
+          "high" : 47.8,
+          "low" : 44.3,
+          "median" : 46.1,
+          "n" : 2
+        },
+        "other" : {
+          "high" : 50,
+          "low" : 45,
+          "median" : 47.5,
+          "n" : 2
+        },
+        "ssd" : {
+          "high" : 35.6,
+          "low" : 33.8,
+          "median" : 34.7,
+          "n" : 2
+        }
+      },
+      "macs" : 2,
+      "offDrainMilliamps" : {
+        "high" : 1,
+        "low" : 0,
+        "median" : 1,
+        "n" : 2
+      }
+    },
+    "Mac14,9" : {
+      "idleRailAmps" : {
+
+      },
+      "idleTemperature" : {
+        "battery" : {
+          "high" : 28.3,
+          "low" : 28.3,
+          "median" : 28.3,
+          "n" : 1
+        },
+        "chassis" : {
+          "high" : 33.8,
+          "low" : 33.8,
+          "median" : 33.8,
+          "n" : 1
+        },
+        "other" : {
+          "high" : 33.9,
+          "low" : 33.9,
+          "median" : 33.9,
+          "n" : 1
+        },
+        "ssd" : {
+          "high" : 29,
+          "low" : 29,
+          "median" : 29,
+          "n" : 1
+        }
+      },
+      "loadTemperature" : {
+        "battery" : {
+          "high" : 28.3,
+          "low" : 28.3,
+          "median" : 28.3,
+          "n" : 1
+        },
+        "chassis" : {
+          "high" : 34.4,
+          "low" : 34.4,
+          "median" : 34.4,
+          "n" : 1
+        },
+        "other" : {
+          "high" : 36,
+          "low" : 36,
+          "median" : 36,
+          "n" : 1
+        },
+        "ssd" : {
+          "high" : 29.1,
+          "low" : 29.1,
+          "median" : 29.1,
+          "n" : 1
+        }
+      },
+      "macs" : 1
+    },
+    "Mac15,12" : {
+      "idleRailAmps" : {
+
+      },
+      "idleTemperature" : {
+        "battery" : {
+          "high" : 26,
+          "low" : 25.6,
+          "median" : 25.8,
+          "n" : 2
+        },
+        "chassis" : {
+          "high" : 29.3,
+          "low" : 28.9,
+          "median" : 29.1,
+          "n" : 2
+        },
+        "cpu" : {
+          "high" : 41.4,
+          "low" : 38.1,
+          "median" : 39.8,
+          "n" : 2
+        },
+        "gpu" : {
+          "high" : 34.2,
+          "low" : 34.2,
+          "median" : 34.2,
+          "n" : 1
+        },
+        "other" : {
+          "high" : 37.8,
+          "low" : 36.3,
+          "median" : 37.1,
+          "n" : 2
+        },
+        "ssd" : {
+          "high" : 30,
+          "low" : 27.9,
+          "median" : 29,
+          "n" : 2
+        }
+      },
+      "loadTemperature" : {
+        "battery" : {
+          "high" : 26.7,
+          "low" : 26.4,
+          "median" : 26.6,
+          "n" : 2
+        },
+        "chassis" : {
+          "high" : 32.9,
+          "low" : 31.1,
+          "median" : 32,
+          "n" : 2
+        },
+        "cpu" : {
+          "high" : 65.5,
+          "low" : 63.5,
+          "median" : 64.5,
+          "n" : 2
+        },
+        "gpu" : {
+          "high" : 55.1,
+          "low" : 55.1,
+          "median" : 55.1,
+          "n" : 1
+        },
+        "other" : {
+          "high" : 50.7,
+          "low" : 48.7,
+          "median" : 49.7,
+          "n" : 2
+        },
+        "ssd" : {
+          "high" : 34,
+          "low" : 33.2,
+          "median" : 33.6,
+          "n" : 2
+        }
+      },
+      "macs" : 2
+    },
+    "Mac15,3" : {
+      "idleRailAmps" : {
+
+      },
+      "idleTemperature" : {
+        "battery" : {
+          "high" : 28.2,
+          "low" : 28.2,
+          "median" : 28.2,
+          "n" : 1
+        },
+        "chassis" : {
+          "high" : 30,
+          "low" : 30,
+          "median" : 30,
+          "n" : 1
+        },
+        "cpu" : {
+          "high" : 46.3,
+          "low" : 46.3,
+          "median" : 46.3,
+          "n" : 1
+        },
+        "gpu" : {
+          "high" : 41,
+          "low" : 41,
+          "median" : 41,
+          "n" : 1
+        },
+        "other" : {
+          "high" : 40.2,
+          "low" : 40.2,
+          "median" : 40.2,
+          "n" : 1
+        },
+        "ssd" : {
+          "high" : 32.1,
+          "low" : 32.1,
+          "median" : 32.1,
+          "n" : 1
+        }
+      },
+      "loadTemperature" : {
+        "battery" : {
+          "high" : 29,
+          "low" : 29,
+          "median" : 29,
+          "n" : 1
+        },
+        "chassis" : {
+          "high" : 30.2,
+          "low" : 30.2,
+          "median" : 30.2,
+          "n" : 1
+        },
+        "cpu" : {
+          "high" : 62.9,
+          "low" : 62.9,
+          "median" : 62.9,
+          "n" : 1
+        },
+        "gpu" : {
+          "high" : 52.5,
+          "low" : 52.5,
+          "median" : 52.5,
+          "n" : 1
+        },
+        "other" : {
+          "high" : 48.2,
+          "low" : 48.2,
+          "median" : 48.2,
+          "n" : 1
+        },
+        "ssd" : {
+          "high" : 32.9,
+          "low" : 32.9,
+          "median" : 32.9,
+          "n" : 1
+        }
+      },
+      "macs" : 1,
+      "offDrainMilliamps" : {
+        "high" : 6,
+        "low" : 6,
+        "median" : 6,
+        "n" : 1
+      }
+    },
+    "Mac16,12" : {
+      "idleRailAmps" : {
+
+      },
+      "idleTemperature" : {
+        "battery" : {
+          "high" : 27.8,
+          "low" : 25.9,
+          "median" : 26.9,
+          "n" : 2
+        },
+        "chassis" : {
+          "high" : 29.6,
+          "low" : 25.6,
+          "median" : 27.6,
+          "n" : 2
+        },
+        "cpu" : {
+          "high" : 41.4,
+          "low" : 41.4,
+          "median" : 41.4,
+          "n" : 1
+        },
+        "gpu" : {
+          "high" : 38.1,
+          "low" : 38.1,
+          "median" : 38.1,
+          "n" : 1
+        },
+        "other" : {
+          "high" : 39.3,
+          "low" : 29.8,
+          "median" : 34.6,
+          "n" : 2
+        },
+        "ssd" : {
+          "high" : 31,
+          "low" : 28,
+          "median" : 29.5,
+          "n" : 2
+        }
+      },
+      "loadTemperature" : {
+        "battery" : {
+          "high" : 30.3,
+          "low" : 26,
+          "median" : 28.2,
+          "n" : 2
+        },
+        "chassis" : {
+          "high" : 37.6,
+          "low" : 26.1,
+          "median" : 31.9,
+          "n" : 2
+        },
+        "cpu" : {
+          "high" : 82.9,
+          "low" : 82.9,
+          "median" : 82.9,
+          "n" : 1
+        },
+        "gpu" : {
+          "high" : 71,
+          "low" : 71,
+          "median" : 71,
+          "n" : 1
+        },
+        "other" : {
+          "high" : 59.4,
+          "low" : 34.5,
+          "median" : 47,
+          "n" : 2
+        },
+        "ssd" : {
+          "high" : 43.1,
+          "low" : 28.7,
+          "median" : 35.9,
+          "n" : 2
+        }
+      },
+      "macs" : 2
+    },
+    "Mac17,3" : {
+      "idleRailAmps" : {
+
+      },
+      "idleTemperature" : {
+        "battery" : {
+          "high" : 25.3,
+          "low" : 25.3,
+          "median" : 25.3,
+          "n" : 1
+        },
+        "chassis" : {
+          "high" : 29,
+          "low" : 29,
+          "median" : 29,
+          "n" : 1
+        },
+        "other" : {
+          "high" : 37.3,
+          "low" : 37.3,
+          "median" : 37.3,
+          "n" : 1
+        },
+        "ssd" : {
+          "high" : 30,
+          "low" : 30,
+          "median" : 30,
+          "n" : 1
+        }
+      },
+      "loadTemperature" : {
+        "battery" : {
+          "high" : 27.6,
+          "low" : 27.6,
+          "median" : 27.6,
+          "n" : 1
+        },
+        "chassis" : {
+          "high" : 33.6,
+          "low" : 33.6,
+          "median" : 33.6,
+          "n" : 1
+        },
+        "other" : {
+          "high" : 62.2,
+          "low" : 62.2,
+          "median" : 62.2,
+          "n" : 1
+        },
+        "ssd" : {
+          "high" : 39.4,
+          "low" : 39.4,
+          "median" : 39.4,
+          "n" : 1
+        }
+      },
+      "macs" : 1
+    },
+    "MacBookAir10,1" : {
+      "idleRailAmps" : {
+
+      },
+      "idleTemperature" : {
+        "battery" : {
+          "high" : 32.7,
+          "low" : 24.6,
+          "median" : 25.3,
+          "n" : 3
+        },
+        "chassis" : {
+          "high" : 32.9,
+          "low" : 26.8,
+          "median" : 27.7,
+          "n" : 3
+        },
+        "cpu" : {
+          "high" : 39.2,
+          "low" : 30.9,
+          "median" : 35,
+          "n" : 3
+        },
+        "gpu" : {
+          "high" : 30.3,
+          "low" : 30,
+          "median" : 30,
+          "n" : 3
+        },
+        "other" : {
+          "high" : 47.7,
+          "low" : 38.8,
+          "median" : 43.3,
+          "n" : 3
+        },
+        "ssd" : {
+          "high" : 38.5,
+          "low" : 31.3,
+          "median" : 32.3,
+          "n" : 3
+        }
+      },
+      "loadTemperature" : {
+        "battery" : {
+          "high" : 33.5,
+          "low" : 24.9,
+          "median" : 25.7,
+          "n" : 3
+        },
+        "chassis" : {
+          "high" : 34.9,
+          "low" : 27.3,
+          "median" : 28.4,
+          "n" : 3
+        },
+        "cpu" : {
+          "high" : 59.1,
+          "low" : 44.1,
+          "median" : 48.2,
+          "n" : 3
+        },
+        "gpu" : {
+          "high" : 30.5,
+          "low" : 30,
+          "median" : 30,
+          "n" : 3
+        },
+        "other" : {
+          "high" : 56,
+          "low" : 44,
+          "median" : 46.4,
+          "n" : 3
+        },
+        "ssd" : {
+          "high" : 44.1,
+          "low" : 32.3,
+          "median" : 34.2,
+          "n" : 3
+        }
+      },
+      "macs" : 3,
+      "offDrainMilliamps" : {
+        "high" : 15,
+        "low" : 15,
+        "median" : 15,
+        "n" : 1
+      }
+    },
+    "MacBookAir6,1" : {
+      "idleDisplayOffW" : {
+        "high" : 5.7,
+        "low" : 5.7,
+        "median" : 5.7,
+        "n" : 1
+      },
+      "idleRailAmps" : {
+        "APC" : {
+          "high" : 0.012,
+          "low" : 0.012,
+          "median" : 0.012,
+          "n" : 1
+        },
+        "BLC" : {
+          "high" : 0.007,
+          "low" : 0.007,
+          "median" : 0.007,
+          "n" : 1
+        },
+        "C0R" : {
+          "high" : 0.259,
+          "low" : 0.259,
+          "median" : 0.259,
+          "n" : 1
+        },
+        "C1C" : {
+          "high" : 0.011,
+          "low" : 0.011,
+          "median" : 0.011,
+          "n" : 1
+        },
+        "CS0" : {
+          "high" : 0.929,
+          "low" : 0.929,
+          "median" : 0.929,
+          "n" : 1
+        },
+        "CS1" : {
+          "high" : 0.047,
+          "low" : 0.047,
+          "median" : 0.047,
+          "n" : 1
+        },
+        "D0R" : {
+          "high" : 0.338,
+          "low" : 0.338,
+          "median" : 0.338,
+          "n" : 1
+        },
+        "LDC" : {
+          "high" : 0,
+          "low" : 0,
+          "median" : 0,
+          "n" : 1
+        },
+        "M0C" : {
+          "high" : 0.871,
+          "low" : 0.871,
+          "median" : 0.871,
+          "n" : 1
+        },
+        "M3C" : {
+          "high" : 0.115,
+          "low" : 0.115,
+          "median" : 0.115,
+          "n" : 1
+        },
+        "O0R" : {
+          "high" : 0.234,
+          "low" : 0.234,
+          "median" : 0.234,
+          "n" : 1
+        },
+        "PBR" : {
+          "high" : 0.253,
+          "low" : 0.253,
+          "median" : 0.253,
+          "n" : 1
+        },
+        "R0C" : {
+          "high" : 0.008,
+          "low" : 0.008,
+          "median" : 0.008,
+          "n" : 1
+        },
+        "R5C" : {
+          "high" : 0,
+          "low" : 0,
+          "median" : 0,
+          "n" : 1
+        },
+        "S2C" : {
+          "high" : 0,
+          "low" : 0,
+          "median" : 0,
+          "n" : 1
+        },
+        "SDC" : {
+          "high" : 0.08,
+          "low" : 0.08,
+          "median" : 0.08,
+          "n" : 1
+        }
+      },
+      "idleTemperature" : {
+        "battery" : {
+          "high" : 28.5,
+          "low" : 28.5,
+          "median" : 28.5,
+          "n" : 1
+        },
+        "chassis" : {
+          "high" : 27.1,
+          "low" : 27.1,
+          "median" : 27.1,
+          "n" : 1
+        },
+        "cpu" : {
+          "high" : 58.9,
+          "low" : 58.9,
+          "median" : 58.9,
+          "n" : 1
+        },
+        "gpu" : {
+          "high" : 53.1,
+          "low" : 53.1,
+          "median" : 53.1,
+          "n" : 1
+        },
+        "other" : {
+          "high" : 47.2,
+          "low" : 47.2,
+          "median" : 47.2,
+          "n" : 1
+        },
+        "ssd" : {
+          "high" : 33.3,
+          "low" : 33.3,
+          "median" : 33.3,
+          "n" : 1
+        }
+      },
+      "loadTemperature" : {
+        "battery" : {
+          "high" : 29.1,
+          "low" : 29.1,
+          "median" : 29.1,
+          "n" : 1
+        },
+        "chassis" : {
+          "high" : 27.1,
+          "low" : 27.1,
+          "median" : 27.1,
+          "n" : 1
+        },
+        "cpu" : {
+          "high" : 75,
+          "low" : 75,
+          "median" : 75,
+          "n" : 1
+        },
+        "gpu" : {
+          "high" : 70.4,
+          "low" : 70.4,
+          "median" : 70.4,
+          "n" : 1
+        },
+        "other" : {
+          "high" : 57.8,
+          "low" : 57.8,
+          "median" : 57.8,
+          "n" : 1
+        },
+        "ssd" : {
+          "high" : 34.2,
+          "low" : 34.2,
+          "median" : 34.2,
+          "n" : 1
+        }
+      },
+      "macs" : 1
+    },
+    "MacBookAir8,2" : {
+      "idleRailAmps" : {
+
+      },
+      "idleTemperature" : {
+
+      },
+      "loadTemperature" : {
+        "battery" : {
+          "high" : 34,
+          "low" : 34,
+          "median" : 34,
+          "n" : 1
+        },
+        "chassis" : {
+          "high" : 27.5,
+          "low" : 27.5,
+          "median" : 27.5,
+          "n" : 1
+        },
+        "cpu" : {
+          "high" : 96.7,
+          "low" : 96.7,
+          "median" : 96.7,
+          "n" : 1
+        },
+        "gpu" : {
+          "high" : 84.6,
+          "low" : 84.6,
+          "median" : 84.6,
+          "n" : 1
+        },
+        "other" : {
+          "high" : 69.4,
+          "low" : 69.4,
+          "median" : 69.4,
+          "n" : 1
+        }
+      },
+      "macs" : 1,
+      "offDrainMilliamps" : {
+        "high" : 19,
+        "low" : 19,
+        "median" : 19,
+        "n" : 1
+      }
+    },
+    "MacBookPro11,3" : {
+      "idleRailAmps" : {
+
+      },
+      "idleTemperature" : {
+
+      },
+      "loadTemperature" : {
+        "battery" : {
+          "high" : 33,
+          "low" : 33,
+          "median" : 33,
+          "n" : 1
+        },
+        "chassis" : {
+          "high" : 26.4,
+          "low" : 26.4,
+          "median" : 26.4,
+          "n" : 1
+        },
+        "cpu" : {
+          "high" : 92.5,
+          "low" : 92.5,
+          "median" : 92.5,
+          "n" : 1
+        },
+        "gpu" : {
+          "high" : 75.5,
+          "low" : 75.5,
+          "median" : 75.5,
+          "n" : 1
+        },
+        "other" : {
+          "high" : 47.7,
+          "low" : 47.7,
+          "median" : 47.7,
+          "n" : 1
+        }
+      },
+      "macs" : 1
+    },
+    "MacBookPro13,2" : {
+      "idleDisplayOffW" : {
+        "high" : 7.2,
+        "low" : 7.2,
+        "median" : 7.2,
+        "n" : 1
+      },
+      "idleRailAmps" : {
+        "18C" : {
+          "high" : 0,
+          "low" : 0,
+          "median" : 0,
+          "n" : 1
+        },
+        "APC" : {
+          "high" : 0,
+          "low" : 0,
+          "median" : 0,
+          "n" : 1
+        },
+        "B0L" : {
+          "high" : 0,
+          "low" : 0,
+          "median" : 0,
+          "n" : 1
+        },
+        "BLR" : {
+          "high" : 0,
+          "low" : 0,
+          "median" : 0,
+          "n" : 1
+        },
+        "BTC" : {
+          "high" : 0,
+          "low" : 0,
+          "median" : 0,
+          "n" : 1
+        },
+        "C0R" : {
+          "high" : 0.08,
+          "low" : 0.08,
+          "median" : 0.08,
+          "n" : 1
+        },
+        "CAC" : {
+          "high" : 0,
+          "low" : 0,
+          "median" : 0,
+          "n" : 1
+        },
+        "CAM" : {
+          "high" : 0,
+          "low" : 0,
+          "median" : 0,
+          "n" : 1
+        },
+        "CEC" : {
+          "high" : 0,
+          "low" : 0,
+          "median" : 0,
+          "n" : 1
+        },
+        "CGC" : {
+          "high" : 0,
+          "low" : 0,
+          "median" : 0,
+          "n" : 1
+        },
+        "CGM" : {
+          "high" : 0,
+          "low" : 0,
+          "median" : 0,
+          "n" : 1
+        },
+        "CMC" : {
+          "high" : 0,
+          "low" : 0,
+          "median" : 0,
+          "n" : 1
+        },
+        "CSC" : {
+          "high" : 0,
+          "low" : 0,
+          "median" : 0,
+          "n" : 1
+        },
+        "D0R" : {
+          "high" : 0.353,
+          "low" : 0.353,
+          "median" : 0.353,
+          "n" : 1
+        },
+        "F3C" : {
+          "high" : 0,
+          "low" : 0,
+          "median" : 0,
+          "n" : 1
+        },
+        "F5C" : {
+          "high" : 0,
+          "low" : 0,
+          "median" : 0,
+          "n" : 1
+        },
+        "HCC" : {
+          "high" : 0,
+          "low" : 0,
+          "median" : 0,
+          "n" : 1
+        },
+        "HNC" : {
+          "high" : 0,
+          "low" : 0,
+          "median" : 0,
+          "n" : 1
+        },
+        "IDC" : {
+          "high" : 0,
+          "low" : 0,
+          "median" : 0,
+          "n" : 1
+        },
+        "KBC" : {
+          "high" : 0,
+          "low" : 0,
+          "median" : 0,
+          "n" : 1
+        },
+        "LDC" : {
+          "high" : 0,
+          "low" : 0,
+          "median" : 0,
+          "n" : 1
+        },
+        "M0C" : {
+          "high" : 0,
+          "low" : 0,
+          "median" : 0,
+          "n" : 1
+        },
+        "M1C" : {
+          "high" : 0,
+          "low" : 0,
+          "median" : 0,
+          "n" : 1
+        },
+        "MCC" : {
+          "high" : 0,
+          "low" : 0,
+          "median" : 0,
+          "n" : 1
+        },
+        "O3R" : {
+          "high" : 0,
+          "low" : 0,
+          "median" : 0,
+          "n" : 1
+        },
+        "O5R" : {
+          "high" : 0,
+          "low" : 0,
+          "median" : 0,
+          "n" : 1
+        },
+        "PBR" : {
+          "high" : 0.138,
+          "low" : 0.138,
+          "median" : 0.138,
+          "n" : 1
+        },
+        "S1C" : {
+          "high" : 0,
+          "low" : 0,
+          "median" : 0,
+          "n" : 1
+        },
+        "SCC" : {
+          "high" : 0,
+          "low" : 0,
+          "median" : 0,
+          "n" : 1
+        },
+        "TAR" : {
+          "high" : 0,
+          "low" : 0,
+          "median" : 0,
+          "n" : 1
+        },
+        "ULC" : {
+          "high" : 0,
+          "low" : 0,
+          "median" : 0,
+          "n" : 1
+        },
+        "URC" : {
+          "high" : 0,
+          "low" : 0,
+          "median" : 0,
+          "n" : 1
+        }
+      },
+      "idleTemperature" : {
+        "battery" : {
+          "high" : 31.8,
+          "low" : 31.8,
+          "median" : 31.8,
+          "n" : 1
+        },
+        "chassis" : {
+          "high" : 28.5,
+          "low" : 28.5,
+          "median" : 28.5,
+          "n" : 1
+        },
+        "cpu" : {
+          "high" : 48.5,
+          "low" : 48.5,
+          "median" : 48.5,
+          "n" : 1
+        },
+        "gpu" : {
+          "high" : 43.3,
+          "low" : 43.3,
+          "median" : 43.3,
+          "n" : 1
+        },
+        "other" : {
+          "high" : 40.4,
+          "low" : 40.4,
+          "median" : 40.4,
+          "n" : 1
+        }
+      },
+      "loadTemperature" : {
+        "battery" : {
+          "high" : 32,
+          "low" : 32,
+          "median" : 32,
+          "n" : 1
+        },
+        "chassis" : {
+          "high" : 28.2,
+          "low" : 28.2,
+          "median" : 28.2,
+          "n" : 1
+        },
+        "cpu" : {
+          "high" : 61,
+          "low" : 61,
+          "median" : 61,
+          "n" : 1
+        },
+        "gpu" : {
+          "high" : 55.1,
+          "low" : 55.1,
+          "median" : 55.1,
+          "n" : 1
+        },
+        "other" : {
+          "high" : 49.9,
+          "low" : 49.9,
+          "median" : 49.9,
+          "n" : 1
+        }
+      },
+      "macs" : 1
+    },
+    "MacBookPro15,1" : {
+      "idleDisplayOffW" : {
+        "high" : 7.5,
+        "low" : 7.5,
+        "median" : 7.5,
+        "n" : 1
+      },
+      "idleRailAmps" : {
+        "A8C" : {
+          "high" : 0,
+          "low" : 0,
+          "median" : 0,
+          "n" : 1
+        },
+        "APC" : {
+          "high" : 0,
+          "low" : 0,
+          "median" : 0,
+          "n" : 1
+        },
+        "BLR" : {
+          "high" : 0,
+          "low" : 0,
+          "median" : 0,
+          "n" : 1
+        },
+        "C0R" : {
+          "high" : 0.182,
+          "low" : 0.182,
+          "median" : 0.182,
+          "n" : 1
+        },
+        "CAC" : {
+          "high" : 0,
+          "low" : 0,
+          "median" : 0,
+          "n" : 1
+        },
+        "CIC" : {
+          "high" : 0,
+          "low" : 0,
+          "median" : 0,
+          "n" : 1
+        },
+        "CSC" : {
+          "high" : 0,
+          "low" : 0,
+          "median" : 0,
+          "n" : 1
+        },
+        "CTC" : {
+          "high" : 0,
+          "low" : 0,
+          "median" : 0,
+          "n" : 1
+        },
+        "D0R" : {
+          "high" : 0,
+          "low" : 0,
+          "median" : 0,
+          "n" : 1
+        },
+        "F3C" : {
+          "high" : 0,
+          "low" : 0,
+          "median" : 0,
+          "n" : 1
+        },
+        "G0C" : {
+          "high" : 0,
+          "low" : 0,
+          "median" : 0,
+          "n" : 1
+        },
+        "G0R" : {
+          "high" : 0.006,
+          "low" : 0.006,
+          "median" : 0.006,
+          "n" : 1
+        },
+        "G1C" : {
+          "high" : 0,
+          "low" : 0,
+          "median" : 0,
+          "n" : 1
+        },
+        "G2C" : {
+          "high" : 0,
+          "low" : 0,
+          "median" : 0,
+          "n" : 1
+        },
+        "G3C" : {
+          "high" : 0,
+          "low" : 0,
+          "median" : 0,
+          "n" : 1
+        },
+        "G4C" : {
+          "high" : 0,
+          "low" : 0,
+          "median" : 0,
+          "n" : 1
+        },
+        "H0C" : {
+          "high" : 0.006,
+          "low" : 0.006,
+          "median" : 0.006,
+          "n" : 1
+        },
+        "H0R" : {
+          "high" : 0.006,
+          "low" : 0.006,
+          "median" : 0.006,
+          "n" : 1
+        },
+        "H1C" : {
+          "high" : 0.004,
+          "low" : 0.004,
+          "median" : 0.004,
+          "n" : 1
+        },
+        "H1R" : {
+          "high" : 0.004,
+          "low" : 0.004,
+          "median" : 0.004,
+          "n" : 1
+        },
+        "LDC" : {
+          "high" : 0,
+          "low" : 0,
+          "median" : 0,
+          "n" : 1
+        },
+        "M0C" : {
+          "high" : 0.235,
+          "low" : 0.235,
+          "median" : 0.235,
+          "n" : 1
+        },
+        "M1C" : {
+          "high" : 0,
+          "low" : 0,
+          "median" : 0,
+          "n" : 1
+        },
+        "MCC" : {
+          "high" : 0,
+          "low" : 0,
+          "median" : 0,
+          "n" : 1
+        },
+        "O5R" : {
+          "high" : 0.077,
+          "low" : 0.077,
+          "median" : 0.077,
+          "n" : 1
+        },
+        "OLR" : {
+          "high" : 0.217,
+          "low" : 0.217,
+          "median" : 0.217,
+          "n" : 1
+        },
+        "ORR" : {
+          "high" : 0.084,
+          "low" : 0.084,
+          "median" : 0.084,
+          "n" : 1
+        },
+        "P0R" : {
+          "high" : 0,
+          "low" : 0,
+          "median" : 0,
+          "n" : 1
+        },
+        "PBR" : {
+          "high" : 0.675,
+          "low" : 0.675,
+          "median" : 0.675,
+          "n" : 1
+        },
+        "S1C" : {
+          "high" : 0,
+          "low" : 0,
+          "median" : 0,
+          "n" : 1
+        },
+        "SLC" : {
+          "high" : 0.158,
+          "low" : 0.158,
+          "median" : 0.158,
+          "n" : 1
+        },
+        "ULC" : {
+          "high" : 0,
+          "low" : 0,
+          "median" : 0,
+          "n" : 1
+        },
+        "URC" : {
+          "high" : 0,
+          "low" : 0,
+          "median" : 0,
+          "n" : 1
+        }
+      },
+      "idleTemperature" : {
+        "battery" : {
+          "high" : 32.2,
+          "low" : 32.2,
+          "median" : 32.2,
+          "n" : 1
+        },
+        "chassis" : {
+          "high" : 31,
+          "low" : 31,
+          "median" : 31,
+          "n" : 1
+        },
+        "cpu" : {
+          "high" : 61.9,
+          "low" : 61.9,
+          "median" : 61.9,
+          "n" : 1
+        },
+        "gpu" : {
+          "high" : 50.8,
+          "low" : 50.8,
+          "median" : 50.8,
+          "n" : 1
+        },
+        "other" : {
+          "high" : 44.5,
+          "low" : 44.5,
+          "median" : 44.5,
+          "n" : 1
+        }
+      },
+      "loadTemperature" : {
+        "battery" : {
+          "high" : 33.8,
+          "low" : 33.8,
+          "median" : 33.8,
+          "n" : 1
+        },
+        "chassis" : {
+          "high" : 30.2,
+          "low" : 30.2,
+          "median" : 30.2,
+          "n" : 1
+        },
+        "cpu" : {
+          "high" : 91.1,
+          "low" : 91.1,
+          "median" : 91.1,
+          "n" : 1
+        },
+        "gpu" : {
+          "high" : 70,
+          "low" : 70,
+          "median" : 70,
+          "n" : 1
+        },
+        "other" : {
+          "high" : 42.5,
+          "low" : 42.5,
+          "median" : 42.5,
+          "n" : 1
+        }
+      },
+      "macs" : 1
+    },
+    "MacBookPro15,2" : {
+      "idleRailAmps" : {
+
+      },
+      "idleTemperature" : {
+        "battery" : {
+          "high" : 28.1,
+          "low" : 28.1,
+          "median" : 28.1,
+          "n" : 1
+        },
+        "chassis" : {
+          "high" : 25.3,
+          "low" : 25.3,
+          "median" : 25.3,
+          "n" : 1
+        },
+        "cpu" : {
+          "high" : 56,
+          "low" : 56,
+          "median" : 56,
+          "n" : 1
+        },
+        "gpu" : {
+          "high" : 46.5,
+          "low" : 46.5,
+          "median" : 46.5,
+          "n" : 1
+        },
+        "other" : {
+          "high" : 43.4,
+          "low" : 43.4,
+          "median" : 43.4,
+          "n" : 1
+        }
+      },
+      "loadTemperature" : {
+        "battery" : {
+          "high" : 29.9,
+          "low" : 29.9,
+          "median" : 29.9,
+          "n" : 1
+        },
+        "chassis" : {
+          "high" : 25.5,
+          "low" : 25.5,
+          "median" : 25.5,
+          "n" : 1
+        },
+        "cpu" : {
+          "high" : 81.9,
+          "low" : 81.9,
+          "median" : 81.9,
+          "n" : 1
+        },
+        "gpu" : {
+          "high" : 69.2,
+          "low" : 69.2,
+          "median" : 69.2,
+          "n" : 1
+        },
+        "other" : {
+          "high" : 64.1,
+          "low" : 64.1,
+          "median" : 64.1,
+          "n" : 1
+        }
+      },
+      "macs" : 1
+    },
+    "MacBookPro18,3" : {
+      "idleRailAmps" : {
+
+      },
+      "idleTemperature" : {
+        "battery" : {
+          "high" : 27.6,
+          "low" : 27.6,
+          "median" : 27.6,
+          "n" : 1
+        },
+        "chassis" : {
+          "high" : 36.5,
+          "low" : 36.5,
+          "median" : 36.5,
+          "n" : 1
+        },
+        "other" : {
+          "high" : 36.8,
+          "low" : 36.8,
+          "median" : 36.8,
+          "n" : 1
+        },
+        "ssd" : {
+          "high" : 31.2,
+          "low" : 31.2,
+          "median" : 31.2,
+          "n" : 1
+        }
+      },
+      "loadTemperature" : {
+        "battery" : {
+          "high" : 27.7,
+          "low" : 27.7,
+          "median" : 27.7,
+          "n" : 1
+        },
+        "chassis" : {
+          "high" : 36.4,
+          "low" : 36.4,
+          "median" : 36.4,
+          "n" : 1
+        },
+        "other" : {
+          "high" : 38.9,
+          "low" : 38.9,
+          "median" : 38.9,
+          "n" : 1
+        },
+        "ssd" : {
+          "high" : 31.1,
+          "low" : 31.1,
+          "median" : 31.1,
+          "n" : 1
+        }
+      },
+      "macs" : 1
+    }
+  },
+  "note" : "Bench values of healthy Macs per model: idle / load temperatures per sensor group (°C), idle power with the display off (W), CPU power under the all-core load (W), cooling (°C per W), idle rail currents (A), drain while shut down (mA). One value per Mac; rebuilt by the lab merge.",
+  "schemaVersion" : 1
+}
