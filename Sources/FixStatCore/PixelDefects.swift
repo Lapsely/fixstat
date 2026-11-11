@@ -97,10 +97,15 @@ public struct PixelDefects: Equatable, Sendable {
         } }
         rows = rows.map { $0 / Double(w) }
         columns = columns.map { $0 / Double(h) }
+        // Plain loop: CI's compiler timed out type-checking the filter closure.
         func odd(_ m: [Double]) -> Int {
-            (1..<(m.count - 1)).filter { i in
-                abs(m[i] - m[i - 1]) > lineMargin && abs(m[i] - m[i + 1]) > lineMargin
-            }.count
+            var count = 0
+            for i in 1..<(m.count - 1) {
+                let before: Double = abs(m[i] - m[i - 1])
+                let after: Double = abs(m[i] - m[i + 1])
+                if before > lineMargin && after > lineMargin { count += 1 }
+            }
+            return count
         }
         return odd(rows) + odd(columns)
     }
