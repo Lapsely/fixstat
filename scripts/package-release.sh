@@ -76,7 +76,12 @@ APPLESCRIPT
 fi
 
 chmod -Rf go-w "/Volumes/$volume" || true
-rm -rf "/Volumes/$volume/.fseventsd"
+# fseventsd may still be writing into its folder (CI): retry, and do not fail the package over it.
+for _ in 1 2 3; do
+    rm -rf "/Volumes/$volume/.fseventsd" 2>/dev/null && break
+    sleep 1
+done
+[ -e "/Volumes/$volume/.fseventsd" ] && echo "warning: .fseventsd could not be removed" >&2
 sync
 hdiutil detach -quiet "/Volumes/$volume"
 rm -f "$out"
