@@ -13,7 +13,9 @@
 > an Intel iMac with macOS 10.13 High Sierra. Intel sensor names are still estimated —
 > reports are welcome.
 >
-> **Download:** `FixStat.dmg` on the [Releases](../../releases/latest) page.
+> **Download:** `FixStat.dmg` on the [Releases](../../releases/latest) page. Download FixStat only from
+> [github.com/Lapsely/fixstat](https://github.com/Lapsely/fixstat/releases) (the project page
+> [lapsely.github.io/fixstat](https://lapsely.github.io/fixstat/) links there): copies offered anywhere else are not ours.
 
 FixStat shows battery, temperature, fan and system data in the menu bar — with
 sensor names that were verified per Mac model, and a technician mode with the raw
@@ -167,6 +169,10 @@ FixStat and pick a language. Numbers and units follow your region settings.
   `~/Library/Application Support/FixStat/`; reports are only created when you export them.
 - **Serial numbers** are masked in every output and export, unless you turn on
   "Show full serial numbers in reports" in Settings (off by default).
+- **Official download only.** FixStat is published only at
+  [github.com/Lapsely/fixstat/releases](https://github.com/Lapsely/fixstat/releases). It is not notarized yet, so macOS
+  cannot vouch for a copy: do not install a FixStat from another site, a forum attachment or a file someone sent you.
+  The update notice in FixStat only links to that page.
 
 ## Acknowledgements
 

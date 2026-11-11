@@ -13,7 +13,9 @@
 > High Sierra yüklü bir Intel iMac'te test edildi. Intel'de sensör isimleri hâlâ tahminidir —
 > geri bildirimlerinizi bekliyoruz.
 >
-> **İndirme:** [Releases](../../releases/latest) sayfasındaki `FixStat.dmg`.
+> **İndirme:** [Releases](../../releases/latest) sayfasındaki `FixStat.dmg`. FixStat'ı yalnızca
+> [github.com/Lapsely/fixstat](https://github.com/Lapsely/fixstat/releases) adresinden indirin (proje sayfası
+> [lapsely.github.io/fixstat](https://lapsely.github.io/fixstat/) oraya yönlendirir): başka yerde sunulan kopyalar bizim değildir.
 
 FixStat batarya, sıcaklık, fan ve sistem verilerini menü çubuğunda gösterir. Sensör
 isimleri Mac modeline göre doğrulanmıştır. Teknisyen modu, normalde `ioreg` içinden
@@ -174,6 +176,10 @@ biçimleri bölge ayarınızı izler.
   yalnızca siz dışa aktardığınızda oluşturulur.
 - **Seri numaraları** her çıktıda ve dışa aktarmada maskelenir; Ayarlar'da "Raporlarda seri
   numaralarını tam göster" açılırsa raporlarda tam görünür (varsayılan kapalı).
+- **Yalnızca resmî indirme.** FixStat yalnızca [github.com/Lapsely/fixstat/releases](https://github.com/Lapsely/fixstat/releases)
+  adresinde yayınlanır. Henüz notarize edilmediği için macOS bir kopyanın doğruluğunu garanti edemez: başka bir siteden,
+  forum ekinden ya da birinin gönderdiği dosyadan FixStat kurmayın. FixStat'taki güncelleme bildirimi yalnızca o sayfaya
+  bağlantı verir.
 
 ## Teşekkür
 
