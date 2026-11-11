@@ -132,9 +132,15 @@ public enum ThermalHistoryText {
         if h.episodes.isEmpty, h.emergencySleeps.isEmpty { return L("none in the last %lld days", h.days) }
         var parts: [String] = []
         if !h.episodes.isEmpty {
-            parts.append(L("%1$lld times, %2$@ heavy or worse", h.episodes.count, Format.duration(h.heavySeconds)))
+            let heavy = Format.duration(h.heavySeconds)
+            parts.append(h.episodes.count == 1 ? L("once, %@ heavy or worse", heavy)
+                         : L("%1$lld times, %2$@ heavy or worse", h.episodes.count, heavy))
         }
-        if !h.emergencySleeps.isEmpty { parts.append(L("%lld sleeps forced by heat", h.emergencySleeps.count)) }
+        if h.emergencySleeps.count == 1 {
+            parts.append(L("1 sleep forced by heat"))
+        } else if !h.emergencySleeps.isEmpty {
+            parts.append(L("%lld sleeps forced by heat", h.emergencySleeps.count))
+        }
         return parts.joined(separator: " · ")
     }
 

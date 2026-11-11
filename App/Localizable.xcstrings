@@ -946,6 +946,16 @@
         }
       }
     },
+    "1 sleep forced by heat" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ısı yüzünden 1 zorunlu uyku"
+          }
+        }
+      }
+    },
     "2 per second" : {
       "localizations" : {
         "tr" : {
@@ -11344,6 +11354,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "açık"
+          }
+        }
+      }
+    },
+    "once, %@ heavy or worse" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "1 kez, %@ ağır ya da daha kötü"
           }
         }
       }

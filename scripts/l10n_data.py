@@ -532,6 +532,8 @@ TR = {
     "none in the last %lld days": "son %lld günde yok",
     "%1$lld times, %2$@ heavy or worse": "%1$lld kez, %2$@ ağır ya da daha kötü",
     "%lld sleeps forced by heat": "ısı yüzünden %lld zorunlu uyku",
+    "once, %@ heavy or worse": "1 kez, %@ ağır ya da daha kötü",
+    "1 sleep forced by heat": "ısı yüzünden 1 zorunlu uyku",
     "peak: %@": "en yüksek: %@",
     "How often macOS slowed this Mac down because of heat, from the system log (kept for a few days to weeks). Repeated heavy pressure at light use points to the cooling: dust, the fan, dried thermal paste or a blocked vent; a forced sleep often means the Mac was closed in a bag while awake.":
         "macOS'un bu Mac'i ısı yüzünden ne sıklıkla yavaşlattığı, sistem kaydından (birkaç gün ile birkaç hafta tutulur). Hafif kullanımda tekrarlayan ağır basınç soğutmaya işaret eder: toz, fan, kurumuş termal macun ya da tıkalı bir hava çıkışı; zorunlu uyku çoğu zaman Mac'in uyanıkken çantada kapalı kaldığını gösterir.",
