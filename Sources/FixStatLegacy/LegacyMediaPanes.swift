@@ -7,16 +7,46 @@ import FixStatCore
 
 final class LegacySpeakerPane: BlockPane {
     private let player = TonePlayer()
+    private let loopback = SpeakerLoopback()
     private var device = AudioDevice.defaultDevice(input: false)
     private var played: Set<TonePlayer.Tone> = []
 
     override init(core: MonitorCore) {
         super.init(core: core)
         player.onChange = { [weak self] in self?.refresh() }
+        loopback.onChange = { [weak self] in
+            guard let self else { return }
+            if loopback.state == .finished, let result = loopback.result {
+                let failed = !result.findings.isEmpty
+                core.recordCheck(.speakers, detail: LoopbackText.summary(result), passed: !failed, failed: failed)
+            }
+            refresh()
+        }
     }
 
     override func deactivate() {
         player.stop()
+        loopback.stop()
+    }
+
+    /// The automatic check: tones on each speaker, heard by the built-in microphone.
+    private func loopbackBlocks() -> [Block] {
+        var blocks: [Block] = [.headline(L("Automatic check"), nil), .secondary(LoopbackText.explanation)]
+        let running = loopback.state == .running
+        let button = ActionButton(title: L("Listen to the speakers")) { [unowned self] in
+            player.stop()
+            loopback.start()
+        }
+        button.isEnabled = !running
+        blocks.append(.view(hStack([button, makeSpacer()])))
+        if running { blocks.append(.progress(L("Listening…"))) }
+        if case let .failed(message) = loopback.state { blocks.append(.status(message, .bad)) }
+        if let result = loopback.result {
+            blocks.append(.rows(LoopbackText.rows(result).map { DocRow(title: $0.0, value: $0.1) }, labelWidth: nil))
+            if result.findings.isEmpty { blocks.append(.status(LoopbackText.summary(result), .good)) }
+            for finding in result.findings { blocks.append(.status(LoopbackText.finding(finding), .bad)) }
+        }
+        return blocks
     }
 
     override func blocks() -> [Block] {
@@ -43,7 +73,7 @@ final class LegacySpeakerPane: BlockPane {
             buttons.append(ActionButton(title: L("Stop")) { [unowned self] in player.stop() })
         }
         blocks.append(.view(hStack(buttons + [makeSpacer()], spacing: 10)))
-        return blocks
+        return blocks + loopbackBlocks()
     }
 
     private func play(_ tone: TonePlayer.Tone) {
@@ -141,6 +171,8 @@ final class LegacyCameraPane: BlockPane {
     private let preview = CameraPreviewView()
     private var lastSecond = -1
     private var started = false
+    private var defects = PixelDefects()
+    private var measuring = false
 
     override init(core: MonitorCore) {
         super.init(core: core)
@@ -186,8 +218,41 @@ final class LegacyCameraPane: BlockPane {
                 if camera.looksBlack {
                     blocks.append(.status(L("The image is black. Check that nothing covers the camera; otherwise suspect the camera or its cable."), .bad))
                 }
+                blocks += pixelBlocks()
             }
             return blocks
+        }
+    }
+}
+
+extension LegacyCameraPane {
+    /// The pixel test: an averaged frame with the lens covered, then on a bright surface.
+    fileprivate func pixelBlocks() -> [Block] {
+        var blocks: [Block] = [.secondary(PixelText.explanation)]
+        let dark = ActionButton(title: L("Measure with the lens covered")) { [unowned self] in measure(dark: true) }
+        let bright = ActionButton(title: L("Measure on a bright surface")) { [unowned self] in measure(dark: false) }
+        dark.isEnabled = !measuring
+        bright.isEnabled = !measuring
+        blocks.append(.view(hStack([dark, bright, makeSpacer()])))
+        let rows = PixelText.rows(defects)
+        if !rows.isEmpty { blocks.append(.rows(rows.map { DocRow(title: $0.0, value: $0.1) }, labelWidth: nil)) }
+        for finding in PixelText.findings(defects) { blocks.append(.status(finding, .bad)) }
+        return blocks
+    }
+
+    fileprivate func measure(dark: Bool) {
+        measuring = true
+        refresh()
+        camera.captureAverage { [weak self] frame in
+            guard let self else { return }
+            measuring = false
+            if let frame {
+                if dark { defects.analyzeDark(frame) } else { defects.analyzeBright(frame) }
+                let detail = [camera.detail, PixelText.summary(defects)].compactMap { $0 }.joined(separator: " · ")
+                core.recordCheck(.camera, detail: detail, passed: defects.darkValid && defects.brightValid && !defects.problem,
+                                 failed: defects.problem)
+            }
+            refresh()
         }
     }
 }

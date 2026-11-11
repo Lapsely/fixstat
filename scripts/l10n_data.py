@@ -499,6 +499,49 @@ TR = {
     "Lifetime record identical to the one clone gauges ship with: the gauge does not keep its own history":
         "Ömür kaydı klon gauge'ların fabrikadan geldiği kayıtla birebir aynı: gauge kendi geçmişini tutmuyor",
     "%@ per cell": "hücre başına %@",
+    "Choose the built-in speakers as the sound output (headphones or an external device is selected).":
+        "Ses çıkışı olarak dahili hoparlörleri seçin (kulaklık ya da harici bir aygıt seçili).",
+    "Choose the built-in microphone as the sound input.": "Ses girişi olarak dahili mikrofonu seçin.",
+    "Turn the volume up to at least half and unmute the Mac.": "Sesi en az yarıya açın ve Mac'i sessizden çıkarın.",
+    "FixStat may not use the microphone: allow it under Privacy & Security › Microphone.":
+        "FixStat mikrofonu kullanamıyor: Gizlilik ve Güvenlik › Mikrofon altında izin verin.",
+    "The microphone delivers no sound.": "Mikrofondan ses gelmiyor.",
+    "The microphone could not be started.": "Mikrofon başlatılamadı.",
+    "The tones could not be played.": "Sesler çalınamadı.",
+    "Plays tones on each speaker and listens with the built-in microphone: a silent speaker, one far quieter than the other or one that distorts (rattle, torn cone) shows without listening by ear. Keep the room quiet and the lid open; about 6 s.":
+        "Her hoparlörde sesler çalar ve dahili mikrofonla dinler: ses vermeyen, diğerinden çok daha kısık ya da bozuk ses veren (cızırtı, yırtık zar) hoparlör kulakla dinlemeden ortaya çıkar. Ortam sessiz, kapak açık olsun; yaklaşık 6 sn.",
+    "%1$@ … %2$@ above the room": "ortamın %1$@ … %2$@ üstünde",
+    "harmonics %@": "harmonikler %@",
+    "Left speaker": "Sol hoparlör",
+    "Right speaker": "Sağ hoparlör",
+    "The microphone did not hear the left speaker: the speaker, its cable or the amplifier.":
+        "Mikrofon sol hoparlörü duymadı: hoparlör, kablosu ya da amfi.",
+    "The microphone did not hear the right speaker: the speaker, its cable or the amplifier.":
+        "Mikrofon sağ hoparlörü duymadı: hoparlör, kablosu ya da amfi.",
+    "The %1$@ speaker is %2$@ quieter than the other: a weak or blocked speaker.":
+        "%1$@ hoparlör diğerinden %2$@ daha kısık: zayıf ya da tıkalı bir hoparlör.",
+    "The %1$@ speaker distorts (harmonics %2$@): listen for a rattle or buzz, a torn cone or a loose part.":
+        "%1$@ hoparlör bozuk ses veriyor (harmonikler %2$@): cızırtı ya da vızıltı, yırtık zar veya gevşek parça için dinleyin.",
+    "Both speakers heard clearly by the microphone": "Mikrofon iki hoparlörü de net duydu",
+    "Automatic check": "Otomatik kontrol",
+    "Listen to the speakers": "Hoparlörleri dinle",
+    "Listening…": "Dinleniyor…",
+    "Pixel test: cover the lens completely (a finger or tape) and measure, then fill the picture with a plain bright surface (white paper, a white wall) and measure. Hot pixels stay bright in the dark, dead pixels dark on the bright surface; a bright or dark line points to the sensor or its cable.":
+        "Piksel testi: lensi tamamen kapatıp (parmak ya da bant) ölçün, sonra görüntüyü düz, parlak bir yüzeyle (beyaz kâğıt, beyaz duvar) doldurup ölçün. Sıcak pikseller karanlıkta parlak, ölü pikseller parlak yüzeyde karanlık kalır; parlak ya da karanlık bir çizgi sensöre ya da kablosuna işaret eder.",
+    "Lens covered": "Lens kapalı",
+    "%lld hot pixels": "%lld sıcak piksel",
+    "not dark enough: cover the lens completely": "yeterince karanlık değil: lensi tamamen kapatın",
+    "Bright surface": "Parlak yüzey",
+    "%1$lld dead pixels · %2$lld spots (dust or smudge on the lens)": "%1$lld ölü piksel · %2$lld leke (lenste toz ya da leke)",
+    "not bright enough: use a brighter, plain surface": "yeterince parlak değil: daha parlak, düz bir yüzey kullanın",
+    "Line defects": "Çizgi hataları",
+    "%lld hot pixels: the camera sensor is faulty.": "%lld sıcak piksel: kamera sensörü arızalı.",
+    "%lld dead pixels: the camera sensor is faulty (or a speck on the lens).": "%lld ölü piksel: kamera sensörü arızalı (ya da lenste bir zerre).",
+    "%lld lines differ from their neighbours: the camera sensor or its cable.": "%lld çizgi komşularından farklı: kamera sensörü ya da kablosu.",
+    "Spots on the picture: clean the lens and the glass in front of it.": "Görüntüde lekeler var: lensi ve önündeki camı temizleyin.",
+    "%1$lld hot, %2$lld dead pixels, %3$lld line defects": "%1$lld sıcak, %2$lld ölü piksel, %3$lld çizgi hatası",
+    "Measure with the lens covered": "Lens kapalıyken ölç",
+    "Measure on a bright surface": "Parlak yüzeyde ölç",
     "Pairing and parts": "Eşleşme ve parçalar",
     "Lid angle sensor": "Kapak açısı sensörü",
     "Works (fingerprints enrolled)": "Çalışıyor (parmak izi kayıtlı)",

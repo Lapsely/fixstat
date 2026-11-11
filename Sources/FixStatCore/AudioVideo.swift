@@ -375,15 +375,106 @@ public final class CameraCapture: @unchecked Sendable {
 
     /// Black image after a second of frames: covered lens, camera or cable.
     public var looksBlack: Bool { frames > 30 && (brightness ?? 1) < 0.03 }
+
+    /// Averages the luma (Y) plane of the next `frames` frames at full resolution, for the
+    /// pixel test; `completion` runs on the main thread (nil if no frame arrived).
+    public func captureAverage(frames: Int = 8, completion: @escaping (LumaFrame?) -> Void) {
+        sampler.requestAverage(frames: frames) { frame in
+            DispatchQueue.main.async { completion(frame) }
+        }
+        // No frame within 5 s: the session is not running.
+        DispatchQueue.main.asyncAfter(deadline: .now() + 5) { [weak self] in
+            self?.sampler.cancelAverage { frame in completion(frame) }
+        }
+    }
+}
+
+/// One luma plane, 0 … 255 per pixel (row major).
+public struct LumaFrame: Equatable, Sendable {
+    public let width: Int
+    public let height: Int
+    public let values: [UInt8]
+
+    public init(width: Int, height: Int, values: [UInt8]) {
+        self.width = width
+        self.height = height
+        self.values = values
+    }
 }
 
 /// Counts frames and measures the average luma of every 15th frame (Y plane, sparse).
 private final class FrameSampler: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate, @unchecked Sendable {
     var onFrame: ((Int, Double?) -> Void)?
     private var count = 0
+    private let lock = NSLock()
+    private var averageWanted = 0
+    private var averageDone: ((LumaFrame?) -> Void)?
+    private var sums: [UInt32] = []
+    private var summed = 0
+    private var size = (width: 0, height: 0)
+
+    func requestAverage(frames: Int, completion: @escaping (LumaFrame?) -> Void) {
+        lock.lock()
+        averageWanted = frames
+        averageDone = completion
+        sums = []
+        summed = 0
+        lock.unlock()
+    }
+
+    /// Ends a pending request with what was summed so far (nil if nothing).
+    func cancelAverage(_ fallback: @escaping (LumaFrame?) -> Void) {
+        lock.lock()
+        guard averageDone != nil else { lock.unlock(); return }
+        let frame = summed > 0 ? averaged() : nil
+        averageDone = nil
+        averageWanted = 0
+        lock.unlock()
+        fallback(frame)
+    }
+
+    private func averaged() -> LumaFrame {
+        LumaFrame(width: size.width, height: size.height, values: sums.map { UInt8(min(255, $0 / UInt32(max(summed, 1)))) })
+    }
+
+    /// Adds a frame's full Y plane to the running sum while an average is wanted.
+    private func accumulate(_ pixels: CVPixelBuffer) {
+        lock.lock()
+        defer { lock.unlock() }
+        guard averageWanted > 0, let base = CVPixelBufferGetBaseAddressOfPlane(pixels, 0) else { return }
+        let width = CVPixelBufferGetWidthOfPlane(pixels, 0)
+        let height = CVPixelBufferGetHeightOfPlane(pixels, 0)
+        let stride = CVPixelBufferGetBytesPerRowOfPlane(pixels, 0)
+        if sums.count != width * height {
+            sums = [UInt32](repeating: 0, count: width * height)
+            summed = 0
+            size = (width, height)
+        }
+        let bytes = base.assumingMemoryBound(to: UInt8.self)
+        for y in 0..<height {
+            let row = y * stride, out = y * width
+            for x in 0..<width { sums[out + x] += UInt32(bytes[row + x]) }
+        }
+        summed += 1
+        if summed >= averageWanted {
+            let frame = averaged()
+            let done = averageDone
+            averageDone = nil
+            averageWanted = 0
+            done?(frame)
+        }
+    }
 
     func captureOutput(_ output: AVCaptureOutput, didOutput sampleBuffer: CMSampleBuffer, from connection: AVCaptureConnection) {
         count += 1
+        lock.lock()
+        let wanted = averageWanted > 0
+        lock.unlock()
+        if wanted, let pixels = CoreMediaFunctions.imageBuffer(sampleBuffer) {
+            CVPixelBufferLockBaseAddress(pixels, .readOnly)
+            accumulate(pixels)
+            CVPixelBufferUnlockBaseAddress(pixels, .readOnly)
+        }
         guard count % 15 == 1, let pixels = CoreMediaFunctions.imageBuffer(sampleBuffer) else {
             if count % 15 == 0 { onFrame?(count, nil) }
             return

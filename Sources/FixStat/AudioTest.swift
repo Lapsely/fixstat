@@ -12,6 +12,7 @@ struct SpeakerTestView: View {
     @State private var generator = ToneGenerator()
     @State private var device = AudioDevice.defaultDevice(input: false)
     @State private var played: Set<ToneGenerator.Tone> = []
+    @State private var loopback = LoopbackModel()
 
     var body: some View {
         VStack(alignment: .leading, spacing: 12) {
@@ -25,8 +26,52 @@ struct SpeakerTestView: View {
                     Button("Stop") { generator.stop() }
                 }
             }
+            Divider()
+            loopbackSection
         }
-        .onDisappear { generator.stop() }
+        .onDisappear {
+            generator.stop()
+            loopback.stop()
+        }
+    }
+
+    @ViewBuilder
+    private var loopbackSection: some View {
+        Text("Automatic check").font(.headline)
+        Text(verbatim: LoopbackText.explanation)
+            .font(.callout).foregroundStyle(.secondary)
+            .fixedSize(horizontal: false, vertical: true)
+        HStack {
+            Button("Listen to the speakers") {
+                generator.stop()
+                loopback.start { result in
+                    monitor.recordCheck(.speakers, detail: LoopbackText.summary(result),
+                                        passed: result.findings.isEmpty, failed: !result.findings.isEmpty)
+                }
+            }
+            .disabled(loopback.running)
+            if loopback.running { ProgressView().controlSize(.small) }
+        }
+        if let failure = loopback.failure {
+            Label(failure, systemImage: "exclamationmark.triangle.fill").foregroundStyle(TemperatureColor.hot)
+        }
+        if let result = loopback.result {
+            ForEach(Array(LoopbackText.rows(result).enumerated()), id: \.offset) { _, row in
+                HStack(alignment: .firstTextBaseline) {
+                    Text(verbatim: row.0).frame(width: 130, alignment: .leading)
+                    Text(verbatim: row.1)
+                }
+                .font(.callout)
+            }
+            if result.findings.isEmpty {
+                Label(LoopbackText.summary(result), systemImage: "checkmark.circle").foregroundStyle(TemperatureColor.cool)
+            }
+            ForEach(Array(result.findings.enumerated()), id: \.offset) { _, finding in
+                Label(LoopbackText.finding(finding), systemImage: "exclamationmark.triangle.fill")
+                    .foregroundStyle(TemperatureColor.hot)
+                    .fixedSize(horizontal: false, vertical: true)
+            }
+        }
     }
 
     @ViewBuilder
@@ -88,6 +133,41 @@ final class ToneGenerator {
     static func name(_ tone: Tone) -> String { TonePlayer.name(tone) }
     func play(_ tone: Tone) { player.play(tone) }
     func stop() { player.stop() }
+}
+
+/// SwiftUI view of the core `SpeakerLoopback`.
+@available(macOS 14.0, *)
+@MainActor
+@Observable
+final class LoopbackModel {
+    private(set) var running = false
+    private(set) var result: LoopbackResult?
+    private(set) var failure: String?
+    @ObservationIgnored private let loopback = SpeakerLoopback()
+    @ObservationIgnored private var done: ((LoopbackResult) -> Void)?
+
+    init() {
+        loopback.onChange = { [weak self] in
+            MainActor.assumeIsolated { self?.sync() }
+        }
+    }
+
+    func start(done: @escaping (LoopbackResult) -> Void) {
+        self.done = done
+        failure = nil
+        loopback.start()
+    }
+
+    func stop() { loopback.stop() }
+
+    private func sync() {
+        running = loopback.state == .running
+        if case let .failed(message) = loopback.state { failure = message }
+        if loopback.state == .finished, let result = loopback.result, result != self.result {
+            self.result = result
+            done?(result)
+        }
+    }
 }
 
 // MARK: - Microphone

@@ -91,6 +91,16 @@
         }
       }
     },
+    "%1$@ … %2$@ above the room" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ortamın %1$@ … %2$@ üstünde"
+          }
+        }
+      }
+    },
     "%1$@, below %2$@: over-discharged" : {
       "localizations" : {
         "tr" : {
@@ -117,6 +127,26 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "%1$@: şarj sırasında port kontrolcüsü %2$lld hata saydı (hard reset, kısa devre algılama, giriş anahtarı): portu, kabloyu ve port kontrolcüsünü kontrol edin."
+          }
+        }
+      }
+    },
+    "%1$lld dead pixels · %2$lld spots (dust or smudge on the lens)" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%1$lld ölü piksel · %2$lld leke (lenste toz ya da leke)"
+          }
+        }
+      }
+    },
+    "%1$lld hot, %2$lld dead pixels, %3$lld line defects" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%1$lld sıcak, %2$lld ölü piksel, %3$lld çizgi hatası"
           }
         }
       }
@@ -655,12 +685,52 @@
         }
       }
     },
+    "%lld dead pixels: the camera sensor is faulty (or a speck on the lens)." : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld ölü piksel: kamera sensörü arızalı (ya da lenste bir zerre)."
+          }
+        }
+      }
+    },
     "%lld devices nearby" : {
       "localizations" : {
         "tr" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "yakında %lld cihaz"
+          }
+        }
+      }
+    },
+    "%lld hot pixels" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld sıcak piksel"
+          }
+        }
+      }
+    },
+    "%lld hot pixels: the camera sensor is faulty." : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld sıcak piksel: kamera sensörü arızalı."
+          }
+        }
+      }
+    },
+    "%lld lines differ from their neighbours: the camera sensor or its cable." : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld çizgi komşularından farklı: kamera sensörü ya da kablosu."
           }
         }
       }
@@ -1314,6 +1384,16 @@
         }
       }
     },
+    "Automatic check" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Otomatik kontrol"
+          }
+        }
+      }
+    },
     "Available reserved space" : {
       "localizations" : {
         "tr" : {
@@ -1748,6 +1828,26 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "İkisi"
+          }
+        }
+      }
+    },
+    "Both speakers heard clearly by the microphone" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mikrofon iki hoparlörü de net duydu"
+          }
+        }
+      }
+    },
+    "Bright surface" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Parlak yüzey"
           }
         }
       }
@@ -2384,6 +2484,26 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Yonga"
+          }
+        }
+      }
+    },
+    "Choose the built-in microphone as the sound input." : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ses girişi olarak dahili mikrofonu seçin."
+          }
+        }
+      }
+    },
+    "Choose the built-in speakers as the sound output (headphones or an external device is selected)." : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ses çıkışı olarak dahili hoparlörleri seçin (kulaklık ya da harici bir aygıt seçili)."
           }
         }
       }
@@ -3538,6 +3658,16 @@
         }
       }
     },
+    "FixStat may not use the microphone: allow it under Privacy & Security › Microphone." : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "FixStat mikrofonu kullanamıyor: Gizlilik ve Güvenlik › Mikrofon altında izin verin."
+          }
+        }
+      }
+    },
     "FixStat needs Full Disk Access" : {
       "localizations" : {
         "tr" : {
@@ -4560,6 +4690,26 @@
         }
       }
     },
+    "Left speaker" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sol hoparlör"
+          }
+        }
+      }
+    },
+    "Lens covered" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Lens kapalı"
+          }
+        }
+      }
+    },
     "Less" : {
       "localizations" : {
         "tr" : {
@@ -4756,12 +4906,42 @@
         }
       }
     },
+    "Line defects" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Çizgi hataları"
+          }
+        }
+      }
+    },
     "Link" : {
       "localizations" : {
         "tr" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Bağlantı"
+          }
+        }
+      }
+    },
+    "Listen to the speakers" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hoparlörleri dinle"
+          }
+        }
+      }
+    },
+    "Listening…" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dinleniyor…"
           }
         }
       }
@@ -5058,6 +5238,26 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Boşta gücü ölç (ekran kapalı, yaklaşık 2 dk)"
+          }
+        }
+      }
+    },
+    "Measure on a bright surface" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Parlak yüzeyde ölç"
+          }
+        }
+      }
+    },
+    "Measure with the lens covered" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Lens kapalıyken ölç"
           }
         }
       }
@@ -6428,6 +6628,16 @@
         }
       }
     },
+    "Pixel test: cover the lens completely (a finger or tape) and measure, then fill the picture with a plain bright surface (white paper, a white wall) and measure. Hot pixels stay bright in the dark, dead pixels dark on the bright surface; a bright or dark line points to the sensor or its cable." : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Piksel testi: lensi tamamen kapatıp (parmak ya da bant) ölçün, sonra görüntüyü düz, parlak bir yüzeyle (beyaz kâğıt, beyaz duvar) doldurup ölçün. Sıcak pikseller karanlıkta parlak, ölü pikseller parlak yüzeyde karanlık kalır; parlak ya da karanlık bir çizgi sensöre ya da kablosuna işaret eder."
+          }
+        }
+      }
+    },
     "Play back" : {
       "localizations" : {
         "tr" : {
@@ -6444,6 +6654,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Sol ve sağ hoparlörde test sesi çalar. Tarama sesi pesten tize ilerler ve cızırdayan veya bozuk hoparlörleri ortaya çıkarır."
+          }
+        }
+      }
+    },
+    "Plays tones on each speaker and listens with the built-in microphone: a silent speaker, one far quieter than the other or one that distorts (rattle, torn cone) shows without listening by ear. Keep the room quiet and the lid open; about 6 s." : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Her hoparlörde sesler çalar ve dahili mikrofonla dinler: ses vermeyen, diğerinden çok daha kısık ya da bozuk ses veren (cızırtı, yırtık zar) hoparlör kulakla dinlemeden ortaya çıkar. Ortam sessiz, kapak açık olsun; yaklaşık 6 sn."
           }
         }
       }
@@ -7296,6 +7516,16 @@
         }
       }
     },
+    "Right speaker" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sağ hoparlör"
+          }
+        }
+      }
+    },
     "Rough guide until reference values per model exist: asleep below %@, shut down below %@ is normal. Only sleeps and shutdowns of at least an hour on battery count, and a verdict needs at least %@ lost or %@ measured." : {
       "localizations" : {
         "en" : {
@@ -8068,6 +8298,16 @@
         }
       }
     },
+    "Spots on the picture: clean the lens and the glass in front of it." : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Görüntüde lekeler var: lensi ve önündeki camı temizleyin."
+          }
+        }
+      }
+    },
     "Spread %@ · balanced" : {
       "localizations" : {
         "tr" : {
@@ -8500,6 +8740,26 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Test edilen: "
+          }
+        }
+      }
+    },
+    "The %1$@ speaker distorts (harmonics %2$@): listen for a rattle or buzz, a torn cone or a loose part." : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%1$@ hoparlör bozuk ses veriyor (harmonikler %2$@): cızırtı ya da vızıltı, yırtık zar veya gevşek parça için dinleyin."
+          }
+        }
+      }
+    },
+    "The %1$@ speaker is %2$@ quieter than the other: a weak or blocked speaker." : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%1$@ hoparlör diğerinden %2$@ daha kısık: zayıf ya da tıkalı bir hoparlör."
           }
         }
       }
@@ -8956,6 +9216,46 @@
         }
       }
     },
+    "The microphone could not be started." : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mikrofon başlatılamadı."
+          }
+        }
+      }
+    },
+    "The microphone delivers no sound." : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mikrofondan ses gelmiyor."
+          }
+        }
+      }
+    },
+    "The microphone did not hear the left speaker: the speaker, its cable or the amplifier." : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mikrofon sol hoparlörü duymadı: hoparlör, kablosu ya da amfi."
+          }
+        }
+      }
+    },
+    "The microphone did not hear the right speaker: the speaker, its cable or the amplifier." : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mikrofon sağ hoparlörü duymadı: hoparlör, kablosu ya da amfi."
+          }
+        }
+      }
+    },
     "The pack spent %@ of its life at a high charge: it was mostly kept on the adapter, which ages a battery faster. Optimized Battery Charging or a charge limit (Battery settings) helps." : {
       "localizations" : {
         "tr" : {
@@ -9022,6 +9322,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Bu Mac'te adaptör takılıyken sistem gücü okunamıyor: güç adaptörünü çıkarıp yeniden başlatın."
+          }
+        }
+      }
+    },
+    "The tones could not be played." : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sesler çalınamadı."
           }
         }
       }
@@ -9372,6 +9682,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Tekrar dene"
+          }
+        }
+      }
+    },
+    "Turn the volume up to at least half and unmute the Mac." : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sesi en az yarıya açın ve Mac'i sessizden çıkarın."
           }
         }
       }
@@ -10428,6 +10748,16 @@
         }
       }
     },
+    "harmonics %@" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "harmonikler %@"
+          }
+        }
+      }
+    },
     "high" : {
       "localizations" : {
         "tr" : {
@@ -10658,12 +10988,32 @@
         }
       }
     },
+    "not bright enough: use a brighter, plain surface" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "yeterince parlak değil: daha parlak, düz bir yüzey kullanın"
+          }
+        }
+      }
+    },
     "not connected" : {
       "localizations" : {
         "tr" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "bağlı değil"
+          }
+        }
+      }
+    },
+    "not dark enough: cover the lens completely" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "yeterince karanlık değil: lensi tamamen kapatın"
           }
         }
       }

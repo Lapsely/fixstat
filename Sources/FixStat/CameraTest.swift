@@ -7,6 +7,8 @@ import FixStatCore
 struct CameraTestView: View {
     @Environment(Monitor.self) private var monitor
     @State private var camera = CameraPreview()
+    @State private var defects = PixelDefects()
+    @State private var measuring = false
 
     var body: some View {
         VStack(alignment: .leading, spacing: 12) {
@@ -38,6 +40,7 @@ struct CameraTestView: View {
                               systemImage: "exclamationmark.triangle.fill")
                             .foregroundStyle(TemperatureColor.hot)
                     }
+                    pixelSection
                 }
             }
         }
@@ -46,6 +49,47 @@ struct CameraTestView: View {
         .onChange(of: camera.frames / 30) { _, _ in
             guard let detail = camera.detail else { return }
             monitor.recordCheck(.camera, detail: detail)
+        }
+    }
+}
+
+@available(macOS 14.0, *)
+extension CameraTestView {
+    @ViewBuilder
+    var pixelSection: some View {
+        Divider()
+        Text(verbatim: PixelText.explanation)
+            .font(.callout).foregroundStyle(.secondary)
+            .fixedSize(horizontal: false, vertical: true)
+        HStack {
+            Button("Measure with the lens covered") { measure(dark: true) }
+            Button("Measure on a bright surface") { measure(dark: false) }
+            if measuring { ProgressView().controlSize(.small) }
+        }
+        .disabled(measuring)
+        ForEach(Array(PixelText.rows(defects).enumerated()), id: \.offset) { _, row in
+            HStack(alignment: .firstTextBaseline) {
+                Text(verbatim: row.0).frame(width: 130, alignment: .leading)
+                Text(verbatim: row.1)
+            }
+            .font(.callout)
+        }
+        ForEach(Array(PixelText.findings(defects).enumerated()), id: \.offset) { _, finding in
+            Label(finding, systemImage: "exclamationmark.triangle.fill")
+                .foregroundStyle(TemperatureColor.hot)
+                .fixedSize(horizontal: false, vertical: true)
+        }
+    }
+
+    func measure(dark: Bool) {
+        measuring = true
+        camera.captureAverage { frame in
+            measuring = false
+            guard let frame else { return }
+            if dark { defects.analyzeDark(frame) } else { defects.analyzeBright(frame) }
+            let detail = [camera.detail, PixelText.summary(defects)].compactMap { $0 }.joined(separator: " · ")
+            let judged = defects.darkValid && defects.brightValid
+            monitor.recordCheck(.camera, detail: detail, passed: judged && !defects.problem, failed: defects.problem)
         }
     }
 }
@@ -82,6 +126,8 @@ final class CameraPreview {
     }
 
     func stop() { camera.stop() }
+
+    func captureAverage(_ completion: @escaping (LumaFrame?) -> Void) { camera.captureAverage(completion: completion) }
 
     private func sync() {
         if camera.permission != permission { permission = camera.permission }

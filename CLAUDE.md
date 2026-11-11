@@ -450,8 +450,14 @@ individual cores. Never name them per core ("P-core 1"). Use ids like
   the SMC has lost control (a faulty fan or its drive circuit), e.g. a liquid-damaged MacBook Pro 13" M1 ran 7 500 rpm at target 0 —
   an open PWM line makes these fans run flat out; the live line says "far above the target");
   no target rise = no verdict; `-FixStatSimulateFans N` fakes fans on a fanless Mac),
-  speakers (L/R tones, sweep), microphone
-  (level, record + play back), camera (preview, average luma), Wi-Fi (CoreWLAN; scan
+  speakers (L/R tones, sweep; automatic check `SpeakerLoopback`: left 300 – 4,800 Hz and right 350 – 5,600 Hz tones
+  heard by the built-in mic, found by frequency (Goertzel) against the room noise before them, so no timing:
+  silent (< 10 dB), ≥ 15 dB quieter, 2nd + 3rd harmonics ≥ −12 dB at 0.5 – 1.5 kHz = distorts; needs the built-in
+  speakers / mic and ≥ 40 % volume, unmuted; thresholds not yet tried on real speakers), microphone
+  (level, record + play back), camera (preview, average luma; pixel test `PixelDefects`: 8 averaged full luma
+  frames with the lens covered (≤ 24 mean; hot = 60 above the mean) and on a bright surface (≥ 90; dead = below
+  45 % of its 16 × 16 block, ≤ 2-pixel groups, larger = dust), rows / columns 25 off both neighbours = line
+  defect; the camera's own processing hides single bad pixels, so what is left is real), Wi-Fi (CoreWLAN; scan
   works without Location, names hidden), Bluetooth (`system_profiler` + CoreBluetooth
   scan), ports, lid. Tests fill in evidence and may mark passed; the technician's choice
   always wins. Page 2 of the PDF report when anything was marked.
