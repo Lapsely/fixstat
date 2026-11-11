@@ -444,6 +444,15 @@ individual cores. Never name them per core ("P-core 1"). Use ids like
   light sensor and the lid angle sensor, each against the model (Touch ID: Apple Silicon notebooks, Intel Air
   2018 – 2020 and Touch Bar MacBook Pros; True Tone: Apple Silicon with a display, Intel MBP 2018+, Air 2019 /
   2020, iMac 2020).
+- Display identity (`DisplayIdentity` in MacSensors, `sensordump --display`, lab dump "display identity"):
+  Apple Silicon: the internal `AppleCLCD2` (below `disp0`) publishes `Panel_ID`, read from the panel's own memory:
+  "+"-separated fields, on the M1 Air 8 (field 0 = 17-character panel serial, a `PROD` field, revision / module
+  fields), and `DisplayAttributes.ProductAttributes` (`ManufacturerID` 00-10-fa = Apple; `ProductID` holds ASCII,
+  "92014A" on the M1 Air); the TCON from the device tree (`device_type` "tcon": Parade DP855 on the M1 Air, with
+  `firmware-ver`). Intel: the EDID of `AppleBacklightDisplay` (vendor, product, week / year, 0xFE text = panel
+  part). Dumps keep the panel serial's first 7 characters (maker + presumably date code) and the first 4 of other
+  identifying fields. Field meanings, an aftermarket panel and a swapped display are not recorded yet; FixStat
+  judges nothing from it so far.
 - Device card (`DeviceInfo`, `DeviceInfoView`): `system_profiler SPHardwareDataType -json`
   (part number `model_number`, `boot_rom_version`, `activation_lock_status`; serial masked,
   platform UUID / provisioning UDID never read), `profiles status -type enrollment`
@@ -601,7 +610,7 @@ individual cores. Never name them per core ("P-core 1"). Use ids like
 ```
 swift build
 swift test
-.build/debug/sensordump [--json] [--raw] [--smc-all] [--hid-power] [--all] [--include-serial] [--rails]
+.build/debug/sensordump [--json] [--raw] [--smc-all] [--hid-power] [--all] [--include-serial] [--rails] [--display]
 scripts/build-app.sh            # → build/FixStat.app (ad-hoc signed; release = universal arm64 + x86_64)
 scripts/package-release.sh      # → build/FixStat.dmg (drag-to-Applications window + INSTALL.txt) for Releases
 scripts/make-artwork.sh         # App/AppIcon.svg → AppIcon.icns, packaging/dmg-background.svg → App/DMGBackground.tiff

@@ -13,6 +13,7 @@ let usage = """
       --smc-all         Include every SMC key with its decoded value
       --hid-power       Include HID voltage/current sensors (raw, experimental)
       --rails           Print the SMC power rails (V / A / W) and exit
+      --display         Print the built-in display's identity (panel id masked) and exit
       --all             Also list SMC temperature keys with implausible values
       -h, --help        Show this help
     """
@@ -39,6 +40,9 @@ for argument in CommandLine.arguments.dropFirst() {
         for rail in PowerRails.read(smc: smc, keys: keys) {
             print(rail.name.padding(toLength: 5, withPad: " ", startingAt: 0), f(rail.volts, "V"), f(rail.amps, "A"), f(rail.watts, "W"))
         }
+        exit(0)
+    case "--display":
+        DisplayIdentity.read().maskedLines.forEach { print($0) }
         exit(0)
     case "-h", "--help":
         print(usage)
