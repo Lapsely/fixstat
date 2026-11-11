@@ -32,7 +32,15 @@ public enum TestText {
             return text
         case .stoppedEarly:
             return L("Test was stopped before the planned duration")
+        case let .coolingWorse(degreesPerWatt, high, macs):
+            return L("The CPU heats up %1$@ per watt, more than healthy Macs of this model (up to %2$@, %3$lld Macs): thermal paste, heatsink seating, the fan or dust.",
+                     coolingFigure(degreesPerWatt), coolingFigure(high), macs)
         }
+    }
+
+    /// "1.9 °C/W"
+    public static func coolingFigure(_ value: Double) -> String {
+        Format.number(value, digits: 2) + "\u{00A0}°C/W"
     }
 
     public static func summaryRows(_ r: StressTestResult) -> [(String, String)] {
@@ -49,6 +57,16 @@ public enum TestText {
         }
         if let s = r.maxCellSpread {
             rows.append((L("Largest cell spread"), Format.millivolts(s)))
+        }
+        if let cooling = r.coolingDegreesPerWatt {
+            var text = coolingFigure(cooling)
+            if let idle = r.cpuPowerIdle, let load = r.cpuPowerLoad {
+                text += " · " + L("CPU %1$@ → %2$@", Format.watts(idle, digits: 1), Format.watts(load, digits: 1))
+            }
+            if let stat = r.coolingReference {
+                text += " · " + L("healthy Macs %1$@ – %2$@", coolingFigure(stat.low), coolingFigure(stat.high))
+            }
+            rows.append((L("Cooling"), text))
         }
         if let a = r.socStart, let b = r.socEnd {
             rows.append((L("Battery charge"), "\(Format.percent(a)) → \(Format.percent(b))"))

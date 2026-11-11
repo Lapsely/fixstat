@@ -499,6 +499,16 @@ TR = {
     "Lifetime record identical to the one clone gauges ship with: the gauge does not keep its own history":
         "Ömür kaydı klon gauge'ların fabrikadan geldiği kayıtla birebir aynı: gauge kendi geçmişini tutmuyor",
     "%@ per cell": "hücre başına %@",
+    "The CPU heats up %1$@ per watt, more than healthy Macs of this model (up to %2$@, %3$lld Macs): thermal paste, heatsink seating, the fan or dust.":
+        "CPU watt başına %1$@ ısınıyor, bu modelin sağlam Mac'lerinden fazla (en çok %2$@, %3$lld Mac): termal macun, soğutucunun oturuşu, fan ya da toz.",
+    "CPU %1$@ → %2$@": "CPU %1$@ → %2$@",
+    "healthy Macs %1$@ – %2$@": "sağlam Mac'ler %1$@ – %2$@",
+    "Cooling": "Soğutma",
+    "Measured while the battery charged (%@): charging adds to the system power. Measure on battery or with a full battery.":
+        "Batarya şarj olurken ölçüldü (%@): şarj sistem gücüne eklenir. Pilde ya da batarya doluyken ölçün.",
+    "An external display was connected: it adds to the system power.": "Harici bir ekran bağlıydı: sistem gücüne eklenir.",
+    "Rail %1$@ draws %2$@ (healthy Macs of this model %3$@ – %4$@, %5$lld Macs): a leak or a part pulling current on this rail.":
+        "%1$@ rayı %2$@ çekiyor (bu modelin sağlam Mac'leri %3$@ – %4$@, %5$lld Mac): bu rayda kaçak ya da akım çeken bir parça.",
     "moderate": "orta",
     "heavy": "ağır",
     "trapping (strongly slowed)": "kısıtlama (belirgin yavaşlatma)",
@@ -725,8 +735,8 @@ TR = {
     "Highest SSD temperature": "En yüksek SSD sıcaklığı",
     "Highest battery temperature": "En yüksek batarya sıcaklığı",
     "Largest cell spread": "En büyük hücre farkı",
-    "Loads the CPU and GPU for a few minutes and checks temperatures, cell voltages and power delivery. Run it after a repair with the case closed, on a desk.":
-        "CPU ve GPU'yu birkaç dakika yükler; sıcaklıkları, hücre voltajlarını ve güç beslemesini kontrol eder. Tamirden sonra, kasa kapalıyken ve masa üstünde çalıştırın.",
+    "Loads the CPU and GPU for a few minutes and checks temperatures, cell voltages and power delivery. Run it after a repair with the case closed, on a desk. With the CPU load alone it also measures the cooling (°C per watt: thermal paste, heatsink).":
+        "CPU ve GPU'yu birkaç dakika yükler; sıcaklıkları, hücre voltajlarını ve güç beslemesini kontrol eder. Tamirden sonra, kasa kapalıyken ve masa üstünde çalıştırın. Yalnızca CPU yüküyle soğutmayı da ölçer (watt başına °C: termal macun, soğutucu).",
     "Lowest cell voltage": "En düşük hücre voltajı",
     "Needs attention": "Dikkat edilmesi gerekenler",
     "No problems found": "Sorun bulunmadı",

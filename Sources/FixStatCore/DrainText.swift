@@ -84,8 +84,59 @@ public enum DrainText {
            result.cpu.map { L("CPU %@", Format.percent($0 * 100)) }].compactMap { $0 }.joined(separator: " · "))]
     }
 
-    /// Compared with good Macs of the model (nil problem: no reference yet).
-    public static func idlePowerVerdict(_ result: IdlePowerResult, reference: PowerReference, model: String) -> (text: String, problem: Bool?) {
+    /// Compared with healthy Macs of the model: the lab's model references from three Macs on, else
+    /// the older per-model list (nil problem: no reference yet). A measurement taken while charging
+    /// or with an external display is said to be so: both add to the system power.
+    public static func idlePowerVerdict(_ result: IdlePowerResult, reference: PowerReference, model: String,
+                                        models: ModelReference? = nil) -> (text: String, problem: Bool?) {
+        var verdict = baseVerdict(result, reference: reference, model: model, models: models)
+        var notes: [String] = []
+        if let mA = result.batteryMilliamps, mA > 500 {
+            notes.append(L("Measured while the battery charged (%@): charging adds to the system power. Measure on battery or with a full battery.",
+                           Format.milliamps(mA)))
+        }
+        if let displays = result.externalDisplays, displays > 0 {
+            notes.append(L("An external display was connected: it adds to the system power."))
+        }
+        if !notes.isEmpty {
+            verdict.text += " " + notes.joined(separator: " ")
+            if verdict.problem == true { verdict.problem = nil }
+        }
+        let rails = railFindings(result, models: models)
+        if !rails.isEmpty {
+            verdict.text += " " + rails.joined(separator: " ")
+            verdict.problem = true
+        }
+        return verdict
+    }
+
+    /// Rails drawing clearly more than on healthy Macs of the model (references from three Macs on,
+    /// measured the same way: display off, idle).
+    public static func railFindings(_ result: IdlePowerResult, models: ModelReference?) -> [String] {
+        guard let amps = result.railAmps, let references = models?.idleRailAmps,
+              (result.batteryMilliamps ?? 0) <= 500, (result.externalDisplays ?? 0) == 0 else { return [] }
+        var found: [(Double, String)] = []
+        for (name, stat) in references where stat.n >= ReferenceStat.minimumRecords {
+            guard let value = amps[name], value > max(stat.high * 1.5, stat.high + 0.03) else { continue }
+            found.append((value - stat.high, L("Rail %1$@ draws %2$@ (healthy Macs of this model %3$@ – %4$@, %5$lld Macs): a leak or a part pulling current on this rail.",
+                                               name, Format.amps(milliamps: Int(value * 1000)),
+                                               Format.amps(milliamps: Int(stat.low * 1000)), Format.amps(milliamps: Int(stat.high * 1000)), stat.n)))
+        }
+        return found.sorted { $0.0 > $1.0 }.map(\.1)
+    }
+
+    static func baseVerdict(_ result: IdlePowerResult, reference: PowerReference, model: String,
+                            models: ModelReference?) -> (text: String, problem: Bool?) {
+        if let stat = models?.idleDisplayOffW, stat.n >= ReferenceStat.minimumRecords {
+            let limit = max(stat.high * 1.25, stat.median + 0.5)
+            if result.watts > limit {
+                return (L("%@ above good Macs of this model (%@ – %@, %lld Macs): a busy process (see CPU) or a leak on a powered rail.",
+                          Format.watts(result.watts - stat.median, digits: 1), Format.watts(stat.low, digits: 1),
+                          Format.watts(stat.high, digits: 1), stat.n), true)
+            }
+            return (L("Within the range of good Macs of this model (%@ – %@, %lld Macs).",
+                      Format.watts(stat.low, digits: 1), Format.watts(stat.high, digits: 1), stat.n), false)
+        }
         switch reference.verdict(model: model, watts: result.watts) {
         case .noReference:
             return (L("No reference values for this model yet: compare with the same Mac after the repair or with another one of the model."), nil)

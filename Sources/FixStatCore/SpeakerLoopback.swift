@@ -163,6 +163,9 @@ public struct LoopbackResult: Equatable {
     public static let heardLimit = 10.0
     /// A speaker this much quieter than the other (median over its tones) is reported.
     public static let imbalanceLimit = 15.0
+    /// This far below the other speaker counts as not heard: what remains at its frequencies is the
+    /// other speaker leaking in, not sound of its own.
+    public static let silentGap = 35.0
     /// Harmonics this close to the tone (mid frequencies) point to a rattle or a torn cone.
     public static let distortionLimit = -12.0
 
@@ -193,7 +196,8 @@ public struct LoopbackResult: Equatable {
 
     public var findings: [Finding] {
         var out: [Finding] = []
-        let leftHeard = leftLevel >= Self.heardLimit, rightHeard = rightLevel >= Self.heardLimit
+        let leftHeard = leftLevel >= Self.heardLimit && leftLevel > rightLevel - Self.silentGap
+        let rightHeard = rightLevel >= Self.heardLimit && rightLevel > leftLevel - Self.silentGap
         if !leftHeard { out.append(.silent(left: true)) }
         if !rightHeard { out.append(.silent(left: false)) }
         if leftHeard, rightHeard {
@@ -244,12 +248,17 @@ public struct LoopbackResult: Equatable {
         return LoopbackResult(left: SpeakerLoopback.leftFrequencies.map(tone), right: SpeakerLoopback.rightFrequencies.map(tone))
     }
 
-    /// Power of one frequency in a block (Goertzel), normalised by the block length.
+    /// Power of one frequency in a block (Goertzel over a Hann-windowed block, normalised by the
+    /// block length). The window keeps a loud tone of one speaker from leaking into the nearby
+    /// frequency of the other (300 / 350 Hz are 12 bins apart in a 0.25 s block; without a window
+    /// the leak stood ≈ 10 dB above the room and a silent speaker could pass as heard).
     static func goertzel(_ x: [Float], from start: Int, count: Int, frequency: Double, sampleRate: Double) -> Double {
         let k = 2 * cos(2 * .pi * frequency / sampleRate)
+        let step = 2 * Double.pi / Double(max(count - 1, 1))
         var s1 = 0.0, s2 = 0.0
-        for i in start..<(start + count) {
-            let s0 = Double(x[i]) + k * s1 - s2
+        for i in 0..<count {
+            let w = 0.5 - 0.5 * cos(step * Double(i))
+            let s0 = Double(x[start + i]) * w + k * s1 - s2
             s2 = s1
             s1 = s0
         }

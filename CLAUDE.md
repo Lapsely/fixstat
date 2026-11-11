@@ -403,6 +403,12 @@ individual cores. Never name them per core ("P-core 1"). Use ids like
   left out): idle / load temperature per group, idle display-off power (on battery, else charging ≤ 500 mA, no
   external display, CPU < 25 % busy), CPU load power, cooling °C/W, die above heatsink, idle rail amps, off-state
   drain, each as n / median / low / high. FixStat judges against them from `ReferenceStat.minimumRecords` (3) Macs.
+  Used by: the stress test's cooling (`StressTestResult.coolingDegreesPerWatt`: 8 idle seconds first, then the
+  hottest CPU sensor's rise to the last 20 s per watt of CPU power from `CPUPowerSampler`; CPU-only loads only —
+  with the GPU loaded an M1 Air read 9.7 °C/W at 3.9 W; worse than the healthy high + 20 % = finding) and the idle
+  power test (references win over power-reference.json from 3 Macs; rails averaged during the measurement, a rail
+  above max(1.5 × healthy high, high + 30 mA) = finding; charging > 500 mA or an external display = not judged).
+  Loopback: Hann-windowed Goertzel, and a speaker 35 dB below the other counts as not heard (leak, not sound).
 - Idle power, display off (`IdlePowerRunner`, `DisplayPower`, `PowerReference`; in the drain
   detective): brightness 0 through DisplayServices (private) or the IODisplay brightness
   parameter, restored on every way out (also at the next launch after a crash, from the

@@ -55,7 +55,7 @@ final class LegacyStressTest: LegacySnapshotStartable {
                 runner.start(duration: minutes * 60, cpu: cpuBox.state == .on, gpu: gpuBox.state == .on)
             }
         var blocks: [Block] = [
-            .secondary(L("Loads the CPU and GPU for a few minutes and checks temperatures, cell voltages and power delivery. Run it after a repair with the case closed, on a desk.")),
+            .secondary(L("Loads the CPU and GPU for a few minutes and checks temperatures, cell voltages and power delivery. Run it after a repair with the case closed, on a desk. With the CPU load alone it also measures the cooling (°C per watt: thermal paste, heatsink).")),
             .view(hStack([durationControl, cpuBox, gpuBox, makeSpacer(), action], spacing: 14)),
         ]
         if runner.state != .idle {

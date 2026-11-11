@@ -1292,6 +1292,16 @@
         }
       }
     },
+    "An external display was connected: it adds to the system power." : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Harici bir ekran bağlıydı: sistem gücüne eklenir."
+          }
+        }
+      }
+    },
     "Angle seen: %@ – %@" : {
       "localizations" : {
         "en" : {
@@ -1878,6 +1888,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "CPU"
+          }
+        }
+      }
+    },
+    "CPU %1$@ → %2$@" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "CPU %1$@ → %2$@"
           }
         }
       }
@@ -2700,6 +2720,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Serin"
+          }
+        }
+      }
+    },
+    "Cooling" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Soğutma"
           }
         }
       }
@@ -5032,12 +5062,12 @@
         }
       }
     },
-    "Loads the CPU and GPU for a few minutes and checks temperatures, cell voltages and power delivery. Run it after a repair with the case closed, on a desk." : {
+    "Loads the CPU and GPU for a few minutes and checks temperatures, cell voltages and power delivery. Run it after a repair with the case closed, on a desk. With the CPU load alone it also measures the cooling (°C per watt: thermal paste, heatsink)." : {
       "localizations" : {
         "tr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "CPU ve GPU'yu birkaç dakika yükler; sıcaklıkları, hücre voltajlarını ve güç beslemesini kontrol eder. Tamirden sonra, kasa kapalıyken ve masa üstünde çalıştırın."
+            "value" : "CPU ve GPU'yu birkaç dakika yükler; sıcaklıkları, hücre voltajlarını ve güç beslemesini kontrol eder. Tamirden sonra, kasa kapalıyken ve masa üstünde çalıştırın. Yalnızca CPU yüküyle soğutmayı da ölçer (watt başına °C: termal macun, soğutucu)."
           }
         }
       }
@@ -5298,6 +5328,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Ölçülen kapasite (%100'e uzatılmış)"
+          }
+        }
+      }
+    },
+    "Measured while the battery charged (%@): charging adds to the system power. Measure on battery or with a full battery." : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Batarya şarj olurken ölçüldü (%@): şarj sistem gücüne eklenir. Pilde ya da batarya doluyken ölçün."
           }
         }
       }
@@ -7150,6 +7190,16 @@
         }
       }
     },
+    "Rail %1$@ draws %2$@ (healthy Macs of this model %3$@ – %4$@, %5$lld Macs): a leak or a part pulling current on this rail." : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%1$@ rayı %2$@ çekiyor (bu modelin sağlam Mac'leri %3$@ – %4$@, %5$lld Mac): bu rayda kaçak ya da akım çeken bir parça."
+          }
+        }
+      }
+    },
     "Random data" : {
       "localizations" : {
         "tr" : {
@@ -8820,6 +8870,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "%@ adaptör %@ ile sınırlı kalıyor: kablo büyük ihtimalle 3 A'lık, 5 A'lık (100 W ve üstü) bir kablo kullanın."
+          }
+        }
+      }
+    },
+    "The CPU heats up %1$@ per watt, more than healthy Macs of this model (up to %2$@, %3$lld Macs): thermal paste, heatsink seating, the fan or dust." : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "CPU watt başına %1$@ ısınıyor, bu modelin sağlam Mac'lerinden fazla (en çok %2$@, %3$lld Mac): termal macun, soğutucunun oturuşu, fan ya da toz."
           }
         }
       }
@@ -10804,6 +10864,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "harmonikler %@"
+          }
+        }
+      }
+    },
+    "healthy Macs %1$@ – %2$@" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "sağlam Mac'ler %1$@ – %2$@"
           }
         }
       }

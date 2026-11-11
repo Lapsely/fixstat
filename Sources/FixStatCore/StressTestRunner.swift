@@ -28,7 +28,15 @@ public final class StressTestRunner {
         self.monitor = monitor
     }
 
-    public var elapsed: TimeInterval { samples.last?.time ?? 0 }
+    /// Seconds of load (the idle seconds before it do not count).
+    public var elapsed: TimeInterval { max(0, (samples.last?.time ?? 0) - Self.idleSeconds) }
+    /// Still measuring the idle values before the load starts.
+    public var measuringIdle: Bool { pendingLoad != nil }
+
+    /// Seconds without load first: the idle CPU temperature and power for the cooling figure.
+    public static let idleSeconds: TimeInterval = 8
+    private var cpuPower: CPUPowerSampler?
+    private var pendingLoad: (() -> Void)?
 
     public func start(duration: TimeInterval, cpu: Bool, gpu: Bool) {
         guard state != .running, cpu || gpu else { return }
@@ -46,8 +54,12 @@ public final class StressTestRunner {
         self.flag = flag
         // With the GPU load running, leave one core for feeding the GPU, sampling and the UI.
         let cores = ProcessInfo.processInfo.activeProcessorCount
-        if cpu { LoadGenerator.cpu(threads: gpu ? max(1, cores - 1) : cores, flag: flag) }
-        if gpu { _ = LoadGenerator.gpu(flag: flag) }
+        cpuPower = CPUPowerSampler()
+        _ = cpuPower?.sample()
+        pendingLoad = {
+            if cpu { LoadGenerator.cpu(threads: gpu ? max(1, cores - 1) : cores, flag: flag) }
+            if gpu { _ = LoadGenerator.gpu(flag: flag) }
+        }
         monitor.testRunning = true
         state = .running
         takeSample()
@@ -66,6 +78,10 @@ public final class StressTestRunner {
     }
 
     private func tick() {
+        if let load = pendingLoad, Date().timeIntervalSince(startedAt) >= Self.idleSeconds {
+            pendingLoad = nil
+            load()
+        }
         takeSample()
         if elapsed >= duration {
             finish()
@@ -86,6 +102,8 @@ public final class StressTestRunner {
             cellVoltages: battery?.cellVoltages, amperage: battery?.amperage,
             stateOfCharge: battery?.stateOfCharge, externalConnected: battery?.externalConnected
         )
+        sample.cpuPower = cpuPower?.sample()
+        sample.idle = pendingLoad != nil ? true : nil
         if battery?.externalConnected == true {
             sample.inputWatts = battery?.powerTelemetry?.systemPowerIn.flatMap { $0 > 0 ? Double($0) / 1000 : nil }
             let active = battery?.powerDelivery?.activeProfile
@@ -97,6 +115,8 @@ public final class StressTestRunner {
     }
 
     private func finish() {
+        pendingLoad = nil
+        cpuPower = nil
         flag?.stop()
         flag = nil
         timer?.invalidate()
@@ -110,7 +130,8 @@ public final class StressTestRunner {
         let result = StressTestResult.analyze(
             samples: samples, startedAt: startedAt, plannedDuration: duration, loads: loads,
             hotThreshold: hot > 0 ? hot : Pref.defaultHot,
-            imbalanceThreshold: imbalance > 0 ? imbalance : Pref.defaultCellImbalance
+            imbalanceThreshold: imbalance > 0 ? imbalance : Pref.defaultCellImbalance,
+            reference: monitor.modelReference
         )
         self.result = result
         monitor.lastTestResult = result

@@ -15,6 +15,9 @@ public struct StressSample: Codable, Sendable, Equatable {
     public var amperage: Int?
     public var stateOfCharge: Double?
     public var externalConnected: Bool?
+    /// CPU power (W) and whether the load was still off (the idle seconds before it starts).
+    public var cpuPower: Double? = nil
+    public var idle: Bool? = nil
     /// What the adapter delivered (`SystemPowerIn`, W; Apple Silicon) and the USB-C contract in use
     /// (mV / mA) with the adapter's rated power: why the battery had to help (a 3 A cable caps a
     /// 20 V contract at 60 W). nil where not reported.
@@ -53,6 +56,8 @@ public struct StressTestResult: Codable, Sendable, Equatable {
                             contractMilliamps: Int? = nil, adapterWatts: Int? = nil)
         /// The test was stopped before the planned duration.
         case stoppedEarly
+        /// The CPU warmed up more per watt than the healthy Macs of this model (°C/W, their highest).
+        case coolingWorse(degreesPerWatt: Double, healthyHigh: Double, macs: Int)
     }
 
     /// Apple Silicon throttles around 100 °C by design (fanless MacBook Air reaches it
@@ -78,11 +83,24 @@ public struct StressTestResult: Codable, Sendable, Equatable {
     /// Seconds with CPU or GPU at or above the user's "hot" threshold.
     public var secondsAboveHot: Double
     public var findings: [Finding]
+    /// Hottest CPU sensor's rise from idle to the end of the load per watt of CPU power added,
+    /// and the CPU power idle / under load (means of the idle seconds and the last 20 s).
+    public var coolingDegreesPerWatt: Double? = nil
+    public var cpuPowerIdle: Double? = nil
+    public var cpuPowerLoad: Double? = nil
+    /// Healthy Macs of this model behind the cooling comparison (nil: no reference).
+    public var coolingReference: ReferenceStat? = nil
 
     public var passed: Bool { findings.allSatisfy { $0 == .stoppedEarly } }
 
-    public static func analyze(samples: [StressSample], startedAt: Date, plannedDuration: TimeInterval,
-                               loads: [String], hotThreshold: Double, imbalanceThreshold: Int) -> StressTestResult {
+    /// Worse than every healthy Mac of the model by this share (the lab's plateau and this test differ).
+    public static let coolingMargin = 0.2
+
+    public static func analyze(samples all: [StressSample], startedAt: Date, plannedDuration: TimeInterval,
+                               loads: [String], hotThreshold: Double, imbalanceThreshold: Int,
+                               reference: ModelReference? = nil) -> StressTestResult {
+        let idleSamples = all.filter { $0.idle == true }
+        let samples = all.filter { $0.idle != true }
         func maximum(_ values: [Double?]) -> Double? { values.compactMap { $0 }.max() }
         let cells = samples.compactMap(\.cellVoltages).filter { !$0.isEmpty }
         let minCell = cells.flatMap { $0 }.min()
@@ -131,15 +149,34 @@ public struct StressTestResult: Codable, Sendable, Equatable {
                                                 adapterWatts: plugged.compactMap(\.adapterWatts).last))
             }
         }
-        let duration = samples.last?.time ?? 0
+        let loadStart = samples.first?.time ?? 0
+        let duration = max(0, (samples.last?.time ?? 0) - loadStart)
         if duration + 5 < plannedDuration { findings.append(.stoppedEarly) }
+
+        // Cooling: idle seconds against the last 20 s of the load, CPU load only: with the GPU loaded
+        // too, the GPU's heat warms the CPU sensors and a throttled CPU draws little (an M1 Air:
+        // 9.7 °C/W at 3.9 W), and the lab's references come from a CPU-only load.
+        func mean(_ values: [Double]) -> Double? { values.isEmpty ? nil : values.reduce(0, +) / Double(values.count) }
+        let end = samples.filter { $0.time >= (samples.last?.time ?? 0) - 20 }
+        let idleTemp = mean(idleSamples.compactMap(\.cpu)), loadTemp = mean(end.compactMap(\.cpu))
+        let idlePower = mean(idleSamples.compactMap(\.cpuPower)), loadPower = mean(end.compactMap(\.cpuPower))
+        var cooling: Double?
+        if loads == ["cpu"], let idleTemp, let loadTemp, let idlePower, let loadPower, loadPower - idlePower >= 1, duration >= 60 {
+            cooling = ((loadTemp - idleTemp) / (loadPower - idlePower) * 100).rounded() / 100
+        }
+        let coolingReference = reference?.coolingDegreesPerWatt.flatMap { $0.n >= ReferenceStat.minimumRecords ? $0 : nil }
+        if let cooling, let stat = coolingReference, cooling > stat.high * (1 + coolingMargin) {
+            findings.append(.coolingWorse(degreesPerWatt: cooling, healthyHigh: stat.high, macs: stat.n))
+        }
 
         return StressTestResult(
             startedAt: startedAt, plannedDuration: plannedDuration, duration: duration, loads: loads,
             maxCPU: maxCPU, maxGPU: maxGPU, maxSSD: maximum(samples.map(\.ssd)), maxBattery: maxBattery,
             minCellVoltage: minCell, maxCellSpread: maxSpread,
             socStart: samples.first?.stateOfCharge, socEnd: samples.last?.stateOfCharge,
-            averageCurrent: averageCurrent, secondsAboveHot: aboveHot, findings: findings
+            averageCurrent: averageCurrent, secondsAboveHot: aboveHot, findings: findings,
+            coolingDegreesPerWatt: cooling, cpuPowerIdle: idlePower.map { ($0 * 10).rounded() / 10 },
+            cpuPowerLoad: loadPower.map { ($0 * 10).rounded() / 10 }, coolingReference: coolingReference
         )
     }
 }

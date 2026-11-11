@@ -285,3 +285,20 @@ public final class ClusterActivitySampler {
         }
     }
 }
+
+/// CPU power in W, one reading per call: IOReport's CPU total on Apple Silicon (the first call only
+/// starts the count), the SMC's package power on Intel (`PCPT` / `PCPC`).
+public final class CPUPowerSampler {
+    private let energy: EnergySampler?
+    private let smc: SMC?
+
+    public init(appleSilicon: Bool = SystemInfo.current().isAppleSilicon) {
+        energy = appleSilicon ? EnergySampler() : nil
+        smc = appleSilicon ? nil : try? SMC()
+    }
+
+    public func sample() -> Double? {
+        if let energy { return energy.sample().first { EnergySampler.kind($0.name) == "cpu" }?.watts }
+        return smc?.packagePower().cpu
+    }
+}

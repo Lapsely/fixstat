@@ -98,6 +98,12 @@ public struct IdlePowerResult: Codable, Sendable, Equatable {
     public var onBattery: Bool
     /// "smc" (`PSTR`, every second) or "gauge" (battery telemetry, every ~30 s).
     public var source: String?
+    /// Mean current of every SMC power rail during the measurement (A).
+    public var railAmps: [String: Double]? = nil
+    /// Mean battery current (mA, positive = charging): charging adds to the system power.
+    public var batteryMilliamps: Int? = nil
+    /// External displays connected: they add to the system power too.
+    public var externalDisplays: Int? = nil
 
     public init(date: Date, samples values: [Double], cpu: Double?, onBattery: Bool, source: String? = nil) {
         self.date = date

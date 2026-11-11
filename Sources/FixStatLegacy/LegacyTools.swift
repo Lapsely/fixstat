@@ -485,7 +485,7 @@ final class LegacySleep: LegacySnapshotStartable {
         }
         if let result = core.lastIdlePower {
             blocks.append(.rows(DrainText.idlePowerRows(result).map { DocRow(title: $0.0, value: $0.1) }, labelWidth: 220))
-            let verdict = DrainText.idlePowerVerdict(result, reference: core.powerReference, model: core.system.model)
+            let verdict = DrainText.idlePowerVerdict(result, reference: core.powerReference, model: core.system.model, models: core.modelReference)
             blocks.append(.status(verdict.text, verdict.problem.map { $0 ? .bad : .good } ?? .neutral))
         }
         blocks.append(.actions([DocAction(title: DrainText.idlePowerButton) { [unowned self] in idlePower.start() }]))

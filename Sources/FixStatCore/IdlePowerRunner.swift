@@ -30,6 +30,9 @@ public final class IdlePowerRunner {
     private var activity: NSObjectProtocol?
     private var samples: [Double] = []
     private var cpu: [Double] = []
+    private var railKeys: [PowerRails.Keys] = []
+    private var railSums: [String: (sum: Double, count: Int)] = [:]
+    private var currents: [Int] = []
     private let stats = SystemStats()
     private let smc = try? SMC()
     private var usedSMC = false
@@ -77,6 +80,9 @@ public final class IdlePowerRunner {
         }
         samples = []
         cpu = []
+        railSums = [:]
+        currents = []
+        railKeys = smc.map { PowerRails.discover(smc: $0) } ?? []
         elapsed = 0
         displayWakes = 0
         _ = stats.cpuUsage()
@@ -127,6 +133,14 @@ public final class IdlePowerRunner {
             let watts = usedSMC ? smc?.systemPower() : BatteryReader.read()?.systemPowerWatts
             if let watts, watts > 0 { samples.append(watts) }
             if let usage = stats.cpuUsage() { cpu.append(usage) }
+            if let smc, !railKeys.isEmpty {
+                for rail in PowerRails.read(smc: smc, keys: railKeys) {
+                    guard let amps = rail.amps, amps.isFinite else { continue }
+                    let s = railSums[rail.name] ?? (0, 0)
+                    railSums[rail.name] = (s.sum + amps, s.count + 1)
+                }
+            }
+            if let amps = BatteryReader.read()?.amperage { currents.append(amps) }
         } else {
             _ = stats.cpuUsage()
         }
@@ -134,16 +148,30 @@ public final class IdlePowerRunner {
             end()
             if samples.count >= 10 {
                 let battery = BatteryReader.read()
-                monitor.lastIdlePower = IdlePowerResult(date: Date(), samples: samples,
-                                                        cpu: cpu.isEmpty ? nil : cpu.reduce(0, +) / Double(cpu.count),
-                                                        onBattery: battery?.externalConnected != true,
-                                                        source: usedSMC ? "smc" : "gauge")
+                var result = IdlePowerResult(date: Date(), samples: samples,
+                                             cpu: cpu.isEmpty ? nil : cpu.reduce(0, +) / Double(cpu.count),
+                                             onBattery: battery?.externalConnected != true,
+                                             source: usedSMC ? "smc" : "gauge")
+                if !railSums.isEmpty {
+                    result.railAmps = railSums.mapValues { ($0.sum / Double(max($0.count, 1)) * 1000).rounded() / 1000 }
+                }
+                if !currents.isEmpty { result.batteryMilliamps = currents.reduce(0, +) / currents.count }
+                result.externalDisplays = Self.externalDisplays()
+                monitor.lastIdlePower = result
                 state = .finished
             } else {
                 state = .failed(L("Too few power readings: the battery gauge did not report the power."))
             }
         }
         onChange?()
+    }
+
+    static func externalDisplays() -> Int {
+        var count: UInt32 = 0
+        guard CGGetOnlineDisplayList(0, nil, &count) == .success, count > 0 else { return 0 }
+        var ids = [CGDirectDisplayID](repeating: 0, count: Int(count))
+        guard CGGetOnlineDisplayList(count, &ids, &count) == .success else { return 0 }
+        return ids.prefix(Int(count)).filter { CGDisplayIsBuiltin($0) == 0 }.count
     }
 
     /// Stops the timer and the activity and turns the display back on (every way out).

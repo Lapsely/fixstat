@@ -14,11 +14,13 @@ import Testing
         for (frequencies, gain, harmonics) in [(SpeakerLoopback.leftFrequencies, left, Float(0)),
                                                (SpeakerLoopback.rightFrequencies, right, rightHarmonics)] {
             for f in frequencies {
+                let fade = Int(0.02 * rate)
                 for i in 0..<tone {
                     let t = Double(i) / rate
+                    let envelope = Float(min(1, Double(i) / Double(fade), Double(tone - i) / Double(fade)))
                     let fundamental = Float(sin(2 * .pi * f * t))
                     let h = Float(sin(2 * .pi * 2 * f * t) + sin(2 * .pi * 3 * f * t))
-                    samples.append(gain * (fundamental + harmonics * h) + noise())
+                    samples.append(gain * envelope * (fundamental + harmonics * h) + noise())
                 }
             }
         }

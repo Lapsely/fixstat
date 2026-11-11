@@ -18,7 +18,7 @@ struct TestView: View {
         VStack(alignment: .leading, spacing: 12) {
             Card {
                 CardHeader("Post-repair test", systemImage: "flame")
-                Text("Loads the CPU and GPU for a few minutes and checks temperatures, cell voltages and power delivery. Run it after a repair with the case closed, on a desk.")
+                Text("Loads the CPU and GPU for a few minutes and checks temperatures, cell voltages and power delivery. Run it after a repair with the case closed, on a desk. With the CPU load alone it also measures the cooling (°C per watt: thermal paste, heatsink).")
                     .foregroundStyle(.secondary)
                     .fixedSize(horizontal: false, vertical: true)
                 controls.padding(.top, 4)

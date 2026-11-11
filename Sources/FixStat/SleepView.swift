@@ -293,7 +293,7 @@ final class IdlePowerTester {
         if case let .failed(message) = runner.state { failure = message } else { failure = nil }
         if core.lastIdlePower != result {
             result = core.lastIdlePower
-            verdict = result.map { DrainText.idlePowerVerdict($0, reference: core.powerReference, model: core.system.model) }
+            verdict = result.map { DrainText.idlePowerVerdict($0, reference: core.powerReference, model: core.system.model, models: core.modelReference) }
         }
     }
 }

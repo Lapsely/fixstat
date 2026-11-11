@@ -64,7 +64,7 @@ public struct ReportData {
         drain = monitor.profile.hasBattery ? monitor.drainReport(analysis: monitor.lastSleepAnalysis) : nil
         idlePower = monitor.lastIdlePower.map(DrainText.idlePowerRows) ?? []
         idlePowerVerdict = monitor.lastIdlePower.map {
-            DrainText.idlePowerVerdict($0, reference: monitor.powerReference, model: monitor.system.model).text
+            DrainText.idlePowerVerdict($0, reference: monitor.powerReference, model: monitor.system.model, models: monitor.modelReference).text
         }
     }
 }

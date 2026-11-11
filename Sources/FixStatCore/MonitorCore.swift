@@ -30,6 +30,16 @@ public final class MonitorCore {
             ?? URL(fileURLWithPath: "SensorMaps/power-reference.json")
         return PowerReference.load(from: url) ?? PowerReference()
     }()
+    /// Bench values of healthy Macs per model (`model-reference.json`, from the lab).
+    public let modelReferences: ModelReferences = {
+        let url = Bundle.main.url(forResource: "model-reference", withExtension: "json")
+            ?? URL(fileURLWithPath: "SensorMaps/model-reference.json")
+        return ModelReferences.load(from: url) ?? ModelReferences()
+    }()
+
+    /// This model's healthy references, if the lab has any.
+    public var modelReference: ModelReference? { modelReferences.models[system.model] }
+
     /// Result of the last idle power measurement (session, for reports).
     public var lastIdlePower: IdlePowerResult?
 
