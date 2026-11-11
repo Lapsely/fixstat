@@ -563,7 +563,8 @@ individual cores. Never name them per core ("P-core 1"). Use ids like
 - Lid: `IOPMrootDomain.AppleClamshellState` polled, plus the last `pmset -g log` sleep
   reason ("Clamshell Sleep") after a wake. Lid angle (`LidAngleSensor`): the SPU HID device "las"
   (0x05AC / 0x8104, sensor page 0x20, usage 0x8A; report 1 = usage 0x047F, 9 bits, 0 … 360°)
-  on MacBook Air M2 / M3 and MacBook Pro M3 (dumps; not on M1, Intel, the 13" M2 MacBook Pro).
+  on MacBook Air M2 / M3 and MacBook Pro M3 (dumps; not on M1, the 13" M2 MacBook Pro), and on the Intel
+  MacBook Pro 16" 2019 (A2141, owner's screenshot: feature report, 1 – 131°, macOS reported the lid closed at 5°).
   Read by asking the sensor for a feature report (then an input report): the value the HID system
   last delivered lagged seconds behind the lid on a real Mac (all three ways answered on a
   MacBook Pro M3 and a MacBook Air M2). Read every display frame and eased (`AngleFollower`,
@@ -574,7 +575,8 @@ individual cores. Never name them per core ("P-core 1"). Use ids like
   black, 11 sky blue; space gray confirmed on a MacBook Air M2). The angle at which macOS reports
   the lid closed and the range seen are evidence, and a lid that closed while the angle stayed
   within 20° is a finding. `-FixStatSampleLidAngle YES|N|missing` swings or holds a made-up lid,
-  `-FixStatNotebookBody air13|air15|pro14|pro16` and `-FixStatHousingColor NAME` pick the drawing.
+  `-FixStatNotebookBody air13|air15|pro14|pro16|classic13|classic15|classic16` (classic = the 2016 – 2020 Intel
+  Pro bodies, MacBookPro13,x – 16,x: the Pro design with two Thunderbolt ports on the left, small feet, no side vent) and `-FixStatHousingColor NAME` pick the drawing.
   Every MacBook with M2 or later has the sensor except the 13" MacBook Pro M2 (Mac14,7) (owner;
   `LidAngleSensor.expected`): on those a sensor macOS does not show fails the test ("check the
   sensor in the hinge and its cable"; `-FixStatSampleLidAngle missing` pretends it). Whether an

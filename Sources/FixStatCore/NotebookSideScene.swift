@@ -9,12 +9,14 @@ import MacSensors
 /// `Canvas`, a flipped NSView), so both interfaces can use it.
 public struct NotebookSideScene {
     /// Body shapes, from published dimensions (the lid angle sensor is in the MacBook Air M2 and
-    /// later and the MacBook Pro M3 and later; older bodies map to the nearest).
+    /// later, the MacBook Pro M3 and later and the 16" MacBook Pro 2019; older bodies map to the
+    /// nearest). `classic…`: the Intel MacBook Pro of 2016 – 2020 (two Thunderbolt ports on the
+    /// left, no MagSafe, the headphone jack on the right), drawn from the Pro design.
     public enum Body: String, CaseIterable {
-        case air13, air15, pro14, pro16
+        case air13, air15, pro14, pro16, classic13, classic15, classic16
 
         /// The body of this Mac from the product name ("MacBook Air (15-inch, M3, 2024)").
-        /// `-FixStatNotebookBody air13|air15|pro14|pro16` overrides it.
+        /// `-FixStatNotebookBody air13|air15|pro14|pro16|classic13|classic15|classic16` overrides it.
         public static func current(system: SystemInfo = .current()) -> Body {
             if let raw = UserDefaults.standard.string(forKey: "FixStatNotebookBody"), let body = Body(rawValue: raw) {
                 return body
@@ -25,6 +27,11 @@ public struct NotebookSideScene {
         static func of(marketingName: String?, model: String) -> Body {
             let name = marketingName?.lowercased() ?? ""
             if name.contains("macbook pro") || model.hasPrefix("MacBookPro") {
+                // MacBookPro13,x – 16,x: the USB-C Intel bodies of 2016 – 2020.
+                if let generation = Int(model.dropFirst("MacBookPro".count).prefix { $0 != "," }), (13...16).contains(generation) {
+                    if name.contains("16-inch") { return .classic16 }
+                    return name.contains("15-inch") ? .classic15 : .classic13
+                }
                 return name.contains("16-inch") || name.contains("15-inch") ? .pro16 : .pro14
             }
             return name.contains("15-inch") ? .air15 : .air13
@@ -37,10 +44,14 @@ public struct NotebookSideScene {
             case .air13, .pro14: return (0, 0)
             case .air15: return ((237.6 - 215) * 698 / 215, 0)
             case .pro16: return ((248.1 - 221.2) * 700.7 / 221.2, 0)
+            case .classic13: return ((212.4 - 221.2) * 700.7 / 221.2, 0)
+            case .classic15: return ((240.7 - 221.2) * 700.7 / 221.2, 0)
+            case .classic16: return ((245.9 - 221.2) * 700.7 / 221.2, 0)
             }
         }
 
-        var isPro: Bool { self == .pro14 || self == .pro16 }
+        var isClassic: Bool { self == .classic13 || self == .classic15 || self == .classic16 }
+        var isPro: Bool { self == .pro14 || self == .pro16 || isClassic }
     }
 
     let body: Body
@@ -226,8 +237,14 @@ public struct NotebookSideScene {
     // MARK: MacBook Pro
 
     private func drawPro(_ ctx: CGContext, angle: Double, dx: Double) {
-        // Feet.
-        for x in [185.44, 731.25 + dx] {
+        let classic = body.isClassic
+        // Feet (the classic body has small round feet, low in a side view).
+        if classic {
+            for x in [196.0, 760 + dx] {
+                fill(ctx, rounded(x, 582, 34, 3.6, 1.8), vertical: Self.proFoot, from: 582, to: 585.6)
+            }
+        }
+        for x in [185.44, 731.25 + dx] where !classic {
             let foot = CGMutablePath()
             foot.move(to: pt(x, 582))
             foot.addLine(to: pt(x + 57.09, 582))
@@ -280,18 +297,25 @@ public struct NotebookSideScene {
         fill(ctx, rect(130, 549, 715 + dx, 34), vertical: Self.proBaseShade, from: 549, to: 583)
         fill(ctx, rect(130, 549, 715 + dx, 0.8), metal: 0xbdbec1)
         fill(ctx, rect(130, 549.8, 715 + dx, 0.9), hex: 0xffffff, alpha: 0.45)
-        // The vent slot along the bottom edge, fading out towards the front.
-        let slot = rect(412.07, 576.25, 350.32 + dx, 4)
-        ctx.beginTransparencyLayer(auxiliaryInfo: nil)
-        fill(ctx, rounded(412.07, 577.03, 350.32 + dx, 1.99, 0.9), vertical: Self.proSlot, from: 577.03, to: 579.02)
-        fill(ctx, rect(412.07, 579.02, 350.32 + dx, 0.8), hex: 0xffffff, alpha: 0.35)
-        ctx.setBlendMode(.destinationIn)
-        fill(ctx, slot, gradient: Self.proSlotFade, from: pt(412.07, 0), to: pt(762.39 + dx, 0))
-        ctx.endTransparencyLayer()
+        // The vent slot along the bottom edge, fading out towards the front (2021 and later).
+        if !classic {
+            let slot = rect(412.07, 576.25, 350.32 + dx, 4)
+            ctx.beginTransparencyLayer(auxiliaryInfo: nil)
+            fill(ctx, rounded(412.07, 577.03, 350.32 + dx, 1.99, 0.9), vertical: Self.proSlot, from: 577.03, to: 579.02)
+            fill(ctx, rect(412.07, 579.02, 350.32 + dx, 0.8), hex: 0xffffff, alpha: 0.35)
+            ctx.setBlendMode(.destinationIn)
+            fill(ctx, slot, gradient: Self.proSlotFade, from: pt(412.07, 0), to: pt(762.39 + dx, 0))
+            ctx.endTransparencyLayer()
+        }
         ctx.restoreGState()
         // Shadow where the lid meets the base.
         radial(ctx, Self.proHingeShade, in: CGRect(x: 135.5, y: 544.3, width: 16, height: 8.4), centre: pt(0.5, 0.5), clipToEllipse: true)
 
+        if classic {
+            // Two Thunderbolt 3 ports near the hinge, nothing else on this side.
+            for x in [196.0, 238.8] { thunderbolt(ctx, x) }
+            return
+        }
         // MagSafe 3.
         fill(ctx, rounded(213.55, 554.88, 43.25, 7.61, 3.81), vertical: metal(Self.proMag), from: 554.88, to: 562.49)
         fill(ctx, rounded(221.34, 557.48, 30.71, 3.98, 1.38), vertical: Self.proMagSlot, from: 557.48, to: 561.46)
@@ -299,16 +323,18 @@ public struct NotebookSideScene {
             fill(ctx, rounded(x, 558.77, 1.38, 2.08, 0.4), hex: 0x77787c)
         }
         // Thunderbolt.
-        for x in [279.03, 321.85] {
-            fill(ctx, rounded(x, 554.71, 23.87, 1.3, 0.65), metal: 0xeceef0, alpha: 0.7)
-            fill(ctx, rounded(x + 0.26, 555.57, 23.36, 7.79, 3.89), vertical: Self.proUsb, from: 555.57, to: 563.36)
-            fill(ctx, rounded(x + 2.08, 558.6, 17.82, 1.9, 0.95), hex: 0x44464a)
-        }
+        for x in [279.03, 321.85] { thunderbolt(ctx, x) }
         // Headphone jack.
         fill(ctx, CGPath(ellipseIn: CGRect(x: 368.13 - 5.36, y: 559.38 - 5.36, width: 10.72, height: 10.72), transform: nil),
              metal: 0xc4c5c8, alpha: 0.6)
         radial(ctx, Self.proJack, in: CGRect(x: 368.13 - 4.76, y: 559.38 - 4.76, width: 9.52, height: 9.52),
                centre: pt(0.5, 0.45), clipToEllipse: true)
+    }
+
+    private func thunderbolt(_ ctx: CGContext, _ x: Double) {
+        fill(ctx, rounded(x, 554.71, 23.87, 1.3, 0.65), metal: 0xeceef0, alpha: 0.7)
+        fill(ctx, rounded(x + 0.26, 555.57, 23.36, 7.79, 3.89), vertical: Self.proUsb, from: 555.57, to: 563.36)
+        fill(ctx, rounded(x + 2.08, 558.6, 17.82, 1.9, 0.95), hex: 0x44464a)
     }
 
     // MARK: Drawing helpers
