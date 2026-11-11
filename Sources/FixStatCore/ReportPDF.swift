@@ -16,6 +16,8 @@ public struct ReportData {
     public let batteryCheck: PartCheck?
     public let adapterCheck: PartCheck?
     public let macOSHealth: MacOSBatteryHealth?
+    /// Touch ID, True Tone, camera, light and lid angle sensors against what the model should have.
+    public let pairing: PairingTraces
     public let device: DeviceInfo
     public let shopName: String
     public let note: String
@@ -46,6 +48,7 @@ public struct ReportData {
         batteryCheck = battery.map { PartCheck.battery($0, model: monitor.system.model, modelYear: monitor.system.modelYear, reference: monitor.partsReference) }
         adapterCheck = battery.flatMap { PartCheck.adapter($0, reference: monitor.partsReference) }
         macOSHealth = MacOSBatteryHealth.read()
+        pairing = PairingTraces.read(system: monitor.system, profile: monitor.profile)
         // The device card in the app is always masked: read again for full serials.
         device = fullSerial ? DeviceInfo.read(includeSerial: true) : (monitor.deviceInfo ?? DeviceInfo.read())
         let defaults = UserDefaults.standard
@@ -200,6 +203,7 @@ private final class ReportWriter {
         row(L("Activation Lock · MDM"), [DeviceText.state(d.activationLock, on: L("On"), off: L("Off")),
                                          DeviceText.state(d.mdmEnrolled, on: L("Enrolled"), off: L("Not enrolled"))]
             .joined(separator: " · "))
+        for (title, value, _) in DeviceText.pairing(data.pairing) { row(title, value) }
         endGroup()
     }
 

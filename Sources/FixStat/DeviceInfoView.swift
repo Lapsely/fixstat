@@ -11,6 +11,7 @@ struct DeviceInfoView: View {
     @Environment(Monitor.self) private var monitor
     @State private var ssd: SSDInfo?
     @State private var panics: [PanicReport]?
+    @State private var pairing: PairingTraces?
     @State private var copied = false
 
     var body: some View {
@@ -23,6 +24,14 @@ struct DeviceInfoView: View {
                         CardHeader("Ownership and security", systemImage: "lock")
                         ForEach(DeviceText.security(info), id: \.0) { row in
                             SecurityRow(title: row.0, value: row.1, attention: row.2)
+                        }
+                    }
+                    if let pairing, !pairing.items.isEmpty {
+                        Card {
+                            CardHeader("Pairing and parts", systemImage: "link")
+                            ForEach(DeviceText.pairing(pairing), id: \.0) { row in
+                                SecurityRow(title: row.0, value: row.1, attention: row.2)
+                            }
                         }
                     }
                     Card {
@@ -55,6 +64,7 @@ struct DeviceInfoView: View {
             await monitor.loadDeviceInfo()
             ssd = await Task.detached { SSDInfo.read() }.value
             panics = await Task.detached { CrashHistory.panics() }.value
+            pairing = await Task.detached { PairingTraces.read() }.value
         }
     }
 

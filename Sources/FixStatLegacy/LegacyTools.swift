@@ -129,6 +129,7 @@ final class LegacyDeviceInfo {
     private let core: MonitorCore
     private var ssd: SSDInfo?
     private var panics: [PanicReport]?
+    private var pairing: PairingTraces?
     private var copied = false
     private(set) var window: LegacyToolWindow!
     private lazy var exportButton = LegacyExport.menuButton(core: core)
@@ -145,11 +146,18 @@ final class LegacyDeviceInfo {
             self?.core.deviceInfo = info
             self?.window.reload()
         }
-        background({ (SSDInfo.read(), CrashHistory.panics()) }, done: { [weak self] result in
+        background({ (SSDInfo.read(), CrashHistory.panics(), PairingTraces.read()) }, done: { [weak self] result in
             self?.ssd = result.0
             self?.panics = result.1
+            self?.pairing = result.2
             self?.window.reload()
         })
+    }
+
+    private func pairingBlocks() -> [Block] {
+        guard let pairing, !pairing.items.isEmpty else { return [] }
+        return [.section(L("Pairing and parts")),
+                .list(DeviceText.pairing(pairing).map { .status("\($0.0): \($0.1)", $0.2 ? .bad : .good) })]
     }
 
     private var healthRows: [(String, String, Bool)] {
@@ -170,7 +178,7 @@ final class LegacyDeviceInfo {
             .list(DeviceText.security(info).map { .status("\($0.0): \($0.1)", $0.2 ? .bad : .good) }),
             .section(L("Health summary")),
             .list(health.map { .status("\($0.0): \($0.1)", $0.2 ? .bad : .good) }),
-        ] + [.view(hStack([ActionButton(title: copied ? L("Copied") : L("Copy as text")) { [unowned self] in
+        ] + pairingBlocks() + [.view(hStack([ActionButton(title: copied ? L("Copied") : L("Copy as text")) { [unowned self] in
                 NSPasteboard.general.clearContents()
                 NSPasteboard.general.setString(DeviceText.plainText(info, ssd: ssd, health: healthRows), forType: .string)
                 copied = true

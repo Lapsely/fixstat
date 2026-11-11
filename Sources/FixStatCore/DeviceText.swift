@@ -38,6 +38,39 @@ public enum DeviceText {
         ]
     }
 
+    /// Pairing and parts: title, state, needs attention.
+    public static func pairing(_ traces: PairingTraces) -> [(String, String, Bool)] {
+        traces.items.map { item in (pairingTitle(item.id), pairingState(item), item.problem) }
+    }
+
+    static func pairingTitle(_ id: String) -> String {
+        switch id {
+        case "touchID": return "Touch ID"
+        case "trueTone": return "True Tone"
+        case "camera": return L("Camera")
+        case "lightSensor": return L("Ambient light sensor")
+        case "lidAngle": return L("Lid angle sensor")
+        default: return id
+        }
+    }
+
+    static func pairingState(_ item: PairingTraces.Item) -> String {
+        switch (item.id, item.status) {
+        case ("touchID", .working): return L("Works (fingerprints enrolled)")
+        case (_, .working): return L("Works")
+        case (_, .notEnrolled): return L("The sensor answers; no fingerprint is enrolled (enroll one to try it)")
+        case (_, .lockedOut): return L("Locked after failed attempts (the sensor answers)")
+        case ("touchID", .missing):
+            return L("Not available — after a board or Touch ID swap it needs Apple's pairing; otherwise the sensor or its cable")
+        case ("trueTone", _):
+            return L("Not available — a replaced display that is not paired, or the ambient light sensor")
+        case ("camera", .missing): return L("Not found — the camera module or the display cable (often after a board or display swap)")
+        case ("lightSensor", .missing): return L("Not found — the ambient light sensor or the display cable")
+        case ("lidAngle", .missing): return L("Not found — the sensor in the hinge or its cable")
+        default: return L("Not found")
+        }
+    }
+
     public static func state(_ s: DeviceInfo.SecurityState, on: String, off: String) -> String {
         switch s {
         case .on: on

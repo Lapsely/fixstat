@@ -499,6 +499,21 @@ TR = {
     "Lifetime record identical to the one clone gauges ship with: the gauge does not keep its own history":
         "Ömür kaydı klon gauge'ların fabrikadan geldiği kayıtla birebir aynı: gauge kendi geçmişini tutmuyor",
     "%@ per cell": "hücre başına %@",
+    "Pairing and parts": "Eşleşme ve parçalar",
+    "Lid angle sensor": "Kapak açısı sensörü",
+    "Works (fingerprints enrolled)": "Çalışıyor (parmak izi kayıtlı)",
+    "Works": "Çalışıyor",
+    "The sensor answers; no fingerprint is enrolled (enroll one to try it)": "Sensör yanıt veriyor; kayıtlı parmak izi yok (denemek için bir tane kaydedin)",
+    "Locked after failed attempts (the sensor answers)": "Başarısız denemelerden sonra kilitli (sensör yanıt veriyor)",
+    "Not available — after a board or Touch ID swap it needs Apple's pairing; otherwise the sensor or its cable":
+        "Kullanılamıyor — kart veya Touch ID değişiminden sonra Apple eşleştirmesi gerekir; değilse sensör ya da kablosu",
+    "Not available — a replaced display that is not paired, or the ambient light sensor":
+        "Kullanılamıyor — eşleştirilmemiş değişen bir ekran ya da ortam ışığı sensörü",
+    "Not found — the camera module or the display cable (often after a board or display swap)":
+        "Bulunamadı — kamera modülü ya da ekran kablosu (çoğu zaman kart veya ekran değişiminden sonra)",
+    "Not found — the ambient light sensor or the display cable": "Bulunamadı — ortam ışığı sensörü ya da ekran kablosu",
+    "Not found — the sensor in the hinge or its cable": "Bulunamadı — menteşedeki sensör ya da kablosu",
+    "Not found": "Bulunamadı",
     "The battery reports %@: it may not be charged until that is fixed.": "Batarya şunu bildiriyor: %@. Bu düzelene kadar şarj edilmeyebilir.",
     "The battery reports a permanent failure: it is not charged any more.": "Batarya kalıcı arıza bildiriyor: artık şarj edilmiyor.",
     "Full: macOS tops it up again only after the charge has dropped a few percent.": "Dolu: macOS şarj birkaç yüzde düşmeden yeniden doldurmaz.",

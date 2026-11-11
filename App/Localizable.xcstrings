@@ -4596,6 +4596,16 @@
         }
       }
     },
+    "Lid angle sensor" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kapak açısı sensörü"
+          }
+        }
+      }
+    },
     "Lid angle sensor found, no reading yet." : {
       "localizations" : {
         "tr" : {
@@ -4818,6 +4828,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "CPU ve GPU'yu birkaç dakika yükler; sıcaklıkları, hücre voltajlarını ve güç beslemesini kontrol eder. Tamirden sonra, kasa kapalıyken ve masa üstünde çalıştırın."
+          }
+        }
+      }
+    },
+    "Locked after failed attempts (the sensor answers)" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Başarısız denemelerden sonra kilitli (sensör yanıt veriyor)"
           }
         }
       }
@@ -5678,6 +5698,26 @@
         }
       }
     },
+    "Not available — a replaced display that is not paired, or the ambient light sensor" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kullanılamıyor — eşleştirilmemiş değişen bir ekran ya da ortam ışığı sensörü"
+          }
+        }
+      }
+    },
+    "Not available — after a board or Touch ID swap it needs Apple's pairing; otherwise the sensor or its cable" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kullanılamıyor — kart veya Touch ID değişiminden sonra Apple eşleştirmesi gerekir; değilse sensör ya da kablosu"
+          }
+        }
+      }
+    },
     "Not charging because" : {
       "localizations" : {
         "tr" : {
@@ -5734,6 +5774,46 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Kayıtlı değil"
+          }
+        }
+      }
+    },
+    "Not found" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bulunamadı"
+          }
+        }
+      }
+    },
+    "Not found — the ambient light sensor or the display cable" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bulunamadı — ortam ışığı sensörü ya da ekran kablosu"
+          }
+        }
+      }
+    },
+    "Not found — the camera module or the display cable (often after a board or display swap)" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bulunamadı — kamera modülü ya da ekran kablosu (çoğu zaman kart veya ekran değişiminden sonra)"
+          }
+        }
+      }
+    },
+    "Not found — the sensor in the hinge or its cable" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bulunamadı — menteşedeki sensör ya da kablosu"
           }
         }
       }
@@ -6184,6 +6264,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Eşlenmiş cihazlar"
+          }
+        }
+      }
+    },
+    "Pairing and parts" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Eşleşme ve parçalar"
           }
         }
       }
@@ -8896,6 +8986,16 @@
         }
       }
     },
+    "The sensor answers; no fingerprint is enrolled (enroll one to try it)" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sensör yanıt veriyor; kayıtlı parmak izi yok (denemek için bir tane kaydedin)"
+          }
+        }
+      }
+    },
     "The sensor saw the flashlight but the camera stayed dark — check the camera as well." : {
       "localizations" : {
         "tr" : {
@@ -9878,6 +9978,26 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Kamera izni olmadan fener elle onaylanır."
+          }
+        }
+      }
+    },
+    "Works" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Çalışıyor"
+          }
+        }
+      }
+    },
+    "Works (fingerprints enrolled)" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Çalışıyor (parmak izi kayıtlı)"
           }
         }
       }

@@ -418,6 +418,14 @@ individual cores. Never name them per core ("P-core 1"). Use ids like
   with the drop of AppleRawCurrentCapacity (gauge agreement); DC pack resistance from the
   load step (Amperage is averaged, so ≥ 60 s after the load starts; shown only, no
   threshold yet); cell spread under load.
+- Pairing and parts (`PairingTraces`, core; device card in both interfaces and the PDF): Touch ID from
+  LocalAuthentication `canEvaluatePolicy` without a prompt (−7 not enrolled = the sensor answers; unusable on a
+  model that has it = unpaired after a board / Touch ID swap, or sensor / cable), True Tone from CoreBrightness'
+  `CBTrueToneClient` (`supported` / `available`, private, via the ObjC runtime: supported but not available =
+  an unpaired display or the light sensor), the built-in camera (AVCapture transport 'bltn' only), the ambient
+  light sensor and the lid angle sensor, each against the model (Touch ID: Apple Silicon notebooks, Intel Air
+  2018 – 2020 and Touch Bar MacBook Pros; True Tone: Apple Silicon with a display, Intel MBP 2018+, Air 2019 /
+  2020, iMac 2020).
 - Device card (`DeviceInfo`, `DeviceInfoView`): `system_profiler SPHardwareDataType -json`
   (part number `model_number`, `boot_rom_version`, `activation_lock_status`; serial masked,
   platform UUID / provisioning UDID never read), `profiles status -type enrollment`
