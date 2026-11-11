@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Mac models: temperature sensors, SMC keys and genuine parts – FixStat</title>
+<meta name="description" content="Temperature sensor names and SMC keys per Mac model, and values of genuine Apple batteries and power adapters, measured on the bench with FixStat.">
+<link rel="canonical" href="https://lapsely.github.io/fixstat/models/">
+<link rel="icon" href="../icon.png">
+<style>
+  :root { --bg: #fbfbfd; --surface: #ffffff; --text: #1d1d1f; --muted: #5f6368; --line: #e3e3e8;
+          --accent: #0a66d8; --code: #f2f2f5; --ok: #1f7a3a; }
+  @media (prefers-color-scheme: dark) {
+    :root { --bg: #111214; --surface: #1b1c1f; --text: #f2f2f4; --muted: #a3a6ad; --line: #2c2e33;
+            --accent: #3d8bff; --code: #24262a; --ok: #4cc27a; }
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--text);
+         font: 16px/1.55 -apple-system, BlinkMacSystemFont, "SF Pro Text", "Helvetica Neue", Arial, sans-serif; }
+  .wrap { max-width: 980px; margin: 0 auto; padding: 0 16px; }
+  header { padding: 40px 0 16px; }
+  nav { font-size: 14px; color: var(--muted); }
+  nav a, a { color: var(--accent); }
+  h1 { font-size: 32px; line-height: 1.15; margin: 10px 0 6px; letter-spacing: -0.01em; }
+  h2 { font-size: 21px; margin: 32px 0 10px; }
+  .lead { color: var(--muted); margin: 0 0 8px; }
+  .facts { display: flex; flex-wrap: wrap; gap: 8px 22px; margin: 14px 0 4px; font-size: 15px; }
+  .facts span { color: var(--muted); }
+  .card { background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 4px 16px; overflow-x: auto; }
+  table { width: 100%; border-collapse: collapse; font-size: 15px; }
+  th, td { text-align: left; padding: 8px 10px 8px 0; border-bottom: 1px solid var(--line); vertical-align: top; }
+  tr:last-child td { border-bottom: none; }
+  th { color: var(--muted); font-weight: 600; font-size: 13px; }
+  code { background: var(--code); padding: 1px 6px; border-radius: 5px; font-size: 0.9em; }
+  .ok { color: var(--ok); }
+  .muted { color: var(--muted); }
+  .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 12px; }
+  .grid a { display: block; background: var(--surface); border: 1px solid var(--line); border-radius: 12px;
+            padding: 14px 16px; text-decoration: none; color: var(--text); }
+  .grid a strong { display: block; }
+  .grid a span { color: var(--muted); font-size: 14px; }
+  footer { border-top: 1px solid var(--line); margin-top: 48px; padding: 24px 0 40px; color: var(--muted); font-size: 14px; }
+  footer a { color: var(--muted); }
+</style>
+</head>
+<body>
+<div class="wrap">
+<header><nav><a href="../">FixStat</a> › Mac models</nav>
+<h1>Mac models</h1>
+<p class="lead">Temperature sensor names with their SMC keys, and the values of genuine batteries and power adapters, recorded on the bench with FixStat.</p></header>
+<div class="grid"><a href="mac14-2.html"><strong>MacBook Air (M2, 2022)</strong><span>Mac14,2 · Apple M2 · 62 sensors</span></a><a href="mac14-7.html"><strong>MacBook Pro (13-inch, M2, 2022)</strong><span>Mac14,7 · Apple M2 · 63 sensors</span></a><a href="mac14-9.html"><strong>MacBook Pro (14-inch, 2023)</strong><span>Mac14,9 · Apple M2 Pro · 69 sensors</span></a><a href="mac15-12.html"><strong>MacBook Air (13-inch, M3, 2024)</strong><span>Mac15,12 · Apple M3 · 76 sensors</span></a><a href="mac15-3.html"><strong>MacBook Pro (14-inch, M3, Nov 2023)</strong><span>Mac15,3 · Apple M3 · 75 sensors</span></a><a href="mac16-1.html"><strong>MacBook Pro (14-inch, M4, 2024)</strong><span>Mac16,1 · Apple M4 · 74 sensors</span></a><a href="mac16-12.html"><strong>MacBook Air (13-inch, M4, 2025)</strong><span>Mac16,12 · Apple M4 · 75 sensors</span></a><a href="mac17-3.html"><strong>MacBook Air (13-inch, M5)</strong><span>Mac17,3 · Apple M5</span></a><a href="macbookair10-1.html"><strong>MacBook Air (M1, 2020)</strong><span>MacBookAir10,1 · Apple M1 · 64 sensors</span></a><a href="macbookair6-1.html"><strong>MacBook Air (11-inch, Mid 2013 / Early 2014)</strong><span>MacBookAir6,1 · Intel Core i5 (Haswell) · 15 sensors</span></a><a href="macbookair7-2.html"><strong>MacBook Air (13-inch, Early 2015 / 2017)</strong><span>MacBookAir7,2 · Intel Core (Broadwell)</span></a><a href="macbookair8-2.html"><strong>MacBook Air (Retina, 13-inch, 2019)</strong><span>MacBookAir8,2 · Intel Core (Amber Lake)</span></a><a href="macbookair9-1.html"><strong>MacBook Air (Retina, 13-inch, 2020)</strong><span>MacBookAir9,1 · Intel Core (Ice Lake)</span></a><a href="macbookpro11-3.html"><strong>MacBook Pro (15-inch, Late 2013 / Mid 2014, discrete graphics)</strong><span>MacBookPro11,3 · Intel Core i7 (Haswell) · 18 sensors</span></a><a href="macbookpro13-2.html"><strong>MacBook Pro (13-inch, 2016, four Thunderbolt 3 ports)</strong><span>MacBookPro13,2 · Intel Core (Skylake)</span></a><a href="macbookpro14-1.html"><strong>MacBook Pro (13-inch, 2017, two Thunderbolt 3 ports)</strong><span>MacBookPro14,1 · Intel Core (Kaby Lake)</span></a><a href="macbookpro14-3.html"><strong>MacBook Pro (15-inch, 2017)</strong><span>MacBookPro14,3 · Intel Core i7 (Kaby Lake) · 21 sensors</span></a><a href="macbookpro15-1.html"><strong>MacBook Pro (15-inch, 2018 / 2019)</strong><span>MacBookPro15,1 · Intel Core i9 (Coffee Lake) · 22 sensors</span></a><a href="macbookpro15-2.html"><strong>MacBook Pro (13-inch, 2018, four Thunderbolt 3 ports)</strong><span>MacBookPro15,2 · Intel Core i7 (Coffee Lake) · 17 sensors</span></a><a href="macbookpro17-1.html"><strong>MacBook Pro (13-inch, M1, 2020)</strong><span>MacBookPro17,1 · Apple M1 · 69 sensors</span></a><a href="macbookpro18-3.html"><strong>MacBook Pro (14-inch, 2021)</strong><span>MacBookPro18,3 · Apple M1 Pro · 58 sensors</span></a></div>
+<h2>Genuine Apple power adapters</h2>
+<p class="lead">The adapter ID, power profiles and firmware that original adapters report; FixStat compares a connected adapter with them.</p>
+<div class="card"><table><tr><th>Adapter</th><th>ID</th><th>Reported</th><th>Profiles</th><th>Firmware</th></tr><tr><td>30W USB-C Power Adapter</td><td><code>0x7003</code></td><td>30 W</td><td>5 V 2.96 A, 9 V 2.97 A, 15 V 1.98 A, 20 V 1.49 A</td><td>01030053</td></tr><tr><td>61W USB-C Power Adapter</td><td><code>0x1685</code></td><td>60 W</td><td>5 V 3 A, 9 V 3 A, 15 V 3 A, 20 V 3 A</td><td>01050029</td></tr><tr><td>67W USB-C Power Adapter</td><td><code>0x7016</code></td><td>65 W</td><td>5 V 3 A, 9 V 3 A, 15 V 3 A, 20 V 3.27 A</td><td>01050036</td></tr><tr><td>70W USB-C Power Adapter</td><td><code>0x701C</code></td><td>68 W</td><td>5 V 2.96 A, 9 V 2.97 A, 15 V 2.98 A, 20 V 3.39 A</td><td>01030030</td></tr><tr><td>87W USB-C Power Adapter</td><td><code>0x1656</code></td><td>86 W</td><td></td><td>01070069</td></tr><tr><td>96W USB-C Power Adapter</td><td><code>0x7002</code></td><td>94 W</td><td>5 V 3 A, 9 V 3 A, 15 V 3 A, 20 V 4.7 A</td><td>01070051</td></tr></table></div>
+</div>
+<footer>
+  <div class="wrap">
+    Generated from FixStat's sensor map and parts data, measured on the bench with FixStat.
+    · <a href="../">FixStat</a>
+    · <a href="https://github.com/Lapsely/fixstat">GitHub</a>
+    · <a href="https://github.com/Lapsely/fixstat/releases/latest/download/FixStat.dmg">Download</a>
+  </div>
+</footer>
+</body>
+</html>

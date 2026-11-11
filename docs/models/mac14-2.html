@@ -1,0 +1,80 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>MacBook Air (M2, 2022) (Mac14,2): sensors and genuine parts – FixStat</title>
+<meta name="description" content="MacBook Air (M2, 2022) (Mac14,2): 62 temperature sensors with their SMC keys and names, genuine battery values (design capacity, gauge, chemistry, cell makers), measured on the bench with FixStat, a free Mac diagnostics app for repair technicians.">
+<link rel="canonical" href="https://lapsely.github.io/fixstat/models/mac14-2.html">
+<link rel="icon" href="../icon.png">
+<style>
+  :root { --bg: #fbfbfd; --surface: #ffffff; --text: #1d1d1f; --muted: #5f6368; --line: #e3e3e8;
+          --accent: #0a66d8; --code: #f2f2f5; --ok: #1f7a3a; }
+  @media (prefers-color-scheme: dark) {
+    :root { --bg: #111214; --surface: #1b1c1f; --text: #f2f2f4; --muted: #a3a6ad; --line: #2c2e33;
+            --accent: #3d8bff; --code: #24262a; --ok: #4cc27a; }
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--text);
+         font: 16px/1.55 -apple-system, BlinkMacSystemFont, "SF Pro Text", "Helvetica Neue", Arial, sans-serif; }
+  .wrap { max-width: 980px; margin: 0 auto; padding: 0 16px; }
+  header { padding: 40px 0 16px; }
+  nav { font-size: 14px; color: var(--muted); }
+  nav a, a { color: var(--accent); }
+  h1 { font-size: 32px; line-height: 1.15; margin: 10px 0 6px; letter-spacing: -0.01em; }
+  h2 { font-size: 21px; margin: 32px 0 10px; }
+  .lead { color: var(--muted); margin: 0 0 8px; }
+  .facts { display: flex; flex-wrap: wrap; gap: 8px 22px; margin: 14px 0 4px; font-size: 15px; }
+  .facts span { color: var(--muted); }
+  .card { background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 4px 16px; overflow-x: auto; }
+  table { width: 100%; border-collapse: collapse; font-size: 15px; }
+  th, td { text-align: left; padding: 8px 10px 8px 0; border-bottom: 1px solid var(--line); vertical-align: top; }
+  tr:last-child td { border-bottom: none; }
+  th { color: var(--muted); font-weight: 600; font-size: 13px; }
+  code { background: var(--code); padding: 1px 6px; border-radius: 5px; font-size: 0.9em; }
+  .ok { color: var(--ok); }
+  .muted { color: var(--muted); }
+  .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 12px; }
+  .grid a { display: block; background: var(--surface); border: 1px solid var(--line); border-radius: 12px;
+            padding: 14px 16px; text-decoration: none; color: var(--text); }
+  .grid a strong { display: block; }
+  .grid a span { color: var(--muted); font-size: 14px; }
+  footer { border-top: 1px solid var(--line); margin-top: 48px; padding: 24px 0 40px; color: var(--muted); font-size: 14px; }
+  footer a { color: var(--muted); }
+</style>
+</head>
+<body>
+<div class="wrap">
+<header><nav><a href="../">FixStat</a> › <a href="./">Mac models</a></nav>
+<h1>MacBook Air (M2, 2022)</h1>
+<p class="lead">Temperature sensors and genuine parts of the MacBook Air (M2, 2022) (<code>Mac14,2</code>), as FixStat reads them.</p>
+<div class="facts"><div><span>Model identifier</span> <code>Mac14,2</code></div><div><span>Chip</span> Apple M2</div><div><span>Board</span> J413</div><div><span>Sensors named</span> 62 (11 verified by test)</div></div></header>
+<h2>Temperature sensors</h2>
+<p class="lead">Names from load tests on the bench (CPU, GPU, SSD, charger): “verified by test” sensors followed the matching load; the others are named from the chip and key patterns.</p>
+<h3>CPU</h3>
+<div class="card"><table><tr><th>Sensor</th><th>SMC key</th><th>Naming</th></tr><tr><td>Efficiency cluster 1</td><td><code>Te05</code></td><td><span class="muted">estimated</span></td></tr><tr><td>Performance cluster 1</td><td><code>Tp01</code></td><td><span class="ok">verified by test</span></td></tr><tr><td>Performance cluster 2</td><td><code>Tp05</code></td><td><span class="ok">verified by test</span></td></tr><tr><td>Performance cluster 3</td><td><code>Tp09</code></td><td><span class="muted">estimated</span></td></tr><tr><td>Performance cluster 4</td><td><code>Tp0D</code></td><td><span class="ok">verified by test</span></td></tr><tr><td>Performance cluster 5</td><td><code>Tp0b</code></td><td><span class="muted">estimated</span></td></tr><tr><td>Performance cluster 6</td><td><code>Tp0f</code></td><td><span class="muted">estimated</span></td></tr><tr><td>Performance cluster 7</td><td><code>Tp0j</code></td><td><span class="muted">estimated</span></td></tr><tr><td>Performance cluster 8</td><td><code>Tp0n</code></td><td><span class="ok">verified by test</span></td></tr><tr><td>Performance cluster 9</td><td><code>Tp0r</code></td><td><span class="ok">verified by test</span></td></tr></table></div>
+<h3>GPU</h3>
+<div class="card"><table><tr><th>Sensor</th><th>SMC key</th><th>Naming</th></tr><tr><td>GPU cluster 1</td><td><code>Tg0f</code></td><td><span class="ok">verified by test</span></td></tr><tr><td>GPU cluster 2</td><td><code>Tg0n</code></td><td><span class="ok">verified by test</span></td></tr><tr><td>GPU cluster 3</td><td><code>Tg0r</code></td><td><span class="ok">verified by test</span></td></tr></table></div>
+<h3>SSD</h3>
+<div class="card"><table><tr><th>Sensor</th><th>SMC key</th><th>Naming</th></tr><tr><td>SSD (NAND) channel 1</td><td><code>TN0n</code> <span class="muted">HID “NAND CH0 temp”</span></td><td><span class="ok">verified by test</span></td></tr><tr><td>SSD proximity 1</td><td><code>TH0T</code></td><td><span class="ok">verified by test</span></td></tr><tr><td>SSD proximity 2</td><td><code>TH0x</code></td><td><span class="ok">verified by test</span></td></tr></table></div>
+<h3>Battery</h3>
+<div class="card"><table><tr><th>Sensor</th><th>SMC key</th><th>Naming</th></tr><tr><td>Battery (gas gauge) 1</td><td><code>TG0B</code> <span class="muted">HID “gas gauge battery”</span></td><td><span class="muted">estimated</span></td></tr><tr><td>Battery (gas gauge) 3</td><td><code>TG0H</code> <span class="muted">HID “gas gauge battery”</span></td><td><span class="muted">estimated</span></td></tr><tr><td>Battery (gas gauge) 4</td><td><code>TG0V</code> <span class="muted">HID “gas gauge battery”</span></td><td><span class="muted">estimated</span></td></tr><tr><td>Battery (gas gauge) 5</td><td><code>TG1B</code> <span class="muted">HID “gas gauge battery”</span></td><td><span class="muted">estimated</span></td></tr><tr><td>Battery (gas gauge) 6</td><td><code>TG2B</code> <span class="muted">HID “gas gauge battery”</span></td><td><span class="muted">estimated</span></td></tr><tr><td>Battery pack 1</td><td><code>TB0T</code></td><td><span class="muted">estimated</span></td></tr><tr><td>Battery pack 2</td><td><code>TB1T</code></td><td><span class="muted">estimated</span></td></tr><tr><td>Battery pack 3</td><td><code>TB2T</code></td><td><span class="muted">estimated</span></td></tr></table></div>
+<h3>Enclosure</h3>
+<div class="card"><table><tr><th>Sensor</th><th>SMC key</th><th>Naming</th></tr><tr><td>Ambient (virtual)</td><td><code>TVA0</code></td><td><span class="muted">estimated</span></td></tr><tr><td>Palm rest 1</td><td><code>Ts0P</code></td><td><span class="muted">estimated</span></td></tr><tr><td>Palm rest 2</td><td><code>Ts1P</code></td><td><span class="muted">estimated</span></td></tr><tr><td>Enclosure surface 1 (virtual)</td><td><code>TVS0</code></td><td><span class="muted">estimated</span></td></tr><tr><td>Enclosure surface 2 (virtual)</td><td><code>TVS1</code></td><td><span class="muted">estimated</span></td></tr><tr><td>Enclosure surface 3 (virtual)</td><td><code>TVSx</code></td><td><span class="muted">estimated</span></td></tr></table></div>
+<h3>Board and other</h3>
+<div class="card"><table><tr><th>Sensor</th><th>SMC key</th><th>Naming</th></tr><tr><td>Charger proximity</td><td><code>TCHP</code></td><td><span class="muted">estimated</span></td></tr><tr><td>I/O ports proximity</td><td><code>TIOP</code></td><td><span class="muted">estimated</span></td></tr><tr><td>Memory VR proximity</td><td><code>TMVR</code></td><td><span class="muted">estimated</span></td></tr><tr><td>PMU proximity</td><td><code>TPMP</code></td><td><span class="muted">estimated</span></td></tr><tr><td>Power input proximity</td><td><code>TPSP</code></td><td><span class="muted">estimated</span></td></tr><tr><td>Wi-Fi module proximity</td><td><code>TW0P</code></td><td><span class="muted">estimated</span></td></tr><tr><td>PMU die 1</td><td><code>TP1b</code> <span class="muted">HID “PMU tdie1”</span></td><td><span class="muted">estimated</span></td></tr><tr><td>PMU die 2</td><td><code>TP2b</code> <span class="muted">HID “PMU tdie2”</span></td><td><span class="muted">estimated</span></td></tr><tr><td>PMU die 3</td><td><code>TP3b</code> <span class="muted">HID “PMU tdie3”</span></td><td><span class="muted">estimated</span></td></tr><tr><td>PMU die 4</td><td><code>TP4b</code> <span class="muted">HID “PMU tdie4”</span></td><td><span class="muted">estimated</span></td></tr><tr><td>PMU die 5</td><td><code>TP5b</code> <span class="muted">HID “PMU tdie5”</span></td><td><span class="muted">estimated</span></td></tr><tr><td>PMU die 6</td><td><code>TP6b</code> <span class="muted">HID “PMU tdie6”</span></td><td><span class="muted">estimated</span></td></tr><tr><td>PMU die 7</td><td><code>TP7l</code> <span class="muted">HID “PMU tdie7”</span></td><td><span class="muted">estimated</span></td></tr><tr><td>PMU die 8</td><td><code>TP8l</code> <span class="muted">HID “PMU tdie8”</span></td><td><span class="muted">estimated</span></td></tr><tr><td>PMU NTC 2</td><td><code>TP2d</code> <span class="muted">HID “PMU tdev2”</span></td><td><span class="muted">estimated</span></td></tr><tr><td>PMU NTC 3</td><td><code>TP3d</code> <span class="muted">HID “PMU tdev3”</span></td><td><span class="muted">estimated</span></td></tr><tr><td>PMU NTC 4</td><td><code>TP4d</code> <span class="muted">HID “PMU tdev4”</span></td><td><span class="muted">estimated</span></td></tr><tr><td>PMU NTC 5</td><td><code>TP5d</code> <span class="muted">HID “PMU tdev5”</span></td><td><span class="muted">estimated</span></td></tr><tr><td>PMU NTC 6</td><td><code>TP6d</code> <span class="muted">HID “PMU tdev6”</span></td><td><span class="muted">estimated</span></td></tr><tr><td>PMU NTC 7</td><td><code>TP7d</code> <span class="muted">HID “PMU tdev7”</span></td><td><span class="muted">estimated</span></td></tr><tr><td>PMU NTC 8</td><td><code>TP8d</code> <span class="muted">HID “PMU tdev8”</span></td><td><span class="muted">estimated</span></td></tr><tr><td>PMU2 die 1</td><td><code>TR1b</code> <span class="muted">HID “PMU2 tdie1”</span></td><td><span class="muted">estimated</span></td></tr><tr><td>PMU2 die 2</td><td><code>TR2b</code> <span class="muted">HID “PMU2 tdie2”</span></td><td><span class="muted">estimated</span></td></tr><tr><td>PMU2 die 3</td><td><code>TR3b</code> <span class="muted">HID “PMU2 tdie3”</span></td><td><span class="muted">estimated</span></td></tr><tr><td>PMU2 die 4</td><td><code>TR4b</code> <span class="muted">HID “PMU2 tdie4”</span></td><td><span class="muted">estimated</span></td></tr><tr><td>PMU2 die 5</td><td><code>TR5b</code> <span class="muted">HID “PMU2 tdie5”</span></td><td><span class="muted">estimated</span></td></tr><tr><td>PMU2 die 6</td><td><code>TR6b</code> <span class="muted">HID “PMU2 tdie6”</span></td><td><span class="muted">estimated</span></td></tr><tr><td>PMU2 die 7</td><td><code>TR7l</code> <span class="muted">HID “PMU2 tdie7”</span></td><td><span class="muted">estimated</span></td></tr><tr><td>PMU2 die 8</td><td><code>TR8l</code> <span class="muted">HID “PMU2 tdie8”</span></td><td><span class="muted">estimated</span></td></tr><tr><td>PMU2 NTC 2</td><td><code>TR2d</code> <span class="muted">HID “PMU2 tdev2”</span></td><td><span class="muted">estimated</span></td></tr><tr><td>PMU2 NTC 4</td><td><code>TR4d</code> <span class="muted">HID “PMU2 tdev4”</span></td><td><span class="muted">estimated</span></td></tr><tr><td>PMU2 NTC 5</td><td><code>TR5d</code> <span class="muted">HID “PMU2 tdev5”</span></td><td><span class="muted">estimated</span></td></tr></table></div><p class="muted">17 more keys are constant, unpopulated or aggregates of other sensors; FixStat lists them only in raw lists.</p>
+<h2>Genuine battery</h2>
+<p class="lead">Values of original Apple packs recorded at the bench. FixStat's originality check compares a pack with them (a consistency check, not proof).</p>
+<div class="card"><table><tr><th>Design capacity</th><td>4563 mAh</td></tr><tr><th>Gauge</th><td>bq40z651</td></tr><tr><th>Cells in series</th><td>3</td></tr><tr><th>Chemistry IDs</th><td>21620, 21353</td></tr><tr><th>Cell makers</th><td>COS, ATL</td></tr><tr><th>Genuine packs seen</th><td>3</td></tr></table></div>
+
+</div>
+<footer>
+  <div class="wrap">
+    Generated from FixStat's sensor map and parts data, measured on the bench with FixStat.
+    · <a href="../">FixStat</a>
+    · <a href="https://github.com/Lapsely/fixstat">GitHub</a>
+    · <a href="https://github.com/Lapsely/fixstat/releases/latest/download/FixStat.dmg">Download</a>
+  </div>
+</footer>
+</body>
+</html>
