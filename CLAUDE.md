@@ -577,7 +577,8 @@ individual cores. Never name them per core ("P-core 1"). Use ids like
   within 20° is a finding. `-FixStatSampleLidAngle YES|N|missing` swings or holds a made-up lid,
   `-FixStatNotebookBody air13|air15|pro14|pro16|classic13|classic15|classic16` (classic = the 2016 – 2020 Intel
   Pro bodies, MacBookPro13,x – 16,x: the Pro design with two Thunderbolt ports on the left, small feet, no side vent) and `-FixStatHousingColor NAME` pick the drawing.
-  Every MacBook with M2 or later has the sensor except the 13" MacBook Pro M2 (Mac14,7) (owner;
+  Every MacBook with M2 or later has the sensor except the 13" MacBook Pro M2 (Mac14,7), and so does every
+  A2141 (MacBookPro16,1 / 16,4) (owner;
   `LidAngleSensor.expected`): on those a sensor macOS does not show fails the test ("check the
   sensor in the hinge and its cable"; `-FixStatSampleLidAngle missing` pretends it). Whether an
   unplugged hinge sensor disappears or reads a fixed value is not known yet. No lid angle sensor

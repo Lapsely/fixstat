@@ -65,11 +65,13 @@ public final class LidAngleSensor {
     }
 
     /// Whether this model has the sensor: every MacBook with M2 or later (model identifiers
-    /// `MacNN,N`) except the 13" MacBook Pro M2 (Mac14,7); none before (M1: `MacBookAir10,1`,
-    /// `MacBookPro17,1` / `18,x`; Intel). Technician's knowledge, seen in the MacBook Air M2 / M3
-    /// and MacBook Pro M3 dumps. `notebook`: the identifiers of desktops look the same.
+    /// `MacNN,N`) except the 13" MacBook Pro M2 (Mac14,7), and the 16" MacBook Pro 2019 (A2141:
+    /// MacBookPro16,1 / 16,4); none on M1 (`MacBookAir10,1`, `MacBookPro17,1` / `18,x`) or other Intel
+    /// Macs as far as known. Technician's knowledge, seen in the MacBook Air M2 / M3 and MacBook Pro M3
+    /// dumps and on an A2141. `notebook`: the identifiers of desktops look the same.
     public static func expected(model: String, notebook: Bool) -> Bool {
         guard notebook, model != "Mac14,7" else { return false }
+        if model == "MacBookPro16,1" || model == "MacBookPro16,4" { return true }
         return model.range(of: #"^Mac[0-9]+,[0-9]+$"#, options: .regularExpression) != nil
     }
 

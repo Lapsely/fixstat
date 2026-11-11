@@ -13,10 +13,10 @@ import Testing
     }
 
     @Test func everyMacBookFromM2HasTheSensorButThe13InchProM2() {
-        for model in ["Mac14,2", "Mac15,12", "Mac15,3", "Mac16,12", "Mac17,6"] {
+        for model in ["Mac14,2", "Mac15,12", "Mac15,3", "Mac16,12", "Mac17,6", "MacBookPro16,1", "MacBookPro16,4"] {
             #expect(LidAngleSensor.expected(model: model, notebook: true), "\(model)")
         }
-        for model in ["Mac14,7", "MacBookAir10,1", "MacBookPro17,1", "MacBookPro18,3", "MacBookPro15,2"] {
+        for model in ["Mac14,7", "MacBookAir10,1", "MacBookPro17,1", "MacBookPro18,3", "MacBookPro15,2", "MacBookPro16,2"] {
             #expect(!LidAngleSensor.expected(model: model, notebook: true), "\(model)")
         }
         // A Mac mini M2 has an identifier of the same form.
