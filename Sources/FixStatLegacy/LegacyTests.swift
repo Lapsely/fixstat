@@ -277,6 +277,9 @@ final class LegacySSD: LegacySnapshotStartable {
     private var info: SSDInfo?
     private(set) var window: LegacyToolWindow!
     private let watcher = StorageWatcher()
+    private let capacity = CapacityCheckRunner()
+    private var volumes: [USBVolume] = []
+    private let capacityProgress = NSProgressIndicator()
 
     private let sizes: [Double] = [2, 8, 16, 32]
     private let sizeControl: NSSegmentedControl
@@ -291,7 +294,7 @@ final class LegacySSD: LegacySnapshotStartable {
         sizeControl = NSSegmentedControl(labels: sizes.map { Format.bytes($0 * 1_000_000_000) }, trackingMode: .selectOne,
                                          target: nil, action: nil)
         sizeControl.selectedSegment = 1
-        for bar in [progress, fullProgress] {
+        for bar in [progress, fullProgress, capacityProgress] {
             bar.style = .bar
             bar.isIndeterminate = false
             bar.minValue = 0
@@ -305,12 +308,15 @@ final class LegacySSD: LegacySnapshotStartable {
         window = LegacyToolWindow(title: L("SSD"), contentWidth: 620, height: 700) { [unowned self] in blocks() }
         window.onOpen = { [unowned self] in
             info = SSDInfo.read()
+            volumes = USBVolumes.mounted()
             watcher.start()
         }
+        capacity.onChange = { [weak self] in self?.window.reload() }
         window.onClose = { [unowned self] in watcher.stop() }
         watcher.onChange = { [weak self] in
             guard let self else { return }
             info = SSDInfo.read()
+            volumes = USBVolumes.mounted()
             window.reload()
         }
         runner.onChange = { [weak self] in
@@ -368,6 +374,7 @@ final class LegacySSD: LegacySnapshotStartable {
             blocks.append(.secondary(L("No internal SSD found.")))
         }
         blocks.append(externalDrives())
+        blocks.append(capacityGroup())
         blocks += quickTest()
         blocks.append(.gap)
         blocks += fullTest()
@@ -411,6 +418,34 @@ final class LegacySSD: LegacySnapshotStartable {
         }
         return .group(L("External drives"), blocks)
     }
+    /// Real capacity: fill the free space of a USB volume, read it back and compare.
+    private func capacityGroup() -> Block {
+        var blocks: [Block] = [.secondary(CapacityCheckText.explanation)]
+        if volumes.isEmpty {
+            blocks.append(.secondary(L("Plug in a USB stick, card or external drive to check its capacity.")))
+        }
+        let running = capacity.state == .running
+        for volume in volumes {
+            let details = [volume.device.name, L("%@ free", Format.bytes(Double(volume.availableBytes))),
+                           CapacityCheckText.estimate(CapacityCheckRunner.estimate(volume))].compactMap { $0 }
+            let button = ActionButton(title: L("Check capacity")) { [unowned self] in capacity.start(volume) }
+            button.isEnabled = !running && CapacityCheckRunner.hasSpace(volume)
+            blocks.append(.view(hStack([makeLabel(volume.name + "  ·  " + details.joined(separator: " · ")), makeSpacer(), button])))
+            if let result = capacity.results[volume.name] {
+                blocks.append(.rows(CapacityCheckText.rows(result).map { DocRow(title: $0.0, value: $0.1) }, labelWidth: nil))
+                let verdict = CapacityCheckText.verdict(result)
+                blocks.append(.status(verdict.0, verdict.1 ? .bad : .good))
+            }
+        }
+        if running {
+            capacityProgress.doubleValue = capacity.fraction
+            blocks.append(.view(capacityProgress))
+            blocks.append(.caption(CapacityCheckText.progress(capacity)))
+            blocks.append(.actions([DocAction(title: L("Stop")) { [unowned self] in capacity.stop() }]))
+        }
+        return .group(L("Real capacity"), blocks)
+    }
+
 
     private func healthGroup(summary: String?, findings: [String], rows: [(String, String)],
                              attributes: [[String]]?) -> Block {

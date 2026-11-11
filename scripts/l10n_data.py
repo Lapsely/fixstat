@@ -499,6 +499,21 @@ TR = {
     "Lifetime record identical to the one clone gauges ship with: the gauge does not keep its own history":
         "Ömür kaydı klon gauge'ların fabrikadan geldiği kayıtla birebir aynı: gauge kendi geçmişini tutmuyor",
     "%@ per cell": "hücre başına %@",
+    "Real capacity": "Gerçek kapasite",
+    "Real capacity: fills the free space of a USB stick, card or external drive with test data, reads it all back and compares it. A fake drive that reports more than it holds loses data past its real size. The drive's files are not touched and the test data is deleted afterwards; a large drive takes long (both ways at its own speed).":
+        "Gerçek kapasite: USB belleğin, kartın ya da harici diskin boş alanını test verisiyle doldurur, hepsini geri okuyup karşılaştırır. Olduğundan büyük görünen sahte bir disk, gerçek boyutunun ötesindeki veriyi kaybeder. Diskteki dosyalara dokunulmaz, test verisi sonunda silinir; büyük bir disk uzun sürer (iki yönde de kendi hızında).",
+    "about %@": "yaklaşık %@",
+    "Size reported": "Bildirilen boyut",
+    "%1$@ of %2$@ free": "%2$@ boş alanın %1$@ kadarı",
+    "Speed": "Hız",
+    "write %1$@ · read %2$@": "yazma %1$@ · okuma %2$@",
+    "Data read back wrong after %1$@: the drive holds about %2$@ of the %3$@ it reports (fake capacity, or failing memory).":
+        "%1$@ sonrasında veri yanlış okundu: disk bildirdiği %3$@ yerine yaklaşık %2$@ tutuyor (sahte kapasite ya da bozulan bellek).",
+    "Stopped before the end: only the part tested counts.": "Sonuna gelmeden durduruldu: yalnızca test edilen kısım geçerli.",
+    "Not enough free space to test.": "Test için yeterli boş alan yok.",
+    "All %@ read back intact: the drive holds what it reports.": "%@ verinin hepsi sağlam okundu: disk bildirdiği kadarını tutuyor.",
+    "Plug in a USB stick, card or external drive to check its capacity.": "Kapasitesini kontrol etmek için bir USB bellek, kart ya da harici disk takın.",
+    "Check capacity": "Kapasiteyi kontrol et",
     "The CPU heats up %1$@ per watt, more than healthy Macs of this model (up to %2$@, %3$lld Macs): thermal paste, heatsink seating, the fan or dust.":
         "CPU watt başına %1$@ ısınıyor, bu modelin sağlam Mac'lerinden fazla (en çok %2$@, %3$lld Mac): termal macun, soğutucunun oturuşu, fan ya da toz.",
     "CPU %1$@ → %2$@": "CPU %1$@ → %2$@",

@@ -55,6 +55,8 @@ struct SSDView: View {
     @State private var info = SSDInfo.read()
     @State private var gigabytes = 8.0
     @State private var watcher = StorageWatcher()
+    @State private var volumes = USBVolumes.mounted()
+    @State private var capacity = CapacityModel()
 
     var body: some View {
         ScrollView {
@@ -99,6 +101,7 @@ struct SSDView: View {
                     Text("No internal SSD found.").foregroundStyle(.secondary)
                 }
                 externalDrives
+                realCapacity
                 stressTest
                 Card {
                     FullSSDTestSection(writeVerifyGigabytes: gigabytes)
@@ -112,10 +115,60 @@ struct SSDView: View {
             if state == .finished { info = SSDInfo.read() }
         }
         .onAppear {
-            watcher.onChange = { MainActor.assumeIsolated { info = SSDInfo.read() } }
+            watcher.onChange = { MainActor.assumeIsolated {
+                info = SSDInfo.read()
+                volumes = USBVolumes.mounted()
+            } }
             watcher.start()
         }
         .onDisappear { watcher.stop() }
+    }
+
+    // MARK: Real capacity
+
+    private var realCapacity: some View {
+        Card {
+            CardHeader("Real capacity", systemImage: "checkmark.seal")
+            Text(verbatim: CapacityCheckText.explanation)
+                .font(.callout).foregroundStyle(.secondary)
+                .fixedSize(horizontal: false, vertical: true)
+            if volumes.isEmpty {
+                Text("Plug in a USB stick, card or external drive to check its capacity.").foregroundStyle(.secondary)
+            }
+            ForEach(volumes, id: \.bsdName) { volume in
+                HStack {
+                    VStack(alignment: .leading, spacing: 1) {
+                        Text(verbatim: volume.name)
+                        Text(verbatim: [volume.device.name, String(localized: "\(Format.bytes(Double(volume.availableBytes))) free"),
+                                        CapacityCheckText.estimate(CapacityCheckRunner.estimate(volume))]
+                            .compactMap { $0 }.joined(separator: " · "))
+                            .font(.callout).foregroundStyle(.secondary)
+                    }
+                    Spacer()
+                    Button("Check capacity") { capacity.start(volume) }
+                        .disabled(capacity.running || !CapacityCheckRunner.hasSpace(volume))
+                }
+                if let result = capacity.results[volume.name] {
+                    ForEach(Array(CapacityCheckText.rows(result).enumerated()), id: \.offset) { _, row in
+                        HStack(alignment: .firstTextBaseline) {
+                            Text(verbatim: row.0).frame(width: 140, alignment: .leading).foregroundStyle(.secondary)
+                            Text(verbatim: row.1)
+                        }
+                        .font(.callout)
+                    }
+                    let verdict = CapacityCheckText.verdict(result)
+                    Label(verdict.0, systemImage: verdict.1 ? "exclamationmark.triangle.fill" : "checkmark.circle")
+                        .foregroundStyle(verdict.1 ? TemperatureColor.hot : TemperatureColor.cool)
+                        .fixedSize(horizontal: false, vertical: true)
+                }
+            }
+            if capacity.running {
+                HStack {
+                    ProgressView(value: capacity.fraction) { Text(verbatim: capacity.progress).font(.caption) }
+                    Button("Stop", role: .cancel) { capacity.stop() }
+                }
+            }
+        }
     }
 
     // MARK: External drives
@@ -387,5 +440,33 @@ struct SSDResultView: View {
             }
         }
         .padding(.top, 6)
+    }
+}
+
+/// SwiftUI view of the core `CapacityCheckRunner`.
+@available(macOS 14.0, *)
+@MainActor
+@Observable
+final class CapacityModel {
+    private(set) var running = false
+    private(set) var fraction = 0.0
+    private(set) var progress = ""
+    private(set) var results: [String: CapacityCheck.Result] = [:]
+    @ObservationIgnored private let runner = CapacityCheckRunner()
+
+    init() {
+        runner.onChange = { [weak self] in
+            MainActor.assumeIsolated { self?.sync() }
+        }
+    }
+
+    func start(_ volume: USBVolume) { runner.start(volume) }
+    func stop() { runner.stop() }
+
+    private func sync() {
+        running = runner.state == .running
+        fraction = runner.fraction
+        progress = CapacityCheckText.progress(runner)
+        if runner.results != results { results = runner.results }
     }
 }

@@ -547,6 +547,10 @@ individual cores. Never name them per core ("P-core 1"). Use ids like
   reading below 50 % of its best port, or any read / write error, flags that port. Results are
   session state (`MonitorCore.usbSpeedResults`) and part of the ports evidence.
   `-FixStatSampleUSBDrive YES` fakes a stick in USB-A 1 backed by a temporary folder.
+  Real capacity (`CapacityCheck` / `CapacityCheckRunner`, SSD window "Real capacity", both interfaces): fills the free
+  space of a mounted USB volume (64 MB reserve) with 1 GiB files (FAT32 limit) of a pattern seeded by each 8 MiB
+  chunk's position, F_NOCACHE writes and reads, then reads everything back: the first bad chunk marks what a fake
+  drive holds (used + intact). Never on the sample drive: it is a folder on the internal SSD.
 - Lid: `IOPMrootDomain.AppleClamshellState` polled, plus the last `pmset -g log` sleep
   reason ("Clamshell Sleep") after a wake. Lid angle (`LidAngleSensor`): the SPU HID device "las"
   (0x05AC / 0x8104, sensor page 0x20, usage 0x8A; report 1 = usage 0x047F, 9 bits, 0 … 360°)

@@ -31,6 +31,16 @@
         }
       }
     },
+    "%1$@ of %2$@ free" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%2$@ boş alanın %1$@ kadarı"
+          }
+        }
+      }
+    },
     "%1$@ of %2$@ power-ups followed a power loss without a proper shutdown (%3$@): forced shutdowns or a battery that ran flat, or for a drive in an enclosure, unplugging it without ejecting. Each one puts the data being written at risk." : {
       "localizations" : {
         "tr" : {
@@ -1148,6 +1158,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Uyarı sınırı"
+          }
+        }
+      }
+    },
+    "All %@ read back intact: the drive holds what it reports." : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ verinin hepsi sağlam okundu: disk bildirdiği kadarını tutuyor."
           }
         }
       }
@@ -2392,6 +2412,16 @@
         }
       }
     },
+    "Check capacity" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kapasiteyi kontrol et"
+          }
+        }
+      }
+    },
     "Check for updates automatically" : {
       "localizations" : {
         "tr" : {
@@ -2956,6 +2986,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Geri okunan veri %1$lld blokta uyuşmadı (ilki %2$@ konumunda) — arızalı NAND veya controller"
+          }
+        }
+      }
+    },
+    "Data read back wrong after %1$@: the drive holds about %2$@ of the %3$@ it reports (fake capacity, or failing memory)." : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%1$@ sonrasında veri yanlış okundu: disk bildirdiği %3$@ yerine yaklaşık %2$@ tutuyor (sahte kapasite ya da bozulan bellek)."
           }
         }
       }
@@ -6028,6 +6068,16 @@
         }
       }
     },
+    "Not enough free space to test." : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Test için yeterli boş alan yok."
+          }
+        }
+      }
+    },
     "Not enough reference data to decide" : {
       "localizations" : {
         "tr" : {
@@ -6778,6 +6828,16 @@
         }
       }
     },
+    "Plug in a USB stick, card or external drive to check its capacity." : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kapasitesini kontrol etmek için bir USB bellek, kart ya da harici disk takın."
+          }
+        }
+      }
+    },
     "Plug the charger into each USB-C port in turn (a few seconds each). FixStat notes what every port negotiates and what the adapter delivers there; a port that charges clearly worse than another with the same adapter, only at 5 V, or with port controller faults points to its connector, CC line or port controller." : {
       "localizations" : {
         "tr" : {
@@ -7382,6 +7442,26 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "SSD'nin tamamını — dolu alanlar ve sistem bölümleri dahil — okur, okunamayan ve yavaş bölgeleri haritalar, ardından boş alanda yazma–doğrulama testini çalıştırır. Tarama yalnızca okur. macOS yönetici parolası ister; FixStat parolayı görmez ve saklamaz."
+          }
+        }
+      }
+    },
+    "Real capacity" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Gerçek kapasite"
+          }
+        }
+      }
+    },
+    "Real capacity: fills the free space of a USB stick, card or external drive with test data, reads it all back and compares it. A fake drive that reports more than it holds loses data past its real size. The drive's files are not touched and the test data is deleted afterwards; a large drive takes long (both ways at its own speed)." : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Gerçek kapasite: USB belleğin, kartın ya da harici diskin boş alanını test verisiyle doldurur, hepsini geri okuyup karşılaştırır. Olduğundan büyük görünen sahte bir disk, gerçek boyutunun ötesindeki veriyi kaybeder. Diskteki dosyalara dokunulmaz, test verisi sonunda silinir; büyük bir disk uzun sürer (iki yönde de kendi hızında)."
           }
         }
       }
@@ -8178,6 +8258,16 @@
         }
       }
     },
+    "Size reported" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bildirilen boyut"
+          }
+        }
+      }
+    },
     "Skipped" : {
       "localizations" : {
         "tr" : {
@@ -8388,6 +8478,16 @@
         }
       }
     },
+    "Speed" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hız"
+          }
+        }
+      }
+    },
     "Speed per 8 MB block" : {
       "localizations" : {
         "tr" : {
@@ -8574,6 +8674,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Durduruldu"
+          }
+        }
+      }
+    },
+    "Stopped before the end: only the part tested counts." : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sonuna gelmeden durduruldu: yalnızca test edilen kısım geçerli."
           }
         }
       }
@@ -10572,6 +10682,16 @@
         }
       }
     },
+    "about %@" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "yaklaşık %@"
+          }
+        }
+      }
+    },
     "about %@ more at the wear so far" : {
       "localizations" : {
         "tr" : {
@@ -12184,6 +12304,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "ortalamaya göre"
+          }
+        }
+      }
+    },
+    "write %1$@ · read %2$@" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "yazma %1$@ · okuma %2$@"
           }
         }
       }
