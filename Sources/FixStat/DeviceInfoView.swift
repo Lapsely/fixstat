@@ -12,6 +12,7 @@ struct DeviceInfoView: View {
     @State private var ssd: SSDInfo?
     @State private var panics: [PanicReport]?
     @State private var pairing: PairingTraces?
+    @State private var thermal: ThermalHistory?
     @State private var copied = false
 
     var body: some View {
@@ -24,6 +25,17 @@ struct DeviceInfoView: View {
                         CardHeader("Ownership and security", systemImage: "lock")
                         ForEach(DeviceText.security(info), id: \.0) { row in
                             SecurityRow(title: row.0, value: row.1, attention: row.2)
+                        }
+                    }
+                    if let thermal, !thermal.episodes.isEmpty || !thermal.emergencySleeps.isEmpty {
+                        Card {
+                            CardHeader("Overheating", systemImage: "thermometer.high")
+                            Text(verbatim: ThermalHistoryText.explanation)
+                                .font(.callout).foregroundStyle(.secondary)
+                                .fixedSize(horizontal: false, vertical: true)
+                            ForEach(ThermalHistoryText.episodes(thermal), id: \.self) { line in
+                                Text(verbatim: line).font(.callout)
+                            }
                         }
                     }
                     if let pairing, !pairing.items.isEmpty {
@@ -65,6 +77,7 @@ struct DeviceInfoView: View {
             ssd = await Task.detached { SSDInfo.read() }.value
             panics = await Task.detached { CrashHistory.panics() }.value
             pairing = await Task.detached { PairingTraces.read() }.value
+            thermal = await Task.detached { ThermalHistory.read() }.value
         }
     }
 
@@ -98,7 +111,7 @@ struct DeviceInfoView: View {
     /// (title, value, needs attention)
     private var healthRows: [(String, String, Bool)] {
         DeviceText.healthRows(battery: monitor.battery, model: monitor.system.model, modelYear: monitor.system.modelYear, reference: monitor.partsReference,
-                              ssd: ssd, panics: panics, hardwareCheck: monitor.hardwareCheck)
+                              ssd: ssd, panics: panics, hardwareCheck: monitor.hardwareCheck, thermal: thermal)
     }
 }
 

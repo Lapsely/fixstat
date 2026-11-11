@@ -18,6 +18,8 @@ public struct ReportData {
     public let macOSHealth: MacOSBatteryHealth?
     /// Touch ID, True Tone, camera, light and lid angle sensors against what the model should have.
     public let pairing: PairingTraces
+    /// Thermal pressure and forced sleeps of the last days (system log).
+    public let thermal: ThermalHistory
     public let device: DeviceInfo
     public let shopName: String
     public let note: String
@@ -49,6 +51,7 @@ public struct ReportData {
         adapterCheck = battery.flatMap { PartCheck.adapter($0, reference: monitor.partsReference) }
         macOSHealth = MacOSBatteryHealth.read()
         pairing = PairingTraces.read(system: monitor.system, profile: monitor.profile)
+        thermal = ThermalHistory.read()
         // The device card in the app is always masked: read again for full serials.
         device = fullSerial ? DeviceInfo.read(includeSerial: true) : (monitor.deviceInfo ?? DeviceInfo.read())
         let defaults = UserDefaults.standard
@@ -204,6 +207,7 @@ private final class ReportWriter {
                                          DeviceText.state(d.mdmEnrolled, on: L("Enrolled"), off: L("Not enrolled"))]
             .joined(separator: " · "))
         for (title, value, _) in DeviceText.pairing(data.pairing) { row(title, value) }
+        row(L("Overheating (%lld days)", data.thermal.days), ThermalHistoryText.summary(data.thermal))
         endGroup()
     }
 

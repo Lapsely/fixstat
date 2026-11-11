@@ -86,7 +86,8 @@ public enum Command {
         output("/usr/bin/pmset", ["-g", "log"]) ?? ""
     }
 
-    static func output(_ path: String, _ arguments: [String]) -> String? {
+    /// Standard output of a command (stderr dropped); nil if it could not be started.
+    public static func output(_ path: String, _ arguments: [String]) -> String? {
         let process = Process()
         process.executableURL = URL(fileURLWithPath: path)
         process.arguments = arguments

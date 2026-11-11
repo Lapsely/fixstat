@@ -418,6 +418,12 @@ individual cores. Never name them per core ("P-core 1"). Use ids like
   with the drop of AppleRawCurrentCapacity (gauge agreement); DC pack resistance from the
   load step (Amperage is averaged, so ≥ 60 s after the load starts; shown only, no
   threshold yet); cell spread under load.
+- Overheating (`ThermalHistory`, core; device card health row + "Overheating" list, PDF): thermalmonitord logs
+  every thermal pressure change as "mTPL = N" (0 nominal, 1 moderate, 2 heavy, 3 trapping, 4 sleeping), read with
+  `/usr/bin/log show --last 7d --style compact` (≈ 3 s, no root); `pmset -g log` "Thermal Emergency" sleeps. A
+  level holds until the next change but stops at a sleep ("Entering Sleep", 5 s tolerance: pmset logs whole
+  seconds and wrote this M1's forced dark-wake sleep before its level 4). Attention: ≥ 60 s heavy or worse, a
+  forced sleep or level 4. Episodes < 60 s apart merge.
 - Pairing and parts (`PairingTraces`, core; device card in both interfaces and the PDF): Touch ID from
   LocalAuthentication `canEvaluatePolicy` without a prompt (−7 not enrolled = the sensor answers; unusable on a
   model that has it = unpaired after a board / Touch ID swap, or sensor / cable), True Tone from CoreBrightness'

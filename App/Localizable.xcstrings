@@ -161,6 +161,16 @@
         }
       }
     },
+    "%1$lld times, %2$@ heavy or worse" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%1$lld kez, %2$@ ağır ya da daha kötü"
+          }
+        }
+      }
+    },
     "%@ (%@; median of %lld, %@ in total)" : {
       "localizations" : {
         "en" : {
@@ -787,6 +797,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Günlükte %lld uyku veya uyanma hatası var."
+          }
+        }
+      }
+    },
+    "%lld sleeps forced by heat" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ısı yüzünden %lld zorunlu uyku"
           }
         }
       }
@@ -4440,6 +4460,16 @@
         }
       }
     },
+    "How often macOS slowed this Mac down because of heat, from the system log (kept for a few days to weeks). Repeated heavy pressure at light use points to the cooling: dust, the fan, dried thermal paste or a blocked vent; a forced sleep often means the Mac was closed in a bag while awake." : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "macOS'un bu Mac'i ısı yüzünden ne sıklıkla yavaşlattığı, sistem kaydından (birkaç gün ile birkaç hafta tutulur). Hafif kullanımda tekrarlayan ağır basınç soğutmaya işaret eder: toz, fan, kurumuş termal macun ya da tıkalı bir hava çıkışı; zorunlu uyku çoğu zaman Mac'in uyanıkken çantada kapalı kaldığını gösterir."
+          }
+        }
+      }
+    },
     "I2C bus" : {
       "localizations" : {
         "tr" : {
@@ -6304,6 +6334,26 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Aşırı akım"
+          }
+        }
+      }
+    },
+    "Overheating" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Aşırı ısınma"
+          }
+        }
+      }
+    },
+    "Overheating (%lld days)" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Aşırı ısınma (%lld gün)"
           }
         }
       }
@@ -10758,6 +10808,16 @@
         }
       }
     },
+    "heavy" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ağır"
+          }
+        }
+      }
+    },
     "high" : {
       "localizations" : {
         "tr" : {
@@ -10938,6 +10998,16 @@
         }
       }
     },
+    "moderate" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "orta"
+          }
+        }
+      }
+    },
     "never" : {
       "localizations" : {
         "tr" : {
@@ -10974,6 +11044,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "yok"
+          }
+        }
+      }
+    },
+    "none in the last %lld days" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "son %lld günde yok"
           }
         }
       }
@@ -11024,6 +11104,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "yeterli boş alan yok"
+          }
+        }
+      }
+    },
+    "not recorded on this Mac" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "bu Mac'te kaydedilmiyor"
           }
         }
       }
@@ -11104,6 +11194,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "tepe %@"
+          }
+        }
+      }
+    },
+    "peak: %@" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "en yüksek: %@"
           }
         }
       }
@@ -11878,6 +11978,16 @@
         }
       }
     },
+    "sleep (emergency)" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "uyku (acil durum)"
+          }
+        }
+      }
+    },
     "stopped" : {
       "localizations" : {
         "tr" : {
@@ -11944,6 +12054,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "dokunmalar Touch Bar sensöründen de okunuyor (tüm şerit, Esc bölgesi dahil)"
+          }
+        }
+      }
+    },
+    "trapping (strongly slowed)" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "kısıtlama (belirgin yavaşlatma)"
           }
         }
       }

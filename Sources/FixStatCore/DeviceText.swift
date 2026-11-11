@@ -95,7 +95,8 @@ public enum DeviceText {
 
     /// Health summary of the device card: (title, value, needs attention).
     public static func healthRows(battery: BatteryInfo?, model: String, modelYear: Int? = nil, reference: PartsReference, ssd: SSDInfo?,
-                                  panics: [PanicReport]?, hardwareCheck: HardwareCheck) -> [(String, String, Bool)] {
+                                  panics: [PanicReport]?, hardwareCheck: HardwareCheck,
+                                  thermal: ThermalHistory? = nil) -> [(String, String, Bool)] {
         var rows: [(String, String, Bool)] = []
         if let b = battery {
             let check = PartCheck.battery(b, model: model, modelYear: modelYear, reference: reference)
@@ -116,6 +117,9 @@ public enum DeviceText {
             let recent = panics.filter { $0.date > Date().addingTimeInterval(-30 * 86_400) }
             rows.append((L("Kernel panics (30 days)"),
                          recent.isEmpty ? L("none") : Format.number(Double(recent.count)), !recent.isEmpty))
+        }
+        if let thermal {
+            rows.append((L("Overheating (%lld days)", thermal.days), ThermalHistoryText.summary(thermal), thermal.needsAttention))
         }
         if !hardwareCheck.isEmpty {
             rows.append((L("Hardware check"),

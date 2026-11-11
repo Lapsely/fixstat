@@ -130,6 +130,7 @@ final class LegacyDeviceInfo {
     private var ssd: SSDInfo?
     private var panics: [PanicReport]?
     private var pairing: PairingTraces?
+    private var thermal: ThermalHistory?
     private var copied = false
     private(set) var window: LegacyToolWindow!
     private lazy var exportButton = LegacyExport.menuButton(core: core)
@@ -146,12 +147,19 @@ final class LegacyDeviceInfo {
             self?.core.deviceInfo = info
             self?.window.reload()
         }
-        background({ (SSDInfo.read(), CrashHistory.panics(), PairingTraces.read()) }, done: { [weak self] result in
+        background({ (SSDInfo.read(), CrashHistory.panics(), PairingTraces.read(), ThermalHistory.read()) }, done: { [weak self] result in
             self?.ssd = result.0
             self?.panics = result.1
             self?.pairing = result.2
+            self?.thermal = result.3
             self?.window.reload()
         })
+    }
+
+    private func thermalBlocks() -> [Block] {
+        guard let thermal, !thermal.episodes.isEmpty || !thermal.emergencySleeps.isEmpty else { return [] }
+        return [.section(L("Overheating")), .secondary(ThermalHistoryText.explanation),
+                .list(ThermalHistoryText.episodes(thermal).map { .text($0) })]
     }
 
     private func pairingBlocks() -> [Block] {
@@ -162,7 +170,7 @@ final class LegacyDeviceInfo {
 
     private var healthRows: [(String, String, Bool)] {
         DeviceText.healthRows(battery: core.battery, model: core.system.model, modelYear: core.system.modelYear, reference: core.partsReference,
-                              ssd: ssd, panics: panics, hardwareCheck: core.hardwareCheck)
+                              ssd: ssd, panics: panics, hardwareCheck: core.hardwareCheck, thermal: thermal)
     }
 
     private func blocks() -> [Block] {
@@ -178,7 +186,7 @@ final class LegacyDeviceInfo {
             .list(DeviceText.security(info).map { .status("\($0.0): \($0.1)", $0.2 ? .bad : .good) }),
             .section(L("Health summary")),
             .list(health.map { .status("\($0.0): \($0.1)", $0.2 ? .bad : .good) }),
-        ] + pairingBlocks() + [.view(hStack([ActionButton(title: copied ? L("Copied") : L("Copy as text")) { [unowned self] in
+        ] + thermalBlocks() + pairingBlocks() + [.view(hStack([ActionButton(title: copied ? L("Copied") : L("Copy as text")) { [unowned self] in
                 NSPasteboard.general.clearContents()
                 NSPasteboard.general.setString(DeviceText.plainText(info, ssd: ssd, health: healthRows), forType: .string)
                 copied = true
