@@ -140,7 +140,11 @@ final class LegacySettingsController: NSWindowController, NSWindowDelegate {
             makeNote(UpdateText.privacy, width: Self.formWidth),
             updateRow(),
             hStack([ActionButton(title: L("About FixStat")) { AboutInfo.show() }, makeSpacer(),
+                    ActionButton.link(L("Send feedback…")) { [core] in
+                        if let url = FeedbackForm.general(system: core.system) { NSWorkspace.shared.open(url) }
+                    },
                     ActionButton.link(L("Project page")) { NSWorkspace.shared.open(AboutInfo.repositoryURL) }]),
+            makeNote(FeedbackText.reportHelp, width: Self.formWidth),
         ]
         return form(rows)
     }

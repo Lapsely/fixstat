@@ -6358,6 +6358,16 @@
         }
       }
     },
+    "Opens a prefilled Google Form in your browser: you see every field, and nothing is sent until you press Submit. Serial numbers are never included." : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tarayıcınızda önceden doldurulmuş bir Google Formu açar: her alanı görürsünüz ve Gönder'e basana kadar hiçbir şey gönderilmez. Seri numaraları hiçbir zaman eklenmez."
+          }
+        }
+      }
+    },
     "Operating time" : {
       "localizations" : {
         "tr" : {
@@ -7606,6 +7616,16 @@
         }
       }
     },
+    "Report this part…" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bu parçayı bildir…"
+          }
+        }
+      }
+    },
     "Reported uncorrectable errors" : {
       "localizations" : {
         "tr" : {
@@ -8018,6 +8038,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Tümünü Seç"
+          }
+        }
+      }
+    },
+    "Send feedback…" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Geri bildirim gönder…"
           }
         }
       }

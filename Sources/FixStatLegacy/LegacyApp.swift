@@ -231,7 +231,7 @@ enum LegacyAppearance {
     }
 }
 
-/// `--legacy-ui --snapshot out.png [--technician] [--settings 0|1|2] [--max-height N]
+/// `--legacy-ui --snapshot out.png [--technician] [--settings 0|1|2 [--scroll-end]] [--max-height N]
 /// [--tool device|history|details|crash|sleep|stress|memory|ssd|capacity|hardware|power|live [--wait SECONDS] [--range 0…6] [--start-test SECONDS] [--item NAME] [--full]]`: renders the AppKit
 /// panel or a Settings tab to PNG and exits (UI checks without clicking).
 enum LegacySnapshot {
@@ -315,6 +315,14 @@ enum LegacySnapshot {
             let controller = settings()
             controller.select(tab: tab)
             guard let settingsWindow = controller.window, let frame = settingsWindow.contentView?.superview else { exit(1) }
+            // --scroll-end: the bottom of a long tab (About, update and feedback rows).
+            if arguments.contains("--scroll-end") {
+                frame.layoutSubtreeIfNeeded()
+                if let scroll = firstScrollView(in: frame), let document = scroll.documentView {
+                    document.layoutSubtreeIfNeeded()
+                    document.scroll(NSPoint(x: 0, y: document.isFlipped ? document.bounds.height : 0))
+                }
+            }
             window = settingsWindow
             capture = frame
         } else {

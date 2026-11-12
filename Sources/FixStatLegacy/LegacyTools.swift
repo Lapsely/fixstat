@@ -237,7 +237,16 @@ final class LegacyBatteryDetails {
         } else {
             adapterColumn = [.headline(L("Power adapter"), nil), .secondary(L("Connect the power adapter to check it."))]
         }
-        var blocks: [Block] = [.columns([partColumn(L("Battery"), batteryCheck), adapterColumn])]
+        let system = core.system
+        var batteryColumn = partColumn(L("Battery"), batteryCheck)
+        if FeedbackForm.offersReport(batteryCheck), let url = FeedbackForm.battery(battery, check: batteryCheck, system: system) {
+            batteryColumn.append(reportAction(url))
+        }
+        if let adapterCheck = PartCheck.adapter(battery, reference: core.partsReference), FeedbackForm.offersReport(adapterCheck),
+           let url = FeedbackForm.adapter(battery, check: adapterCheck, system: system) {
+            adapterColumn.append(reportAction(url))
+        }
+        var blocks: [Block] = [.columns([batteryColumn, adapterColumn])]
         if let condition = macOSHealth?.condition {
             let text = L("macOS battery condition: %@", PartText.condition(condition))
                 + (macOSHealth?.maximumCapacity.map { " · \($0)" } ?? "")
@@ -245,6 +254,10 @@ final class LegacyBatteryDetails {
         }
         blocks.append(.caption(L("macOS has no genuine-part flag for Mac batteries and clones can copy digital data, so this is a consistency check against known genuine parts, not proof.")))
         return .group(L("Originality check"), blocks)
+    }
+
+    private func reportAction(_ url: URL) -> Block {
+        .actions([DocAction(title: L("Report this part…"), link: true) { NSWorkspace.shared.open(url) }])
     }
 
     private func partColumn(_ title: String, _ check: PartCheck) -> [Block] {

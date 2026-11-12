@@ -911,6 +911,9 @@ TR = {
     "Menu bar monitor for Mac repair technicians. Reads sensors only — never writes to the SMC.":
         "Mac tamircileri için menü çubuğu izleme uygulaması. Sensörleri yalnızca okur — SMC'ye asla yazmaz.",
     "Project page": "Proje sayfası",
+    "Send feedback…": "Geri bildirim gönder…",
+    "Report this part…": "Bu parçayı bildir…",
+    "Opens a prefilled Google Form in your browser: you see every field, and nothing is sent until you press Submit. Serial numbers are never included.": "Tarayıcınızda önceden doldurulmuş bir Google Formu açar: her alanı görürsünüz ve Gönder'e basana kadar hiçbir şey gönderilmez. Seri numaraları hiçbir zaman eklenmez.",
     "Version": "Sürüm",
     "Appearance": "Görünüm",
     "Dark": "Koyu",

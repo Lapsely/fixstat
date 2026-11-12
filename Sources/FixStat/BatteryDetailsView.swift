@@ -14,7 +14,7 @@ struct BatteryDetailsView: View {
         ScrollView {
             if let battery = monitor.battery {
                 VStack(alignment: .leading, spacing: 12) {
-                    OriginalitySection(battery: battery, model: monitor.system.model, modelYear: monitor.system.modelYear,
+                    OriginalitySection(battery: battery, system: monitor.system,
                                        reference: monitor.partsReference, macOSHealth: macOSHealth)
                     CellsSection(battery: battery)
                     HStack(alignment: .top, spacing: Design.cardSpacing) {
@@ -85,19 +85,22 @@ private struct DetailRow: View {
 @available(macOS 14.0, *)
 private struct OriginalitySection: View {
     let battery: BatteryInfo
-    let model: String
-    let modelYear: Int?
+    let system: SystemInfo
     let reference: PartsReference
     let macOSHealth: MacOSBatteryHealth?
 
     var body: some View {
-        let batteryCheck = PartCheck.battery(battery, model: model, modelYear: modelYear, reference: reference)
+        let batteryCheck = PartCheck.battery(battery, model: system.model, modelYear: system.modelYear, reference: reference)
         let adapterCheck = PartCheck.adapter(battery, reference: reference)
         DetailGroup(title: "Originality check", systemImage: "checkmark.shield") {
             HStack(alignment: .top, spacing: 18) {
-                PartCheckColumn(title: "Battery", check: batteryCheck)
+                PartCheckColumn(title: "Battery", check: batteryCheck,
+                                report: FeedbackForm.offersReport(batteryCheck)
+                                    ? FeedbackForm.battery(battery, check: batteryCheck, system: system) : nil)
                 if let adapterCheck {
-                    PartCheckColumn(title: "Power adapter", check: adapterCheck)
+                    PartCheckColumn(title: "Power adapter", check: adapterCheck,
+                                    report: FeedbackForm.offersReport(adapterCheck)
+                                        ? FeedbackForm.adapter(battery, check: adapterCheck, system: system) : nil)
                 } else {
                     VStack(alignment: .leading, spacing: 4) {
                         Text("Power adapter").font(.callout.weight(.semibold))
@@ -126,6 +129,8 @@ private struct OriginalitySection: View {
 private struct PartCheckColumn: View {
     let title: LocalizedStringKey
     let check: PartCheck
+    /// Prefilled report form, offered when the part could not be confirmed.
+    var report: URL? = nil
 
     var body: some View {
         VStack(alignment: .leading, spacing: 5) {
@@ -152,6 +157,14 @@ private struct PartCheckColumn: View {
                     }
                 }
                 .font(.callout)
+            }
+            if let report {
+                Link(destination: report) {
+                    Label("Report this part…", systemImage: "paperplane")
+                }
+                .font(.callout)
+                .padding(.top, 2)
+                .help(Text(verbatim: FeedbackText.reportHelp))
             }
         }
         .frame(maxWidth: .infinity, alignment: .topLeading)

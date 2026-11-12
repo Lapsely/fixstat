@@ -167,6 +167,11 @@ FixStat and pick a language. Numbers and units follow your region settings.
   off under Settings › "Check for updates automatically"). FixStat never downloads or installs
   anything itself. Settings, custom sensor names and battery history stay on your Mac in
   `~/Library/Application Support/FixStat/`; reports are only created when you export them.
+- **Feedback.** "Send feedback…" (Settings) and "Report this part…" (battery details, for a
+  battery or adapter the originality check could not confirm) open a prefilled Google Form in
+  your browser: the Mac model, macOS and FixStat version and, for a part, its gauge / adapter
+  data and the check's evidence. You see every field there, and nothing is sent until you press
+  Submit. Serial numbers and lot codes are never included; FixStat itself sends nothing.
 - **Serial numbers** are masked in every output and export, unless you turn on
   "Show full serial numbers in reports" in Settings (off by default).
 - **Official download only.** FixStat is published only at

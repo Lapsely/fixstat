@@ -31,6 +31,10 @@ struct AboutSection: View {
             HStack {
                 Button("About FixStat") { AboutInfo.show() }
                 Spacer()
+                if let feedback = FeedbackForm.general(system: monitor.system) {
+                    Link("Send feedback…", destination: feedback)
+                        .help(Text(verbatim: FeedbackText.reportHelp))
+                }
                 Link("Project page", destination: AboutInfo.repositoryURL)
             }
         }

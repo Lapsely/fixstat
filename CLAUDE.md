@@ -263,6 +263,13 @@ individual cores. Never name them per core ("P-core 1"). Use ids like
   line at the top of the panel; Settings has the switch, status and "Check now". Nothing is
   downloaded or installed. Never during `--snapshot` / `--export`; `-FixStatSampleUpdate 1.3.0`
   fakes a newer release. Keep the README privacy section in sync.
+- Feedback (`FeedbackForm`, `FeedbackText`, core): "Send feedback…" in Settings › About and "Report this part…"
+  under a battery / adapter whose originality check is not "consistent" open the project's Google Form prefilled
+  (`entry.*` ids in `FeedbackForm.Entry`; Mac model, macOS, FixStat version, parts.json fields + check evidence).
+  The browser shows the form and the user presses Submit: no network access from FixStat itself. Never put
+  serials, lot codes (only the last ManufacturerData string, the cell maker) or identifiers in it. User reports
+  are field observations, never merged into parts.json as genuine without the owner's review.
+  `-FixStatSamplePartReport YES` offers the report for genuine parts too.
 - Appearance setting (System / Light / Dark) sets `NSApp.appearance`;
   `AppearancePreference.apply()` must tolerate `NSApp == nil` (UserDefaults notifications
   can arrive before NSApplication exists).
@@ -623,7 +630,7 @@ open build/FixStat.app
 build/FixStat.app/Contents/MacOS/FixStat --snapshot out.png [--technician] [--settings 0|1|2] \
     [--history [--range 0…6] --data-dir DIR] [--dark|--light] -AppleLanguages "(tr)" [-AppleLocale en_US]
 # AppKit interface: panel or Settings tab to PNG (also under scripts/simulate-old-macos.sh … -- ARGS):
-build/FixStat.app/Contents/MacOS/FixStat --legacy-ui --snapshot out.png [--technician] [--settings 0|1|2] \
+build/FixStat.app/Contents/MacOS/FixStat --legacy-ui --snapshot out.png [--technician] [--settings 0|1|2 [--scroll-end]] \
     [--max-height N] [--dark|--light]      # --max-height: as on a small screen (11" Air: 722)
 build/FixStat.app/Contents/MacOS/FixStat --legacy-ui --snapshot out.png --tool device|history|details|crash|sleep|hardware \
     [--item keyboard…lid] [--wait SECONDS] [--range 0…6] [--start-test SECONDS] [--full]   # also stress|memory|ssd|capacity

@@ -174,6 +174,12 @@ biçimleri bölge ayarınızı izler.
   kendi başına hiçbir şey indirmez veya kurmaz. Ayarlar, özel sensör isimleri ve batarya
   geçmişi Mac'inizde `~/Library/Application Support/FixStat/` klasöründe kalır; raporlar
   yalnızca siz dışa aktardığınızda oluşturulur.
+- **Geri bildirim.** "Geri bildirim gönder…" (Ayarlar) ve "Bu parçayı bildir…" (batarya
+  ayrıntıları; orijinallik kontrolünün doğrulayamadığı batarya veya adaptör için) tarayıcınızda
+  önceden doldurulmuş bir Google Formu açar: Mac modeli, macOS ve FixStat sürümü, parça için de
+  gauge / adaptör verileri ve kontrolün bulguları. Her alanı orada görürsünüz ve Gönder'e
+  basana kadar hiçbir şey gönderilmez. Seri numaraları ve lot kodları hiçbir zaman eklenmez;
+  FixStat'ın kendisi hiçbir şey göndermez.
 - **Seri numaraları** her çıktıda ve dışa aktarmada maskelenir; Ayarlar'da "Raporlarda seri
   numaralarını tam göster" açılırsa raporlarda tam görünür (varsayılan kapalı).
 - **Yalnızca resmî indirme.** FixStat yalnızca [github.com/Lapsely/fixstat/releases](https://github.com/Lapsely/fixstat/releases)
