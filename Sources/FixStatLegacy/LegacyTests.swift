@@ -390,10 +390,12 @@ final class LegacySSD: LegacySnapshotStartable {
         for (index, drive) in drives.enumerated() {
             if index > 0 { blocks.append(.gap) }
             let findings = SSDText.externalFindings(drive)
-            blocks.append(findings.isEmpty ? .item(drive.model ?? "–", detail: SSDText.externalIdentity(drive))
-                : .status(drive.model ?? "–", .bad, detail: SSDText.externalIdentity(drive)))
+            blocks.append(findings.isEmpty ? .item(drive.model ?? "–", detail: SSDText.externalIdentityShort(drive))
+                : .status(drive.model ?? "–", .bad, detail: SSDText.externalIdentityShort(drive)))
+            let technical = SSDText.externalIdentityTechnical(drive)
+            if !technical.isEmpty { blocks.append(.caption(technical)) }
             if SSDText.externalHasSMART(drive) {
-                if let summary = SSDText.externalHealthSummary(drive) { blocks.append(.headline(summary, nil)) }
+                if let summary = SSDText.externalHealthSummary(drive) { blocks += summaryBlocks(summary) }
                 if findings.isEmpty { blocks.append(.status(L("SSD health is good."), .good)) }
             }
             blocks += findings.map { .status($0, .bad) }
@@ -408,19 +410,17 @@ final class LegacySSD: LegacySnapshotStartable {
             }
             if let io = drive.io, SSDText.ioFinding(io) == nil { blocks.append(.caption(SSDText.io(io))) }
             if SSDText.externalHasSMART(drive) {
-                blocks.append(.rows(SSDText.externalHealthRows(drive).map { DocRow(title: $0.0, value: $0.1) }, labelWidth: 200))
+                blocks.append(smartRows(SSDText.externalHealthRows(drive)))
             }
             if let attributes = SSDText.externalAttributes(drive) {
-                blocks.append(.caption(L("All SMART attributes")))
-                blocks.append(.table(header: SSDText.ataTableHeader, rows: attributes,
-                                     tones: attributes.map { _ in Array(repeating: nil, count: 6) }, leading: true))
+                blocks += attributeBlocks(attributes)
             }
         }
         return .group(L("External drives"), blocks)
     }
     /// Real capacity: fill the free space of a USB volume, read it back and compare.
     private func capacityGroup() -> Block {
-        var blocks: [Block] = [.secondary(CapacityCheckText.explanation)]
+        var blocks: [Block] = [explained(L("Finds fake USB sticks and cards that hold less than they report."), .ssdRealCapacity)]
         if volumes.isEmpty {
             blocks.append(.secondary(L("Plug in a USB stick, card or external drive to check its capacity.")))
         }
@@ -450,15 +450,43 @@ final class LegacySSD: LegacySnapshotStartable {
     private func healthGroup(summary: String?, findings: [String], rows: [(String, String)],
                              attributes: [[String]]?) -> Block {
         var blocks: [Block] = []
-        if let summary { blocks.append(.headline(summary, nil)) }
+        if let summary { blocks += summaryBlocks(summary) }
         blocks.append(findings.isEmpty ? .headline(L("SSD health is good."), .good) : .list(findings.map { .status($0, .bad) }))
-        blocks.append(.rows(rows.map { DocRow(title: $0.0, value: $0.1) }, labelWidth: 200))
-        if let attributes {
-            blocks.append(.section(L("All SMART attributes")))
+        blocks.append(smartRows(rows))
+        if let attributes { blocks += attributeBlocks(attributes) }
+        return .group(L("Health (SMART)"), blocks)
+    }
+
+    /// A short summary line, and the explanation under it when the summary is a long one.
+    private func summaryBlocks(_ summary: String) -> [Block] {
+        let parts = SSDText.splitSummary(summary)
+        return [.headline(parts.title, nil)] + (parts.detail.map { [.secondary($0)] } ?? [])
+    }
+
+    private func smartRows(_ rows: [(String, String)]) -> Block {
+        .rows(rows.map { DocRow(title: $0.0, value: $0.1, info: Glossary.term(forSSDRow: $0.0)) }, labelWidth: 220)
+    }
+
+    /// A one-line description with an ⓘ for the long one.
+    private func explained(_ text: String, _ term: Glossary.Term) -> Block {
+        .rows([DocRow(title: text, value: "", info: term)], labelWidth: nil)
+    }
+
+    private static let attributesKey = "ssd.showAttributes"
+
+    /// Every ATA SMART attribute, behind a link (the table is long).
+    private func attributeBlocks(_ attributes: [[String]]) -> [Block] {
+        let shown = UserDefaults.standard.bool(forKey: Self.attributesKey)
+        var blocks: [Block] = [.actions([DocAction(title: shown ? L("Hide the SMART attributes") : L("All SMART attributes"),
+                                                   link: true) { [unowned self] in
+            UserDefaults.standard.set(!shown, forKey: Self.attributesKey)
+            window.reload()
+        }])]
+        if shown {
             blocks.append(.table(header: SSDText.ataTableHeader, rows: attributes,
                                  tones: attributes.map { _ in Array(repeating: nil, count: 6) }, leading: true))
         }
-        return .group(L("Health (SMART)"), blocks)
+        return blocks
     }
 
     // MARK: Write–verify
@@ -477,7 +505,7 @@ final class LegacySSD: LegacySnapshotStartable {
         }
         var blocks: [Block] = [
             .section(L("Write–verify stress test")),
-            .secondary(L("Writes a test file to free space, reads it back and compares every byte. Finds data corruption, I/O errors and stalling areas that point to failing NAND. Only free space can be tested, and the test uses some of the SSD's write endurance.")),
+            explained(L("Writes test data to free space, reads it back and compares it."), .ssdStressTest),
         ]
         if let note = SSDText.testLocationNote { blocks.append(.secondary(note)) }
         blocks += [
@@ -530,7 +558,7 @@ final class LegacySSD: LegacySnapshotStartable {
         }
         var blocks: [Block] = [
             .section(L("Full test (administrator permission required)")),
-            .secondary(L("Reads the entire SSD — including used space and the system partitions — and maps unreadable and slow areas, then runs the write–verify test on free space. The scan only reads. macOS asks for an administrator password; FixStat never sees or stores it.")),
+            explained(L("Reads the whole SSD, then tests free space. macOS asks for an administrator password."), .ssdFullTest),
             .caption(L("Also needs Full Disk Access: if the scan does not start, allow FixStat in System Settings › Privacy & Security › Full Disk Access.")),
             .view(hStack([action, makeSpacer()])),
         ]

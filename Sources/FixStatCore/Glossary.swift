@@ -19,6 +19,10 @@ public enum Glossary {
         case systemPower, adapterInput, batteryRail, pmuRail, fanActual, fanTarget, batteryVoltage, batteryTemperature
         // Sensor check
         case macSymptoms
+        // SSD
+        case ssdEnduranceUsed, ssdSpare, ssdWritten, ssdEnduranceLeft, ssdPowerOnHours, ssdPowerCycles, ssdUnsafeShutdowns
+        case ssdMediaErrors, ssdErrorLog, ssdReallocated, ssdPending, ssdUncorrectable, ssdCRC, ssdTrim, ssdEraseCycles
+        case ssdLifeLeft, ssdRealCapacity, ssdStressTest, ssdFullTest
     }
 
     public static func explanation(_ term: Term) -> String {
@@ -105,6 +109,44 @@ public enum Glossary {
             return L("The battery's temperature from the gauge's sensor. Charging slows above about 40 °C, and a hot pack ages faster.")
         case .macSymptoms:
             return L("What macOS and the SMC do when they miss a sensor or see a fault: fans at high speed although the Mac is cool, a CPU speed limit below 100 % (macOS runs the CPU slower; read from pmset -g therm), or kernel_task taking the CPU. A missing or broken sensor is a common cause, but a fan, battery or power adapter fault causes the same.")
+        case .ssdEnduranceUsed:
+            return L("The share of the SSD's rated write endurance used up, reported by the drive itself (NVMe \"percentage used\"). NAND cells wear with every write; at 100 % the rated endurance is reached, and most drives keep working for a while but are past their warranty value.")
+        case .ssdSpare:
+            return L("Spare NAND blocks the SSD still has to replace worn-out ones. It starts at 100 % and drops as blocks fail; a low value means the drive is running out of replacements.")
+        case .ssdWritten:
+            return L("All data the computer has written to the drive in its life. Compared with the endurance used it shows how fast the drive wears. \"Estimate\" means the drive counts in sectors and the size is calculated from them.")
+        case .ssdEnduranceLeft:
+            return L("How much more data can be written before the rated endurance is reached, if the drive keeps wearing as it has so far (data written × life left ÷ life used). Shown from 5 % wear, because the drive reports wear in whole percent.")
+        case .ssdPowerOnHours:
+            return L("Hours the drive has been powered on in its life.")
+        case .ssdPowerCycles:
+            return L("How often the drive was powered on.")
+        case .ssdUnsafeShutdowns:
+            return L("Power losses without a proper shutdown: forced shutdowns, a battery that ran flat, or a drive in an enclosure unplugged without ejecting. Each one risks the data being written at that moment.")
+        case .ssdMediaErrors:
+            return L("Data the SSD could not read back correctly even with its error correction. Should be 0; any other value means data was lost and the NAND is failing.")
+        case .ssdErrorLog:
+            return L("Entries in the drive's own error log. They are often harmless (e.g. commands the drive does not support), so judge them together with media errors.")
+        case .ssdReallocated:
+            return L("Sectors the drive found bad and replaced with spare ones. A few on an old hard disk are tolerated; a growing number means the surface or the NAND is failing.")
+        case .ssdPending:
+            return L("Sectors that could not be read and wait to be replaced the next time they are written. Any value above 0 means unreadable data right now.")
+        case .ssdUncorrectable:
+            return L("Errors the drive could not correct while reading. Should be 0.")
+        case .ssdCRC:
+            return L("Transfer errors on the cable between the drive and the computer (or the USB adapter). They point at the cable, the connector or the enclosure, not at the drive itself.")
+        case .ssdTrim:
+            return L("TRIM tells the SSD which blocks are free, so it can keep them ready. macOS turns it on by itself only for Apple's SSDs; without it a third-party SSD gets slower and wears faster (\"sudo trimforce enable\" turns it on).")
+        case .ssdEraseCycles:
+            return L("How often the NAND blocks have been erased, on average and lowest / highest. NAND survives a limited number of erase cycles (typically a few thousand for TLC); a large gap between lowest and highest means uneven wear.")
+        case .ssdLifeLeft:
+            return L("The life left that the drive's maker reports in its own SMART attribute. FixStat shows it only for drive families whose wear counter it knows; for others it shows the evidence instead of a guess.")
+        case .ssdRealCapacity:
+            return CapacityCheckText.explanation
+        case .ssdStressTest:
+            return L("Writes a test file to free space, reads it back and compares every byte. Finds data corruption, I/O errors and stalling areas that point to failing NAND. Only free space can be tested, and the test uses some of the SSD's write endurance.")
+        case .ssdFullTest:
+            return L("Reads the entire SSD — including used space and the system partitions — and maps unreadable and slow areas, then runs the write–verify test on free space. The scan only reads. macOS asks for an administrator password; FixStat never sees or stores it.")
         case .pdHardResets:
             return L("USB-C Power Delivery hard resets: the Mac and the adapter restarted their negotiation. A few are normal; many point at a bad cable, adapter or port.")
         }
@@ -124,5 +166,20 @@ public enum Glossary {
         if id.hasPrefix("battery:cell:") { return .cellVoltage }
         if id.hasPrefix("fan:") { return id.hasSuffix(":target") ? .fanTarget : .fanActual }
         return group == .rails ? .pmuRail : nil
+    }
+
+    /// The explanation for a SMART row of `SSDText` (matched by its localized title).
+    public static func term(forSSDRow title: String) -> Term? {
+        let terms: [(String, Term)] = [
+            (L("Endurance used"), .ssdEnduranceUsed), (L("Available spare"), .ssdSpare),
+            (L("Data written"), .ssdWritten), (L("Data written (estimate)"), .ssdWritten),
+            (L("Endurance left"), .ssdEnduranceLeft), (L("Power-on hours"), .ssdPowerOnHours),
+            (L("Power cycles"), .ssdPowerCycles), (L("Unsafe shutdowns"), .ssdUnsafeShutdowns),
+            (L("Media errors"), .ssdMediaErrors), (L("Error log entries"), .ssdErrorLog),
+            (L("Reallocated sectors"), .ssdReallocated), (L("Pending sectors"), .ssdPending),
+            (L("Uncorrectable sectors"), .ssdUncorrectable), (L("Interface CRC errors"), .ssdCRC),
+            ("TRIM", .ssdTrim), (L("NAND erase cycles"), .ssdEraseCycles), (L("Life left"), .ssdLifeLeft),
+        ]
+        return terms.first { $0.0 == title }?.1
     }
 }

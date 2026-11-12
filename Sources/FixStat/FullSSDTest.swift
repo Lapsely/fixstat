@@ -72,8 +72,8 @@ struct FullSSDTestSection: View {
 
     var body: some View {
         VStack(alignment: .leading, spacing: Design.rowSpacing) {
-            CardHeader("Full test (administrator permission required)", systemImage: "magnifyingglass")
-            Text("Reads the entire SSD — including used space and the system partitions — and maps unreadable and slow areas, then runs the write–verify test on free space. The scan only reads. macOS asks for an administrator password; FixStat never sees or stores it.")
+            CardHeader("Full test (administrator permission required)", systemImage: "magnifyingglass") { InfoButton(.ssdFullTest) }
+            Text("Reads the whole SSD, then tests free space. macOS asks for an administrator password.")
                 .foregroundStyle(.secondary)
                 .fixedSize(horizontal: false, vertical: true)
             Label("Also needs Full Disk Access: if the scan does not start, allow FixStat in System Settings › Privacy & Security › Full Disk Access.",

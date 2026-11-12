@@ -256,7 +256,9 @@ final class LegacyDocumentView: NSScrollView {
     private func renderRows(_ rows: [DocRow], labelWidth: CGFloat?, width: CGFloat) -> NSView {
         let views = rows.map { row -> NSView in
             let label = makeLabel(row.title, color: .secondaryLabelColor)
-            let title = withInfo(label, row.info)
+            // In a label column the ⓘ stays next to the title, not at the column's end.
+            let title = labelWidth == nil ? withInfo(label, row.info)
+                : hStack([label] + (row.info.map { [InfoButton($0)] } ?? []) + [makeSpacer()], spacing: 3, alignment: .centerY)
             // Spread rows: the value wraps in whatever the title (and its ⓘ) leaves free.
             let valueWidth = labelWidth.map { width - $0 - 8 } ?? max(width * 0.4, width - title.fittingSize.width - 16)
             let value = wrapping(row.value ?? "–", width: valueWidth, color: row.tone == .bad ? LegacyStyle.hot : .labelColor)

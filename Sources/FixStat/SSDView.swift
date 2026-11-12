@@ -128,9 +128,9 @@ struct SSDView: View {
 
     private var realCapacity: some View {
         Card {
-            CardHeader("Real capacity", systemImage: "checkmark.seal")
-            Text(verbatim: CapacityCheckText.explanation)
-                .font(.callout).foregroundStyle(.secondary)
+            CardHeader("Real capacity", systemImage: "checkmark.seal") { InfoButton(.ssdRealCapacity) }
+            Text("Finds fake USB sticks and cards that hold less than they report.")
+                .foregroundStyle(.secondary)
                 .fixedSize(horizontal: false, vertical: true)
             if volumes.isEmpty {
                 Text("Plug in a USB stick, card or external drive to check its capacity.").foregroundStyle(.secondary)
@@ -195,7 +195,8 @@ struct SSDView: View {
                 Text(verbatim: SSDText.identity(info)).foregroundStyle(.secondary)
             }
             HStack(spacing: Design.cardSpacing) {
-                MetricTile(title: "Health", value: info.healthPercent.map { Format.percent(Double($0)) } ?? "–")
+                MetricTile(title: "Health", value: info.healthPercent.map { Format.percent(Double($0)) }
+                           ?? (info.ata != nil ? String(localized: "not known") : "–"))
                 if let space = info.space {
                     MetricTile(title: "Free space", value: Format.bytes(space.available))
                 }
@@ -221,8 +222,8 @@ struct SSDView: View {
     private var stressTest: some View {
         let available = Double(SSDRunner.availableBytes) / 1_000_000_000
         return Card {
-            CardHeader("Write–verify stress test", systemImage: "arrow.triangle.2.circlepath")
-            Text("Writes a test file to free space, reads it back and compares every byte. Finds data corruption, I/O errors and stalling areas that point to failing NAND. Only free space can be tested, and the test uses some of the SSD's write endurance.")
+            CardHeader("Write–verify stress test", systemImage: "arrow.triangle.2.circlepath") { InfoButton(.ssdStressTest) }
+            Text("Writes test data to free space, reads it back and compares it.")
                 .foregroundStyle(.secondary)
                 .fixedSize(horizontal: false, vertical: true)
             if let note = SSDText.testLocationNote {
@@ -313,7 +314,11 @@ private struct HealthCard: View {
         Card {
             CardHeader("Health (SMART)", systemImage: "heart.text.square")
             if let summary {
-                Text(verbatim: summary).font(.headline)
+                let parts = SSDText.splitSummary(summary)
+                Text(verbatim: parts.title).font(.headline)
+                if let detail = parts.detail {
+                    Text(verbatim: detail).foregroundStyle(.secondary).fixedSize(horizontal: false, vertical: true)
+                }
             }
             if findings.isEmpty {
                 FindingRow(text: String(localized: "SSD health is good."), problem: false)
@@ -339,14 +344,30 @@ private struct SMARTRows: View {
         Grid(alignment: .leading, horizontalSpacing: 24, verticalSpacing: Design.rowSpacing) {
             ForEach(Array(stride(from: 0, to: rows.count, by: 2)), id: \.self) { index in
                 GridRow {
-                    CardRow(title: Text(verbatim: rows[index].0), value: rows[index].1)
+                    SMARTRow(row: rows[index])
                     if index + 1 < rows.count {
-                        CardRow(title: Text(verbatim: rows[index + 1].0), value: rows[index + 1].1)
+                        SMARTRow(row: rows[index + 1])
                     }
                 }
             }
         }
         .padding(.top, 4)
+    }
+}
+
+/// One SMART value with its ⓘ explanation.
+@available(macOS 14.0, *)
+private struct SMARTRow: View {
+    let row: (String, String)
+
+    var body: some View {
+        HStack(alignment: .firstTextBaseline) {
+            Text(verbatim: row.0).foregroundStyle(.secondary).lineLimit(1)
+                .info(Glossary.term(forSSDRow: row.0))
+            Spacer(minLength: 8)
+            Text(verbatim: row.1).monospacedDigit().multilineTextAlignment(.trailing)
+        }
+        .padding(.vertical, 1)
     }
 }
 
@@ -386,12 +407,19 @@ private struct ExternalDriveView: View {
             VStack(alignment: .leading, spacing: 2) {
                 Text(verbatim: drive.model ?? "–").font(.headline)
                     .foregroundStyle(findings.isEmpty ? .primary : TemperatureColor.hot)
-                Text(verbatim: SSDText.externalIdentity(drive)).font(.callout).foregroundStyle(.secondary)
-                    .textSelection(.enabled)
+                Text(verbatim: SSDText.externalIdentityShort(drive)).foregroundStyle(.secondary)
+                let technical = SSDText.externalIdentityTechnical(drive)
+                if !technical.isEmpty {
+                    Text(verbatim: technical).font(.caption).foregroundStyle(.tertiary).textSelection(.enabled)
+                }
             }
             if SSDText.externalHasSMART(drive) {
                 if let summary = SSDText.externalHealthSummary(drive) {
-                    Text(verbatim: summary)
+                    let parts = SSDText.splitSummary(summary)
+                    Text(verbatim: parts.title).fontWeight(.semibold)
+                    if let detail = parts.detail {
+                        Text(verbatim: detail).foregroundStyle(.secondary).fixedSize(horizontal: false, vertical: true)
+                    }
                 }
                 if findings.isEmpty {
                     FindingRow(text: String(localized: "SSD health is good."), problem: false)

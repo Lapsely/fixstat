@@ -43,7 +43,7 @@ public enum SSDText {
 
     static func enduranceRow(usedPercent: Int?, written: Double?) -> (String, String)? {
         guard let used = usedPercent, let left = remainingEndurance(usedPercent: used, written: written) else { return nil }
-        return (L("Endurance left (estimate)"), L("about %@ more at the wear so far", Format.bytes(left)))
+        return (L("Endurance left"), "≈ " + Format.bytes(left))
     }
 
     /// Unsafe shutdowns that make up a large share of the power cycles (bench: an Apple NVMe 14 %, a
@@ -80,6 +80,30 @@ public enum SSDText {
     /// An SSD whose vendor wear counter FixStat does not know: no percentage is guessed.
     public static var lifeUnknown: String {
         L("Life left not known for this drive model: its wear counter is not documented. Judge it by the erase cycles, spare blocks and errors.")
+    }
+
+    /// A long summary split for the window: a short bold line and the explanation under it.
+    public static func splitSummary(_ summary: String) -> (title: String, detail: String?) {
+        guard summary == lifeUnknown else { return (summary, nil) }
+        return (L("Life left: not known for this drive model"),
+                L("Its wear counter is not documented, so FixStat does not guess a percentage. Judge it by the erase cycles, spare blocks and errors."))
+    }
+
+    /// The first part of `externalIdentity`: kind, size and link ("SSD · 500 GB · USB 5 Gb/s").
+    public static func externalIdentityShort(_ drive: ATADrive) -> String {
+        let kind = drive.isSolidState ? L("SSD") : L("Hard disk")
+        let link = drive.thunderbolt == true ? "Thunderbolt"
+            : drive.usb?.megabitsPerSecond.map { "USB " + PortText.speed($0) } ?? drive.interconnect.map(interconnect)
+        return [kind, drive.capacity.map { Format.bytes($0) }, link].compactMap { $0 }.filter { !$0.isEmpty }
+            .joined(separator: " · ")
+    }
+
+    /// The rest of `externalIdentity`: USB bridge, firmware and BSD name, for technicians.
+    public static func externalIdentityTechnical(_ drive: ATADrive) -> String {
+        let short = externalIdentityShort(drive)
+        let full = externalIdentity(drive)
+        guard full.hasPrefix(short) else { return full }
+        return String(full.dropFirst(short.count)).trimmingCharacters(in: CharacterSet(charactersIn: " ·"))
     }
 
     public static func healthSummary(_ info: SSDInfo) -> String? {

@@ -1262,6 +1262,16 @@
         }
       }
     },
+    "All data the computer has written to the drive in its life. Compared with the endurance used it shows how fast the drive wears. \"Estimate\" means the drive counts in sectors and the size is calculated from them." : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bilgisayarın diske ömrü boyunca yazdığı toplam veri. Kullanılan ömürle karşılaştırınca diskin ne hızla aşındığını gösterir. \"Tahmini\", diskin sektör saydığı ve boyutun bundan hesaplandığı anlamına gelir."
+          }
+        }
+      }
+    },
     "All keys are detected. macOS still acts on its own keys (Mission Control, Spotlight …); allow FixStat under Accessibility to block that during the test." : {
       "localizations" : {
         "tr" : {
@@ -3080,6 +3090,16 @@
         }
       }
     },
+    "Data the SSD could not read back correctly even with its error correction. Should be 0; any other value means data was lost and the NAND is failing." : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "SSD'nin hata düzeltmesine rağmen doğru okuyamadığı veri. 0 olmalı; başka bir değer veri kaybı olduğunu ve NAND'in bozulduğunu gösterir."
+          }
+        }
+      }
+    },
     "Data written" : {
       "localizations" : {
         "tr" : {
@@ -3430,12 +3450,12 @@
         }
       }
     },
-    "Endurance left (estimate)" : {
+    "Endurance left" : {
       "localizations" : {
         "tr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Kalan dayanıklılık (tahmin)"
+            "value" : "Kalan dayanıklılık"
           }
         }
       }
@@ -3476,6 +3496,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Kayıtlı — bir kurum tarafından yönetiliyor"
+          }
+        }
+      }
+    },
+    "Entries in the drive's own error log. They are often harmless (e.g. commands the drive does not support), so judge them together with media errors." : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Diskin kendi hata kaydındaki girdiler. Çoğu zaman zararsızdır (ör. diskin desteklemediği komutlar); medya hatalarıyla birlikte değerlendirin."
           }
         }
       }
@@ -3526,6 +3556,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Açılıştan beri hata"
+          }
+        }
+      }
+    },
+    "Errors the drive could not correct while reading. Should be 0." : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Diskin okurken düzeltemediği hatalar. 0 olmalı."
           }
         }
       }
@@ -3764,6 +3804,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "FileVault"
+          }
+        }
+      }
+    },
+    "Finds fake USB sticks and cards that hold less than they report." : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bildirdiğinden az veri alan sahte USB bellekleri ve kartları bulur."
           }
         }
       }
@@ -4420,6 +4470,16 @@
         }
       }
     },
+    "Hide the SMART attributes" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "SMART özniteliklerini gizle"
+          }
+        }
+      }
+    },
     "High battery drain while asleep: %@. A healthy Mac usually loses less than 1 %% per hour; check Power Nap, wake for network access and the dark wake reasons." : {
       "localizations" : {
         "tr" : {
@@ -4670,6 +4730,16 @@
         }
       }
     },
+    "Hours the drive has been powered on in its life." : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Diskin ömrü boyunca açık kaldığı saat."
+          }
+        }
+      }
+    },
     "Hours the gauge counted in each charge band, from low to high charge. Apple does not document where the bands begin and end." : {
       "localizations" : {
         "tr" : {
@@ -4720,12 +4790,42 @@
         }
       }
     },
+    "How much more data can be written before the rated endurance is reached, if the drive keeps wearing as it has so far (data written × life left ÷ life used). Shown from 5 % wear, because the drive reports wear in whole percent." : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Disk şimdiye kadarki hızla aşınmaya devam ederse öngörülen ömür dolmadan önce daha ne kadar veri yazılabileceği (yazılan veri × kalan ömür ÷ kullanılan ömür). Disk aşınmayı tam yüzde olarak bildirdiği için %5 aşınmadan sonra gösterilir."
+          }
+        }
+      }
+    },
     "How often macOS slowed this Mac down because of heat, from the system log (kept for a few days to weeks). Repeated heavy pressure at light use points to the cooling: dust, the fan, dried thermal paste or a blocked vent; a forced sleep often means the Mac was closed in a bag while awake." : {
       "localizations" : {
         "tr" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "macOS'un bu Mac'i ısı yüzünden ne sıklıkla yavaşlattığı, sistem kaydından (birkaç gün ile birkaç hafta tutulur). Hafif kullanımda tekrarlayan ağır basınç soğutmaya işaret eder: toz, fan, kurumuş termal macun ya da tıkalı bir hava çıkışı; zorunlu uyku çoğu zaman Mac'in uyanıkken çantada kapalı kaldığını gösterir."
+          }
+        }
+      }
+    },
+    "How often the NAND blocks have been erased, on average and lowest / highest. NAND survives a limited number of erase cycles (typically a few thousand for TLC); a large gap between lowest and highest means uneven wear." : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "NAND bloklarının kaç kez silindiği: ortalama, en düşük ve en yüksek. NAND sınırlı sayıda silme döngüsüne dayanır (TLC için genellikle birkaç bin); en düşük ile en yüksek arasındaki büyük fark düzensiz aşınmayı gösterir."
+          }
+        }
+      }
+    },
+    "How often the drive was powered on." : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Diskin kaç kez açıldığı."
           }
         }
       }
@@ -4846,6 +4946,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Dahili SSD"
+          }
+        }
+      }
+    },
+    "Its wear counter is not documented, so FixStat does not guess a percentage. Judge it by the erase cycles, spare blocks and errors." : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Aşınma sayacı belgelenmemiş, bu yüzden FixStat yüzde tahmin etmiyor. Silme döngülerine, yedek bloklara ve hatalara bakarak değerlendirin."
           }
         }
       }
@@ -5172,6 +5282,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Bu disk modelinin kalan ömrü bilinmiyor: aşınma sayacı belgelenmemiş. Silme döngülerine, yedek bloklara ve hatalara bakarak değerlendirin."
+          }
+        }
+      }
+    },
+    "Life left: not known for this drive model" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kalan ömür: bu disk modeli için bilinmiyor"
           }
         }
       }
@@ -7370,6 +7490,16 @@
         }
       }
     },
+    "Power losses without a proper shutdown: forced shutdowns, a battery that ran flat, or a drive in an enclosure unplugged without ejecting. Each one risks the data being written at that moment." : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Düzgün kapatılmadan gelen güç kesintileri: zorla kapatma, biten batarya ya da kutudaki diskin çıkarılmadan sökülmesi. Her biri o anda yazılan veriyi riske atar."
+          }
+        }
+      }
+    },
     "Power lost" : {
       "localizations" : {
         "tr" : {
@@ -7752,6 +7882,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "SSD'nin tamamını — dolu alanlar ve sistem bölümleri dahil — okur, okunamayan ve yavaş bölgeleri haritalar, ardından boş alanda yazma–doğrulama testini çalıştırır. Tarama yalnızca okur. macOS yönetici parolası ister; FixStat parolayı görmez ve saklamaz."
+          }
+        }
+      }
+    },
+    "Reads the whole SSD, then tests free space. macOS asks for an administrator password." : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "SSD'nin tamamını okur, ardından boş alanı test eder. macOS yönetici parolası ister."
           }
         }
       }
@@ -8322,6 +8462,26 @@
         }
       }
     },
+    "Sectors that could not be read and wait to be replaced the next time they are written. Any value above 0 means unreadable data right now." : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Okunamayan ve bir sonraki yazmada değiştirilmeyi bekleyen sektörler. 0'ın üstündeki her değer şu anda okunamayan veri olduğunu gösterir."
+          }
+        }
+      }
+    },
+    "Sectors the drive found bad and replaced with spare ones. A few on an old hard disk are tolerated; a growing number means the surface or the NAND is failing." : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Diskin bozuk bulup yedekleriyle değiştirdiği sektörler. Eski bir sabit diskte birkaç tane kabul edilebilir; sayının artması yüzeyin ya da NAND'in bozulduğunu gösterir."
+          }
+        }
+      }
+    },
     "Select All" : {
       "localizations" : {
         "tr" : {
@@ -8818,6 +8978,16 @@
         }
       }
     },
+    "Spare NAND blocks the SSD still has to replace worn-out ones. It starts at 100 % and drops as blocks fail; a low value means the drive is running out of replacements." : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "SSD'nin aşınan blokların yerine koyabileceği yedek NAND blokları. %100'den başlar, bloklar bozuldukça düşer; düşük değer diskin yedeklerinin tükendiğini gösterir."
+          }
+        }
+      }
+    },
     "Spare blocks below threshold (%lld %%)." : {
       "localizations" : {
         "tr" : {
@@ -9200,6 +9370,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "TRIM kapalı: macOS onu kendiliğinden yalnızca Apple'ın SSD'lerinde açar. TRIM olmadan SSD yavaşlar ve daha hızlı aşınır. Terminal'de “sudo trimforce enable” ile açın (Mac yeniden başlar)."
+          }
+        }
+      }
+    },
+    "TRIM tells the SSD which blocks are free, so it can keep them ready. macOS turns it on by itself only for Apple's SSDs; without it a third-party SSD gets slower and wears faster (\"sudo trimforce enable\" turns it on)." : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "TRIM, SSD'ye hangi blokların boş olduğunu söyler ki onları hazır tutabilsin. macOS bunu yalnızca Apple SSD'lerinde kendiliğinden açar; TRIM olmadan başka marka bir SSD yavaşlar ve daha hızlı aşınır (\"sudo trimforce enable\" ile açılır)."
           }
         }
       }
@@ -9916,6 +10096,16 @@
         }
       }
     },
+    "The life left that the drive's maker reports in its own SMART attribute. FixStat shows it only for drive families whose wear counter it knows; for others it shows the evidence instead of a guess." : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Disk üreticisinin kendi SMART özniteliğinde bildirdiği kalan ömür. FixStat bunu yalnızca aşınma sayacını bildiği disk aileleri için gösterir; diğerlerinde tahmin yerine bulguları gösterir."
+          }
+        }
+      }
+    },
     "The lowest and the highest charge of the day as the gauge records them." : {
       "localizations" : {
         "tr" : {
@@ -10032,6 +10222,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Sensör feneri gördü ama kamera karanlık kaldı; kamerayı da kontrol edin."
+          }
+        }
+      }
+    },
+    "The share of the SSD's rated write endurance used up, reported by the drive itself (NVMe \"percentage used\"). NAND cells wear with every write; at 100 % the rated endurance is reached, and most drives keep working for a while but are past their warranty value." : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "SSD'nin öngörülen yazma ömründen kullanılan kısım; diskin kendisi bildirir (NVMe \"percentage used\"). NAND hücreleri her yazmada aşınır; %100'de öngörülen ömür dolar, çoğu disk bir süre daha çalışır ama garanti değerinin ötesine geçmiştir."
           }
         }
       }
@@ -10422,6 +10622,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Trackpad"
+          }
+        }
+      }
+    },
+    "Transfer errors on the cable between the drive and the computer (or the USB adapter). They point at the cable, the connector or the enclosure, not at the drive itself." : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Disk ile bilgisayar (ya da USB adaptörü) arasındaki kabloda aktarım hataları. Diski değil kabloyu, konnektörü ya da kutuyu gösterir."
           }
         }
       }
@@ -11212,6 +11422,16 @@
         }
       }
     },
+    "Writes test data to free space, reads it back and compares it." : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Boş alana test verisi yazar, geri okur ve karşılaştırır."
+          }
+        }
+      }
+    },
     "Write–verify on free space…" : {
       "localizations" : {
         "tr" : {
@@ -11298,16 +11518,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "yaklaşık %@"
-          }
-        }
-      }
-    },
-    "about %@ more at the wear so far" : {
-      "localizations" : {
-        "tr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "şimdiye kadarki aşınmayla yaklaşık %@ daha"
           }
         }
       }
@@ -11914,6 +12124,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "yeterli boş alan yok"
+          }
+        }
+      }
+    },
+    "not known" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "bilinmiyor"
           }
         }
       }
