@@ -112,7 +112,7 @@ private struct OriginalitySection: View {
             if let condition = macOSHealth?.condition {
                 Label {
                     let text = String(localized: "macOS battery condition: \(PartText.condition(condition))")
-                    Text(verbatim: text + (macOSHealth?.maximumCapacity.map { " · \($0)" } ?? ""))
+                    Text(verbatim: text + (macOSHealth?.maximumCapacityPercent.map { " · " + Format.percent(Double($0)) } ?? ""))
                 } icon: {
                     Image(systemName: macOSHealth?.isGood == true ? "checkmark.circle" : "exclamationmark.triangle.fill")
                 }

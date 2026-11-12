@@ -151,5 +151,9 @@ import Testing
         let health = MacOSBatteryHealth.parse(Data(json.utf8))
         #expect(health?.condition == "Check Battery")
         #expect(health?.isGood == false)
+        #expect(health?.maximumCapacityPercent == 78)
+        // Turkish system language: "%77".
+        #expect(MacOSBatteryHealth(condition: nil, maximumCapacity: "%77").maximumCapacityPercent == 77)
+        #expect(MacOSBatteryHealth(condition: nil, maximumCapacity: "–").maximumCapacityPercent == nil)
     }
 }

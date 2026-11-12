@@ -69,6 +69,14 @@ public struct MacOSBatteryHealth: Codable, Sendable, Equatable {
                                   maximumCapacity: health["sppower_battery_health_maximum_capacity"] as? String)
     }
 
+    /// The maximum capacity as a number: system_profiler formats it in the system language
+    /// ("77%", "%77" in Turkish), so it is shown through FixStat's own formatting.
+    public var maximumCapacityPercent: Int? {
+        guard let text = maximumCapacity else { return nil }
+        let digits = text.filter { $0.isASCII && $0.isNumber }
+        return digits.isEmpty ? nil : Int(digits)
+    }
+
     /// True for "Good" / "Normal".
     public var isGood: Bool {
         guard let condition else { return false }

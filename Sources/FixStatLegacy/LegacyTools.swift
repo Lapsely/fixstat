@@ -249,7 +249,7 @@ final class LegacyBatteryDetails {
         var blocks: [Block] = [.columns([batteryColumn, adapterColumn])]
         if let condition = macOSHealth?.condition {
             let text = L("macOS battery condition: %@", PartText.condition(condition))
-                + (macOSHealth?.maximumCapacity.map { " · \($0)" } ?? "")
+                + (macOSHealth?.maximumCapacityPercent.map { " · " + Format.percent(Double($0)) } ?? "")
             blocks.append(.status(text, macOSHealth?.isGood == true ? .good : .bad))
         }
         blocks.append(.caption(L("macOS has no genuine-part flag for Mac batteries and clones can copy digital data, so this is a consistency check against known genuine parts, not proof.")))
