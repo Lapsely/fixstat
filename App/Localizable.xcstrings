@@ -996,6 +996,16 @@
         }
       }
     },
+    "A number in the gauge that tells it which cell chemistry it works with, so it estimates the charge correctly. It follows the cell maker; genuine packs of a model use a few known IDs." : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Gauge'a hangi hücre kimyasıyla çalıştığını söyleyen numara; şarjı doğru tahmin etmesi için gerekir. Hücre üreticisine göre değişir; bir modelin orijinal paketleri bilinen birkaç kodu kullanır."
+          }
+        }
+      }
+    },
     "Abnormal shutdowns (30 days)" : {
       "localizations" : {
         "tr" : {
@@ -1354,6 +1364,26 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Görünüm"
+          }
+        }
+      }
+    },
+    "Apple's code for why the charger is not charging (a bit field, 0 = charging is allowed). The sentence above the rows names the usual causes in plain words." : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Apple'ın şarjın neden yapılmadığını gösteren kodu (bit alanı, 0 = şarja izin var). Satırların üstündeki cümle bilinen sebepleri düz bir dille söyler."
+          }
+        }
+      }
+    },
+    "Apple's undocumented codes for why charging is slowed or blocked, shown as reported. 0 means none; any other value means the charger is held back for a reason the gauge or the power controller reported." : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Apple'ın şarjın neden yavaşlatıldığını ya da engellendiğini gösteren, belgelenmemiş kodları; olduğu gibi gösterilir. 0 sebep yok demektir; başka bir değer, gauge'un ya da güç denetleyicisinin bildirdiği bir sebeple şarjın kısıldığını gösterir."
           }
         }
       }
@@ -2312,6 +2342,16 @@
         }
       }
     },
+    "Charge cycles counted by the gauge: one cycle is the pack's full capacity used up, in any number of steps (two half discharges make one cycle). Apple rates recent MacBook batteries for 1000 cycles." : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Gauge'un saydığı şarj döngüsü: paketin tam kapasitesi kaç parçada olursa olsun bir kez kullanılınca bir döngü sayılır (iki yarım deşarj = bir döngü). Apple yeni MacBook bataryalarını 1000 döngü için öngörür."
+          }
+        }
+      }
+    },
     "Charge today" : {
       "localizations" : {
         "tr" : {
@@ -2890,6 +2930,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Akım"
+          }
+        }
+      }
+    },
+    "Current flowing into the battery (+, charging) or out of it (−, the Mac runs on the battery), averaged by the gauge." : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bataryaya giren (+, şarj) ya da bataryadan çıkan (−, Mac bataryadan çalışıyor) akım; gauge'un ortalaması."
           }
         }
       }
@@ -3480,6 +3530,26 @@
         }
       }
     },
+    "Every profile the adapter offers. Genuine Apple adapters offer a known set per model; FixStat compares them in the originality check." : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Adaptörün sunduğu tüm profiller. Orijinal Apple adaptörleri her model için bilinen bir set sunar; FixStat bunları orijinallik kontrolünde karşılaştırır."
+          }
+        }
+      }
+    },
+    "Explanation" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Açıklama"
+          }
+        }
+      }
+    },
     "Export history" : {
       "localizations" : {
         "tr" : {
@@ -3516,6 +3586,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Harici diskler"
+          }
+        }
+      }
+    },
+    "Extremes the gauge recorded over the pack's whole life; they are never reset. A very high temperature means the pack was overheated at least once." : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Gauge'un paketin tüm ömrü boyunca kaydettiği en uç değerler; hiç sıfırlanmaz. Çok yüksek bir sıcaklık, paketin en az bir kez aşırı ısındığını gösterir."
           }
         }
       }
@@ -4540,12 +4620,92 @@
         }
       }
     },
+    "Hours the gauge counted in each charge band, from low to high charge. Apple does not document where the bands begin and end." : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Gauge'un her şarj aralığında saydığı saatler, düşükten yükseğe. Apple aralıkların nerede başlayıp bittiğini belgelemiyor."
+          }
+        }
+      }
+    },
+    "Hours the gauge has been powered and counting. It does not count while the pack is disconnected or in shipping mode, so it is a lower bound of the pack's age." : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Gauge'un enerjili olup saydığı saat. Paket sökülüyken ya da sevkiyat modundayken saymaz; bu yüzden paketin yaşının alt sınırıdır."
+          }
+        }
+      }
+    },
+    "How far the cell's resistance (R) and Qmax (Q) are from the average of the pack's cells. Large differences point at the weak cell." : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hücrenin direncinin (R) ve Qmax'ının (Q) paketteki hücrelerin ortalamasından ne kadar saptığı. Büyük farklar zayıf hücreyi gösterir."
+          }
+        }
+      }
+    },
+    "How long charging was slowed because the battery or the Mac was too warm." : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Batarya ya da Mac fazla ısındığı için şarjın ne kadar süre yavaşlatıldığı."
+          }
+        }
+      }
+    },
+    "How many cycles ago the gauge last measured Qmax. It needs a long rest at a low and at a high charge to measure; after many cycles without a measurement the health value may be out of date. A full charge, a few hours' rest, then a discharge to a low charge and another rest refresh it." : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Gauge'un Qmax'ı en son kaç döngü önce ölçtüğü. Ölçmek için düşük ve yüksek şarjda uzun süre dinlenmesi gerekir; uzun süre ölçmediyse sağlık değeri eskimiş olabilir. Tam şarj, birkaç saat dinlenme, ardından düşük şarja kadar deşarj ve yine dinlenme değeri yeniler."
+          }
+        }
+      }
+    },
     "How often macOS slowed this Mac down because of heat, from the system log (kept for a few days to weeks). Repeated heavy pressure at light use points to the cooling: dust, the fan, dried thermal paste or a blocked vent; a forced sleep often means the Mac was closed in a bag while awake." : {
       "localizations" : {
         "tr" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "macOS'un bu Mac'i ısı yüzünden ne sıklıkla yavaşlattığı, sistem kaydından (birkaç gün ile birkaç hafta tutulur). Hafif kullanımda tekrarlayan ağır basınç soğutmaya işaret eder: toz, fan, kurumuş termal macun ya da tıkalı bir hava çıkışı; zorunlu uyku çoğu zaman Mac'in uyanıkken çantada kapalı kaldığını gösterir."
+          }
+        }
+      }
+    },
+    "How often the gauge has written its data memory. It grows slowly with use; a very low count on a pack that looks old can mean a new or reset gauge." : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Gauge'un veri belleğine kaç kez yazdığı. Kullanımla yavaşça artar; eski görünen bir pakette çok düşükse gauge yeni ya da sıfırlanmış olabilir."
+          }
+        }
+      }
+    },
+    "How often the gauge saw a cell disconnect. It should be 0; anything else points at a loose connection inside the pack or at its connector." : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Gauge'un bir hücrenin bağlantısının koptuğunu kaç kez gördüğü. 0 olmalı; başka bir değer paketin içinde ya da konnektöründe gevşek bir bağlantıyı gösterir."
+          }
+        }
+      }
+    },
+    "How often the port controller saw an adapter plugged in and removed. Many removals without anyone unplugging point at a loose cable or a worn port." : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Port denetleyicisinin adaptörün takılıp çıkarıldığını kaç kez gördüğü. Kimse çıkarmadığı hâlde çok sayıda çıkarma, gevşek bir kabloyu ya da yıpranmış bir portu gösterir."
           }
         }
       }
@@ -7038,6 +7198,16 @@
         }
       }
     },
+    "Power coming in from the adapter as the Mac measures it at its power input (voltage × current)." : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mac'in güç girişinde ölçtüğü, adaptörden gelen güç (voltaj × akım)."
+          }
+        }
+      }
+    },
     "Power cycles" : {
       "localizations" : {
         "tr" : {
@@ -8122,6 +8292,16 @@
         }
       }
     },
+    "Share of the pack's life it spent at a high charge, counted by the gauge. Sitting near full all the time ages the cells faster; a Mac that lives on the adapter shows a high share." : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Paketin ömrünün yüksek şarjda geçen kısmı (gauge sayar). Sürekli doluya yakın durmak hücreleri daha hızlı yaşlandırır; hep adaptörde duran bir Mac'te bu oran yüksektir."
+          }
+        }
+      }
+    },
     "Shine a phone flashlight at the sensor next to the camera." : {
       "localizations" : {
         "tr" : {
@@ -8994,6 +9174,16 @@
         }
       }
     },
+    "Text the pack maker wrote into the gauge: lot codes and the cell maker (e.g. ATL, Sunwoda). Clone packs often leave it empty." : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Paket üreticisinin gauge'a yazdığı metinler: lot kodları ve hücre üreticisi (ör. ATL, Sunwoda). Kopya paketlerde çoğu zaman boştur."
+          }
+        }
+      }
+    },
     "The %1$@ speaker distorts (harmonics %2$@): listen for a rattle or buzz, a torn cone or a loose part." : {
       "localizations" : {
         "tr" : {
@@ -9170,6 +9360,16 @@
         }
       }
     },
+    "The USB-C Power Delivery profile the Mac and the adapter agreed on: voltage and maximum current. A 5 V contract from an adapter that offers more means the cable, the port or the adapter is not working properly." : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mac ile adaptörün anlaştığı USB-C Power Delivery profili: voltaj ve en yüksek akım. Daha fazlasını sunan bir adaptörle 5 V'ta anlaşılmışsa kablo, port ya da adaptör düzgün çalışmıyordur."
+          }
+        }
+      }
+    },
     "The adapter delivered at most %@." : {
       "localizations" : {
         "tr" : {
@@ -9270,12 +9470,52 @@
         }
       }
     },
+    "The capacity the gauge measured (AppleRawMaxCapacity) as a share of the design capacity: the real wear of the pack. Below 80 % the battery is due for service." : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Gauge'un ölçtüğü kapasitenin (AppleRawMaxCapacity) tasarım kapasitesine oranı: paketin gerçek yıpranması. %80'in altında batarya değişim zamanı gelmiştir."
+          }
+        }
+      }
+    },
+    "The cell's internal resistance as the gauge tracks it (its weighted Ra value; Apple does not document the unit). It rises as a cell ages. Compare the cells with each other: one far above the rest sags under load and can shut the Mac down early." : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hücrenin gauge'un izlediği iç direnci (ağırlıklı Ra değeri; Apple birimini belgelemiyor). Hücre yaşlandıkça yükselir. Hücreleri birbiriyle karşılaştırın: diğerlerinden çok yüksek olan hücre yük altında çöker ve Mac'i erken kapatabilir."
+          }
+        }
+      }
+    },
+    "The cell's real capacity as the gauge last measured it (mAh). The gauge measures it while the cell rests, from the voltage before and after a charge or discharge. Compared with the design capacity it shows wear; a cell clearly below the others is the weak one." : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hücrenin gauge'un son ölçtüğü gerçek kapasitesi (mAh). Gauge bunu hücre dinlenirken, bir şarj ya da deşarjdan önceki ve sonraki voltajdan ölçer. Tasarım kapasitesiyle karşılaştırınca yıpranmayı gösterir; diğerlerinden belirgin düşük olan hücre zayıf olandır."
+          }
+        }
+      }
+    },
     "The charge fell by less than %@; the capacity figures are only rough." : {
       "localizations" : {
         "tr" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Şarj %@ kadar bile düşmedi; kapasite değerleri yalnızca kabaca doğru."
+          }
+        }
+      }
+    },
+    "The current the charger is set to deliver to the battery now. It drops near a full charge and when the battery is warm." : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Şarj devresinin şu an bataryaya vermek üzere ayarlandığı akım. Dolmaya yakın ve batarya ılıkken düşer."
           }
         }
       }
@@ -9390,6 +9630,16 @@
         }
       }
     },
+    "The fuel gauge chip in the battery pack. It measures voltage, current and temperature, counts the charge, learns the cells' capacity and keeps the pack's history. Genuine packs of a model use the same gauge chip." : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Batarya paketindeki gauge (yakıt göstergesi) çipi. Voltaj, akım ve sıcaklığı ölçer, şarjı sayar, hücrelerin kapasitesini öğrenir ve paketin geçmişini tutar. Bir modelin orijinal paketleri aynı gauge çipini kullanır."
+          }
+        }
+      }
+    },
     "The gauge has counted longer than the pack exists (years: counted / since it was made): a made-up record" : {
       "localizations" : {
         "tr" : {
@@ -9416,6 +9666,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Gauge bir noktada hücre başına %1$@ kaydetmiş, %2$@ altında. Ya paket aşırı deşarj olmuş (böyle hücreler kapasite kaybeder ve şişebilir) ya da bir onarım sırasında bağlantısı sökülüyken ölçülmüş: cihazın geçmişini sorun."
+          }
+        }
+      }
+    },
+    "The gauge's permanent failure flags. Anything other than 0 means the gauge has switched the pack off for good to protect it (e.g. cell imbalance, overheating, a blown fuse); the pack has to be replaced, it cannot be reset." : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Gauge'un kalıcı arıza bayrakları. 0 dışında bir değer, gauge'un paketi korumak için kalıcı olarak devre dışı bıraktığı anlamına gelir (ör. hücre dengesizliği, aşırı ısınma, atmış sigorta); paket değişmelidir, sıfırlanamaz."
           }
         }
       }
@@ -9472,6 +9732,26 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Kapak kapandı ama kapak açısı sensörü %1$@ ile %2$@ arasında kaldı: menteşedeki sensörü ve kablosunu kontrol edin."
+          }
+        }
+      }
+    },
+    "The lowest and the highest charge of the day as the gauge records them." : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Gauge'un kaydettiği günün en düşük ve en yüksek şarjı."
+          }
+        }
+      }
+    },
+    "The lowest pack voltage the gauge ever saw, and per cell. Below 2.5 V per cell means a deep discharge, or a reading taken while the pack was disconnected during a repair." : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Gauge'un gördüğü en düşük paket voltajı ve hücre başına karşılığı. Hücre başına 2,5 V'un altı ya derin deşarjdır ya da tamir sırasında paket sökülüyken alınmış bir okumadır."
           }
         }
       }
@@ -9596,12 +9876,32 @@
         }
       }
     },
+    "The value macOS shows in System Settings (nominal charge capacity / design capacity). macOS smooths and rounds it, so it can differ from the measured health." : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "macOS'un Sistem Ayarları'nda gösterdiği değer (nominal şarj kapasitesi / tasarım kapasitesi). macOS bunu yumuşatır ve yuvarlar, bu yüzden ölçülen sağlıktan farklı olabilir."
+          }
+        }
+      }
+    },
     "The value never changes: the sensor reading is frozen." : {
       "localizations" : {
         "tr" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Değer hiç değişmiyor: sensör okuması donmuş."
+          }
+        }
+      }
+    },
+    "The voltage the charger charges the pack to (its full-charge voltage). It is lowered for a charge limit or a warm battery." : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Şarj devresinin paketi doldurduğu voltaj (tam şarj voltajı). Şarj sınırı varsa ya da batarya ılıksa düşürülür."
           }
         }
       }
@@ -10016,6 +10316,16 @@
         }
       }
     },
+    "USB-C Power Delivery hard resets: the Mac and the adapter restarted their negotiation. A few are normal; many point at a bad cable, adapter or port." : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "USB-C Power Delivery donanım sıfırlamaları: Mac ile adaptör anlaşmayı baştan başlattı. Birkaç tane normaldir; çok sayıda olması kötü bir kabloyu, adaptörü ya da portu gösterir."
+          }
+        }
+      }
+    },
     "Unclear" : {
       "localizations" : {
         "tr" : {
@@ -10296,6 +10606,16 @@
         }
       }
     },
+    "Voltage of each cell. The cells are in series, so at rest they should be within a few tens of millivolts of each other; a growing spread means a weak cell or balancing that does not keep up. A cell below 2.5 V has been over-discharged." : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Her hücrenin voltajı. Hücreler seri bağlı olduğu için dinlenirken aralarındaki fark birkaç on milivoltu geçmemeli; büyüyen fark zayıf bir hücreyi ya da yetişemeyen dengelemeyi gösterir. 2,5 V'un altına inmiş bir hücre aşırı deşarj olmuştur."
+          }
+        }
+      }
+    },
     "Volume %@" : {
       "localizations" : {
         "tr" : {
@@ -10466,12 +10786,32 @@
         }
       }
     },
+    "What the Mac asked the adapter for within the contract: the current it expects to draw." : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mac'in anlaşma içinde adaptörden istediği: çekmeyi beklediği akım."
+          }
+        }
+      }
+    },
     "What the Mac does" : {
       "localizations" : {
         "tr" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Mac'in davranışı"
+          }
+        }
+      }
+    },
+    "When the pack was assembled, from the gauge's manufacture date. A pack much older than the Mac model is a used pack or a made-up record." : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Paketin üretildiği tarih (gauge'un üretim tarihi kaydından). Mac modelinden çok daha eski bir paket ya kullanılmış bir pakettir ya da kayıt uydurmadır."
           }
         }
       }

@@ -271,3 +271,62 @@ enum BatteryIcon {
         return image
     }
 }
+
+/// A small ⓘ next to a term: a click shows what the value is and how to read it (`Glossary`).
+final class InfoButton: NSButton {
+    private var term: Glossary.Term = .qmax
+    private var popover: NSPopover?
+
+    convenience init(_ term: Glossary.Term) {
+        self.init(frame: .zero)
+        self.term = term
+        isBordered = false
+        if #available(macOS 11.0, *),
+           let image = NSImage(systemSymbolName: "info.circle", accessibilityDescription: L("Explanation")) {
+            self.image = image
+            imagePosition = .imageOnly
+            contentTintColor = .secondaryLabelColor
+        } else {
+            attributedTitle = NSAttributedString(string: "ⓘ", attributes: [
+                .foregroundColor: NSColor.secondaryLabelColor, .font: NSFont.systemFont(ofSize: LegacyStyle.caption),
+            ])
+        }
+        setContentHuggingPriority(.required, for: .horizontal)
+        target = self
+        action = #selector(toggle)
+        toolTip = L("Explanation")
+    }
+
+    @objc private func toggle() {
+        if let popover, popover.isShown {
+            popover.performClose(nil)
+            return
+        }
+        let label = NSTextField(wrappingLabelWithString: Glossary.explanation(term))
+        label.font = NSFont.systemFont(ofSize: LegacyStyle.body)
+        label.preferredMaxLayoutWidth = 300
+        label.translatesAutoresizingMaskIntoConstraints = false
+        let content = NSView()
+        content.addSubview(label)
+        NSLayoutConstraint.activate([
+            label.leadingAnchor.constraint(equalTo: content.leadingAnchor, constant: 14),
+            label.trailingAnchor.constraint(equalTo: content.trailingAnchor, constant: -14),
+            label.topAnchor.constraint(equalTo: content.topAnchor, constant: 12),
+            label.bottomAnchor.constraint(equalTo: content.bottomAnchor, constant: -12),
+            label.widthAnchor.constraint(equalToConstant: 300),
+        ])
+        let controller = NSViewController()
+        controller.view = content
+        let popover = NSPopover()
+        popover.behavior = .transient
+        popover.contentViewController = controller
+        popover.show(relativeTo: bounds, of: self, preferredEdge: .maxY)
+        self.popover = popover
+    }
+}
+
+/// `view` followed by an ⓘ for `term` (the view alone when there is none).
+func withInfo(_ view: NSView, _ term: Glossary.Term?) -> NSView {
+    guard let term else { return view }
+    return hStack([view, InfoButton(term)], spacing: 3, alignment: .centerY)
+}

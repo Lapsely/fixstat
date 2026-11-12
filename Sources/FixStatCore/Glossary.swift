@@ -1,0 +1,90 @@
+import Foundation
+
+/// Short explanations of the terms FixStat shows, for the ⓘ buttons next to them: what the value
+/// is, where it comes from and how to read it. Both interfaces use the same texts.
+public enum Glossary {
+    public enum Term: String, CaseIterable {
+        // Cells
+        case cellVoltage, qmax, cellResistance, cellDeviation
+        // Pack
+        case gauge, chemistryID, packMade, manufacturerData, cycles, health, nominalHealth, qmaxMeasured
+        case permanentFailure, cellDisconnects, flashWrites
+        // Lifetime
+        case operatingTime, lifetimeExtremes, lowestPackVoltage, timeAtHighCharge, chargeBands, chargeToday
+        // Charger
+        case batteryCurrent, chargerCurrent, chargerVoltage, input, notChargingReason, reasonCodes, thermallyLimited
+        // USB-C Power Delivery
+        case pdContract, pdRequested, pdOffers, pdPlugIns, pdHardResets
+    }
+
+    public static func explanation(_ term: Term) -> String {
+        switch term {
+        case .cellVoltage:
+            return L("Voltage of each cell. The cells are in series, so at rest they should be within a few tens of millivolts of each other; a growing spread means a weak cell or balancing that does not keep up. A cell below 2.5 V has been over-discharged.")
+        case .qmax:
+            return L("The cell's real capacity as the gauge last measured it (mAh). The gauge measures it while the cell rests, from the voltage before and after a charge or discharge. Compared with the design capacity it shows wear; a cell clearly below the others is the weak one.")
+        case .cellResistance:
+            return L("The cell's internal resistance as the gauge tracks it (its weighted Ra value; Apple does not document the unit). It rises as a cell ages. Compare the cells with each other: one far above the rest sags under load and can shut the Mac down early.")
+        case .cellDeviation:
+            return L("How far the cell's resistance (R) and Qmax (Q) are from the average of the pack's cells. Large differences point at the weak cell.")
+        case .gauge:
+            return L("The fuel gauge chip in the battery pack. It measures voltage, current and temperature, counts the charge, learns the cells' capacity and keeps the pack's history. Genuine packs of a model use the same gauge chip.")
+        case .chemistryID:
+            return L("A number in the gauge that tells it which cell chemistry it works with, so it estimates the charge correctly. It follows the cell maker; genuine packs of a model use a few known IDs.")
+        case .packMade:
+            return L("When the pack was assembled, from the gauge's manufacture date. A pack much older than the Mac model is a used pack or a made-up record.")
+        case .manufacturerData:
+            return L("Text the pack maker wrote into the gauge: lot codes and the cell maker (e.g. ATL, Sunwoda). Clone packs often leave it empty.")
+        case .cycles:
+            return L("Charge cycles counted by the gauge: one cycle is the pack's full capacity used up, in any number of steps (two half discharges make one cycle). Apple rates recent MacBook batteries for 1000 cycles.")
+        case .health:
+            return L("The capacity the gauge measured (AppleRawMaxCapacity) as a share of the design capacity: the real wear of the pack. Below 80 % the battery is due for service.")
+        case .nominalHealth:
+            return L("The value macOS shows in System Settings (nominal charge capacity / design capacity). macOS smooths and rounds it, so it can differ from the measured health.")
+        case .qmaxMeasured:
+            return L("How many cycles ago the gauge last measured Qmax. It needs a long rest at a low and at a high charge to measure; after many cycles without a measurement the health value may be out of date. A full charge, a few hours' rest, then a discharge to a low charge and another rest refresh it.")
+        case .permanentFailure:
+            return L("The gauge's permanent failure flags. Anything other than 0 means the gauge has switched the pack off for good to protect it (e.g. cell imbalance, overheating, a blown fuse); the pack has to be replaced, it cannot be reset.")
+        case .cellDisconnects:
+            return L("How often the gauge saw a cell disconnect. It should be 0; anything else points at a loose connection inside the pack or at its connector.")
+        case .flashWrites:
+            return L("How often the gauge has written its data memory. It grows slowly with use; a very low count on a pack that looks old can mean a new or reset gauge.")
+        case .operatingTime:
+            return L("Hours the gauge has been powered and counting. It does not count while the pack is disconnected or in shipping mode, so it is a lower bound of the pack's age.")
+        case .lifetimeExtremes:
+            return L("Extremes the gauge recorded over the pack's whole life; they are never reset. A very high temperature means the pack was overheated at least once.")
+        case .lowestPackVoltage:
+            return L("The lowest pack voltage the gauge ever saw, and per cell. Below 2.5 V per cell means a deep discharge, or a reading taken while the pack was disconnected during a repair.")
+        case .timeAtHighCharge:
+            return L("Share of the pack's life it spent at a high charge, counted by the gauge. Sitting near full all the time ages the cells faster; a Mac that lives on the adapter shows a high share.")
+        case .chargeBands:
+            return L("Hours the gauge counted in each charge band, from low to high charge. Apple does not document where the bands begin and end.")
+        case .chargeToday:
+            return L("The lowest and the highest charge of the day as the gauge records them.")
+        case .batteryCurrent:
+            return L("Current flowing into the battery (+, charging) or out of it (−, the Mac runs on the battery), averaged by the gauge.")
+        case .chargerCurrent:
+            return L("The current the charger is set to deliver to the battery now. It drops near a full charge and when the battery is warm.")
+        case .chargerVoltage:
+            return L("The voltage the charger charges the pack to (its full-charge voltage). It is lowered for a charge limit or a warm battery.")
+        case .input:
+            return L("Power coming in from the adapter as the Mac measures it at its power input (voltage × current).")
+        case .notChargingReason:
+            return L("Apple's code for why the charger is not charging (a bit field, 0 = charging is allowed). The sentence above the rows names the usual causes in plain words.")
+        case .reasonCodes:
+            return L("Apple's undocumented codes for why charging is slowed or blocked, shown as reported. 0 means none; any other value means the charger is held back for a reason the gauge or the power controller reported.")
+        case .thermallyLimited:
+            return L("How long charging was slowed because the battery or the Mac was too warm.")
+        case .pdContract:
+            return L("The USB-C Power Delivery profile the Mac and the adapter agreed on: voltage and maximum current. A 5 V contract from an adapter that offers more means the cable, the port or the adapter is not working properly.")
+        case .pdRequested:
+            return L("What the Mac asked the adapter for within the contract: the current it expects to draw.")
+        case .pdOffers:
+            return L("Every profile the adapter offers. Genuine Apple adapters offer a known set per model; FixStat compares them in the originality check.")
+        case .pdPlugIns:
+            return L("How often the port controller saw an adapter plugged in and removed. Many removals without anyone unplugging point at a loose cable or a worn port.")
+        case .pdHardResets:
+            return L("USB-C Power Delivery hard resets: the Mac and the adapter restarted their negotiation. A few are normal; many point at a bad cable, adapter or port.")
+        }
+    }
+}

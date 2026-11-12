@@ -283,7 +283,8 @@ final class LegacyBatteryDetails {
         }
         var blocks: [Block] = [
             .table(header: [L("Cell"), L("Voltage"), L("Qmax"), L("Resistance"), L("vs. average")],
-                   rows: rows, tones: tones, leading: false),
+                   rows: rows, tones: tones, leading: false,
+                   info: [nil, .cellVoltage, .qmax, .cellResistance, .cellDeviation]),
         ]
         if analysis.suspects.isEmpty, !analysis.defaultQmax {
             blocks.append(.status(L("Cells are consistent."), .good))
@@ -300,20 +301,20 @@ final class LegacyBatteryDetails {
 
     private func pack(_ b: BatteryInfo) -> Block {
         .group(L("Pack"), [.rows([
-            DocRow(title: L("Gauge"), value: b.gaugeDeviceName),
-            DocRow(title: L("Chemistry ID"), value: b.identity?.chemistryID.map { String($0) }),
-            DocRow(title: L("Pack made"), value: BatteryDetailText.manufactured(b)),
-            DocRow(title: L("Manufacturer data"), value: BatteryDetailText.manufacturer(b)),
-            DocRow(title: L("Cycles"), value: BatteryDetailText.cycles(b)),
-            DocRow(title: L("Health"), value: b.healthPercent.map { Format.percent($0, digits: 1) }),
-            DocRow(title: L("Nominal health"), value: b.nominalHealthPercent.map { Format.percent($0, digits: 1) }),
+            DocRow(title: L("Gauge"), value: b.gaugeDeviceName, info: .gauge),
+            DocRow(title: L("Chemistry ID"), value: b.identity?.chemistryID.map { String($0) }, info: .chemistryID),
+            DocRow(title: L("Pack made"), value: BatteryDetailText.manufactured(b), info: .packMade),
+            DocRow(title: L("Manufacturer data"), value: BatteryDetailText.manufacturer(b), info: .manufacturerData),
+            DocRow(title: L("Cycles"), value: BatteryDetailText.cycles(b), info: .cycles),
+            DocRow(title: L("Health"), value: b.healthPercent.map { Format.percent($0, digits: 1) }, info: .health),
+            DocRow(title: L("Nominal health"), value: b.nominalHealthPercent.map { Format.percent($0, digits: 1) }, info: .nominalHealth),
             DocRow(title: L("Capacity last measured"), value: BatteryDetailText.qmaxMeasured(b),
-                   tone: PackHistory(battery: b).qmaxStale ? .bad : nil),
+                   tone: PackHistory(battery: b).qmaxStale ? .bad : nil, info: .qmaxMeasured),
             DocRow(title: L("Permanent failure"), value: BatteryDetailText.hex(b.permanentFailureStatus),
-                   tone: (b.permanentFailureStatus ?? 0) != 0 ? .bad : nil),
+                   tone: (b.permanentFailureStatus ?? 0) != 0 ? .bad : nil, info: .permanentFailure),
             DocRow(title: L("Cell disconnects"), value: b.cellDisconnectCount.map { Format.number(Double($0)) },
-                   tone: (b.cellDisconnectCount ?? 0) != 0 ? .bad : nil),
-            DocRow(title: L("Flash writes"), value: b.identity?.dataFlashWriteCount.map { Format.number(Double($0)) }),
+                   tone: (b.cellDisconnectCount ?? 0) != 0 ? .bad : nil, info: .cellDisconnects),
+            DocRow(title: L("Flash writes"), value: b.identity?.dataFlashWriteCount.map { Format.number(Double($0)) }, info: .flashWrites),
             DocRow(title: L("Serial"), value: b.serial),
         ], labelWidth: nil)])
     }
@@ -322,18 +323,18 @@ final class LegacyBatteryDetails {
         let l = b.lifetime
         let findings = BatteryDetailText.historyFindings(b).map { Block.status($0, .bad) }
         return .group(L("Lifetime (gauge)"), [.rows([
-            DocRow(title: L("Operating time"), value: BatteryDetailText.operatingTime(l)),
-            DocRow(title: L("Highest temperature"), value: l?.maximumTemperature.map { Format.temperature($0) }),
+            DocRow(title: L("Operating time"), value: BatteryDetailText.operatingTime(l), info: .operatingTime),
+            DocRow(title: L("Highest temperature"), value: l?.maximumTemperature.map { Format.temperature($0) }, info: .lifetimeExtremes),
             DocRow(title: L("Average temperature"), value: l?.averageTemperature.map { Format.temperature($0) }),
             DocRow(title: L("Lowest temperature"), value: l?.minimumTemperature.map { Format.temperature($0) }),
             DocRow(title: L("Highest charge current"), value: l?.maximumChargeCurrent.map { Format.milliamps($0) }),
             DocRow(title: L("Highest discharge current"), value: l?.maximumDischargeCurrent.map { Format.milliamps($0) }),
             DocRow(title: L("Highest pack voltage"), value: l?.maximumPackVoltage.map { Format.volts(millivolts: $0) }),
             DocRow(title: L("Lowest pack voltage"), value: BatteryDetailText.lowestPackVoltage(b),
-                   tone: PackHistory(battery: b).lowVoltageRecorded ? .bad : nil),
-            DocRow(title: L("Time at high charge"), value: ChargeHistogram(lifetime: l).flatMap(ChargingText.highCharge)),
-            DocRow(title: L("Charge today"), value: ChargingText.today(b)),
-        ] + (ChargeHistogram(lifetime: l).flatMap(ChargingText.bands).map { [DocRow(title: L("Charge bands (low → high)"), value: $0)] } ?? []),
+                   tone: PackHistory(battery: b).lowVoltageRecorded ? .bad : nil, info: .lowestPackVoltage),
+            DocRow(title: L("Time at high charge"), value: ChargeHistogram(lifetime: l).flatMap(ChargingText.highCharge), info: .timeAtHighCharge),
+            DocRow(title: L("Charge today"), value: ChargingText.today(b), info: .chargeToday),
+        ] + (ChargeHistogram(lifetime: l).flatMap(ChargingText.bands).map { [DocRow(title: L("Charge bands (low → high)"), value: $0, info: .chargeBands)] } ?? []),
                        labelWidth: nil)] + findings + [ChargingText.usageFinding(b).map { Block.status($0, .neutral) }].compactMap { $0 })
     }
 
@@ -343,17 +344,17 @@ final class LegacyBatteryDetails {
         return .group(L("Charger"), [why].compactMap { $0 } + [
             .rows([
                 DocRow(title: L("State"), value: BatteryText.state(b)),
-                DocRow(title: L("Battery current"), value: b.amperage.map { Format.milliamps($0) }),
-                DocRow(title: L("Charger target current"), value: c?.chargingCurrent.map { Format.milliamps($0, signed: false) }),
-                DocRow(title: L("Charger target voltage"), value: c?.chargingVoltage.map { Format.volts(millivolts: $0, digits: 3) }),
-                DocRow(title: L("Input"), value: BatteryDetailText.input(b.powerTelemetry)),
-                DocRow(title: L("Not charging reason"), value: BatteryDetailText.notCharging(c?.notChargingReason)),
+                DocRow(title: L("Battery current"), value: b.amperage.map { Format.milliamps($0) }, info: .batteryCurrent),
+                DocRow(title: L("Charger target current"), value: c?.chargingCurrent.map { Format.milliamps($0, signed: false) }, info: .chargerCurrent),
+                DocRow(title: L("Charger target voltage"), value: c?.chargingVoltage.map { Format.volts(millivolts: $0, digits: 3) }, info: .chargerVoltage),
+                DocRow(title: L("Input"), value: BatteryDetailText.input(b.powerTelemetry), info: .input),
+                DocRow(title: L("Not charging reason"), value: BatteryDetailText.notCharging(c?.notChargingReason), info: .notChargingReason),
                 DocRow(title: L("Slow charging reason"), value: BatteryDetailText.hex(c?.slowChargingReason),
-                       tone: (c?.slowChargingReason ?? 0) != 0 ? .bad : nil),
+                       tone: (c?.slowChargingReason ?? 0) != 0 ? .bad : nil, info: .reasonCodes),
                 DocRow(title: L("Charger inhibit reason"), value: BatteryDetailText.hex(c?.chargerInhibitReason),
-                       tone: (c?.chargerInhibitReason ?? 0) != 0 ? .bad : nil),
+                       tone: (c?.chargerInhibitReason ?? 0) != 0 ? .bad : nil, info: .reasonCodes),
                 DocRow(title: L("Thermally limited"), value: c?.timeChargingThermallyLimited.map { Format.number(Double($0)) },
-                       tone: (c?.timeChargingThermallyLimited ?? 0) != 0 ? .bad : nil),
+                       tone: (c?.timeChargingThermallyLimited ?? 0) != 0 ? .bad : nil, info: .thermallyLimited),
             ], labelWidth: nil),
             .caption(L("Reason codes are Apple's undocumented bit fields, shown as reported. 0 means none.")),
         ])
@@ -365,23 +366,23 @@ final class LegacyBatteryDetails {
         }
         var blocks: [Block] = []
         if b.externalConnected != true { blocks.append(.caption(L("No power adapter — last contract:"))) }
-        var rows = [DocRow(title: L("Contract"), value: BatteryDetailText.profile(active, position: pd.activePosition))]
+        var rows = [DocRow(title: L("Contract"), value: BatteryDetailText.profile(active, position: pd.activePosition), info: .pdContract)]
         if let contract = pd.consistentContract {
-            rows.append(DocRow(title: L("Requested"), value: BatteryDetailText.requested(contract)))
+            rows.append(DocRow(title: L("Requested"), value: BatteryDetailText.requested(contract), info: .pdRequested))
         }
         blocks.append(.rows(rows, labelWidth: nil))
         if pd.consistentContract?.capabilityMismatch == true {
             blocks.append(.status(L("The Mac reported that the adapter cannot supply what it needs."), .bad))
         }
-        blocks.append(.secondary(L("Adapter offers")))
+        blocks.append(.rows([DocRow(title: L("Adapter offers"), value: "", info: .pdOffers)], labelWidth: nil))
         let offers = pd.offeredProfiles.enumerated().map { index, pdo in
             ["\(index + 1).", BatteryDetailText.pdo(pdo), index + 1 == pd.activePosition ? L("in use") : ""]
         }
         let tones: [[Tone?]] = offers.map { _ in [.neutral, nil, .good] }
         blocks.append(.table(header: nil, rows: offers, tones: tones, leading: true))
         blocks.append(.rows([
-            DocRow(title: L("Plug-ins / removals"), value: BatteryDetailText.counts(pd)),
-            DocRow(title: L("Hard resets"), value: pd.hardResetCount.map { Format.number(Double($0)) }),
+            DocRow(title: L("Plug-ins / removals"), value: BatteryDetailText.counts(pd), info: .pdPlugIns),
+            DocRow(title: L("Hard resets"), value: pd.hardResetCount.map { Format.number(Double($0)) }, info: .pdHardResets),
         ], labelWidth: nil))
         return .group(L("USB-C Power Delivery"), blocks)
     }

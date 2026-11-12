@@ -31,6 +31,8 @@ struct DocRow {
     var title: String
     var value: String?
     var tone: Tone? = nil
+    /// ⓘ after the title.
+    var info: Glossary.Term? = nil
 }
 
 struct DocAction {
@@ -58,8 +60,8 @@ indirect enum Block {
     case list([Block])
     /// Label / value rows; `labelWidth` aligns values in a column, nil spreads them.
     case rows([DocRow], labelWidth: CGFloat?)
-    /// Table; column 0 leading, the others trailing unless `leading`.
-    case table(header: [String]?, rows: [[String]], tones: [[Tone?]], leading: Bool)
+    /// Table; column 0 leading, the others trailing unless `leading`. `info`: ⓘ per header column.
+    case table(header: [String]?, rows: [[String]], tones: [[Tone?]], leading: Bool, info: [Glossary.Term?] = [])
     case tiles([(String, String)], columns: Int)
     /// Rounded box with an optional section title above it.
     case group(String?, [Block])
@@ -179,9 +181,9 @@ final class LegacyDocumentView: NSScrollView {
             return list
         case let .rows(rows, labelWidth):
             return renderRows(rows, labelWidth: labelWidth, width: width)
-        case let .table(header, rows, tones, leading):
+        case let .table(header, rows, tones, leading, info):
             // Natural column widths, not stretched to the document width.
-            return hStack([renderTable(header: header, rows: rows, tones: tones, leading: leading), makeSpacer()],
+            return hStack([renderTable(header: header, rows: rows, tones: tones, leading: leading, info: info), makeSpacer()],
                           alignment: .top)
         case let .tiles(items, columns):
             return renderTiles(items, columns: columns, width: width)
@@ -251,7 +253,8 @@ final class LegacyDocumentView: NSScrollView {
 
     private func renderRows(_ rows: [DocRow], labelWidth: CGFloat?, width: CGFloat) -> NSView {
         let views = rows.map { row -> NSView in
-            let title = makeLabel(row.title, color: .secondaryLabelColor)
+            let label = makeLabel(row.title, color: .secondaryLabelColor)
+            let title = withInfo(label, row.info)
             let valueWidth = labelWidth.map { width - $0 - 8 } ?? width * 0.6
             let value = wrapping(row.value ?? "–", width: valueWidth, color: row.tone == .bad ? LegacyStyle.hot : .labelColor)
             value.isSelectable = true
@@ -261,7 +264,7 @@ final class LegacyDocumentView: NSScrollView {
             }
             value.alignment = .right
             value.font = LegacyStyle.mono(LegacyStyle.body)
-            title.setContentCompressionResistancePriority(.defaultHigh, for: .horizontal)
+            label.setContentCompressionResistancePriority(.defaultHigh, for: .horizontal)
             return hStack([title, makeSpacer(), value], alignment: .firstBaseline)
         }
         let stack = vStack(views, spacing: 5)
@@ -269,10 +272,13 @@ final class LegacyDocumentView: NSScrollView {
         return stack
     }
 
-    private func renderTable(header: [String]?, rows: [[String]], tones: [[Tone?]], leading: Bool) -> NSView {
+    private func renderTable(header: [String]?, rows: [[String]], tones: [[Tone?]], leading: Bool,
+                             info: [Glossary.Term?] = []) -> NSView {
         var cells: [[NSView]] = []
         if let header {
-            cells.append(header.map { makeLabel($0, size: LegacyStyle.caption, color: .secondaryLabelColor) })
+            cells.append(header.enumerated().map { c, text in
+                withInfo(makeLabel(text, size: LegacyStyle.caption, color: .secondaryLabelColor), c < info.count ? info[c] : nil)
+            })
         }
         for (r, row) in rows.enumerated() {
             cells.append(row.enumerated().map { c, text in
@@ -284,6 +290,9 @@ final class LegacyDocumentView: NSScrollView {
             })
         }
         let grid = NSGridView(views: cells)
+        // Keep the rows tight when the group is stretched to a taller neighbour column (a gap
+        // appeared between two rows otherwise).
+        grid.setContentHuggingPriority(.required, for: .vertical)
         grid.rowSpacing = 4
         grid.columnSpacing = 16
         grid.rowAlignment = .firstBaseline
