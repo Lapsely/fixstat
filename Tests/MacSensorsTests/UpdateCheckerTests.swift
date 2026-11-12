@@ -45,4 +45,19 @@ import MacSensors
         #expect(r.fansRunningAway.isEmpty)
         #expect(r.fansNearMax.count == 1)
     }
+
+    @Test func fanWithoutTachSignalIsReportedAsAFan() {
+        let r = Self.result(actual: 0, target: 1200)
+        #expect(r.fansStalled.count == 1)
+        #expect(r.fansStalled.first?.target == 1200)
+        #expect(!r.passed)
+        #expect(SensorCheckText.verdict(r) == L("No broken sensor found, but a fan reads 0 rpm although the SMC asks it to turn."))
+    }
+
+    @Test func fanStoppedAtIdleIsFine() {
+        // Apple Silicon fans stop at idle: target 0, 0 rpm.
+        let r = Self.result(actual: 0, target: 0)
+        #expect(r.fansStalled.isEmpty)
+        #expect(r.passed)
+    }
 }

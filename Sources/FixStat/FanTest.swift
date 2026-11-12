@@ -34,7 +34,7 @@ struct FanTestView: View {
                         Button("Stop") { tester.cancel() }
                     } else {
                         if tester.state == .finished {
-                            FanVerdictLabel(check: tester.check)
+                            FanVerdictLabel(check: tester.check, spinning: tester.spinning) { tester.answerSpinning($0) }
                         }
                         Button(tester.state == .finished ? "Test again" : "Start fan test") { tester.start() }
                     }
@@ -54,10 +54,12 @@ struct FanTestView: View {
 @available(macOS 14.0, *)
 private struct FanVerdictLabel: View {
     let check: FanCheck
+    let spinning: Bool?
+    let answer: (Bool) -> Void
 
     var body: some View {
         let verdict = check.verdict
-        VStack(alignment: .leading, spacing: 4) {
+        VStack(alignment: .leading, spacing: 6) {
             switch verdict {
             case .passed:
                 Label(FanText.verdict(verdict), systemImage: "checkmark.circle.fill").foregroundStyle(TemperatureColor.cool)
@@ -65,6 +67,17 @@ private struct FanVerdictLabel: View {
                 Label(FanText.verdict(verdict), systemImage: "exclamationmark.triangle.fill").foregroundStyle(TemperatureColor.hot)
             case .notAsked:
                 Label(FanText.verdict(verdict), systemImage: "info.circle").foregroundStyle(.secondary)
+            }
+            if case let .stalled(fan, _) = verdict {
+                if let spinning {
+                    FindingRow(text: FanText.stalledAnswer(fan: fan, spinning: spinning))
+                } else {
+                    Text(verbatim: FanText.spinningQuestion(fan: fan)).fontWeight(.semibold)
+                    HStack(spacing: 8) {
+                        Button("Yes, it spins") { answer(true) }
+                        Button("No, it stands still") { answer(false) }
+                    }
+                }
             }
             Text(verbatim: FanText.detail(check)).foregroundStyle(.secondary)
         }
@@ -81,6 +94,7 @@ final class FanTester {
     private(set) var cpuTemperature: Double?
     private(set) var progress: String?
     private(set) var check = FanCheck()
+    private(set) var spinning: Bool?
 
     @ObservationIgnored private let runner: FanTestRunner
 
@@ -95,6 +109,7 @@ final class FanTester {
     func stop() { runner.stop() }
     func start() { runner.start() }
     func cancel() { runner.cancel() }
+    func answerSpinning(_ answer: Bool) { runner.answerSpinning(answer) }
 
     private func sync() {
         if runner.state != state { state = runner.state }
@@ -102,5 +117,6 @@ final class FanTester {
         if runner.cpuTemperature != cpuTemperature { cpuTemperature = runner.cpuTemperature }
         if runner.progress != progress { progress = runner.progress }
         if runner.check != check { check = runner.check }
+        if runner.spinning != spinning { spinning = runner.spinning }
     }
 }

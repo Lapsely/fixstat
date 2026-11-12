@@ -12,6 +12,9 @@ public final class FanTestRunner {
     public private(set) var cpuTemperature: Double?
     public private(set) var elapsed: TimeInterval = 0
     public private(set) var check = FanCheck()
+    /// The technician's answer to "Is the fan spinning?" after a `.stalled` verdict (FixStat only
+    /// sees the tach signal, so it cannot tell a stopped fan from a missing tach signal).
+    public private(set) var spinning: Bool?
     public var onChange: (() -> Void)?
 
     /// 90 s of load, 30 s of spin-down (shorter for snapshots).
@@ -73,6 +76,7 @@ public final class FanTestRunner {
     public func start() {
         guard !isRunning else { return }
         check = FanCheck()
+        spinning = nil
         elapsed = 0
         activity = ProcessInfo.processInfo.beginActivity(
             options: [.userInitiated, .latencyCritical, .idleSystemSleepDisabled], reason: "Fan test")
@@ -122,6 +126,15 @@ public final class FanTestRunner {
         onChange?()
     }
 
+    /// Answers "Is the fan spinning?" and records what that means.
+    public func answerSpinning(_ answer: Bool) {
+        guard case let .stalled(fan, target) = check.verdict else { return }
+        spinning = answer
+        monitor.recordCheck(.fans, detail: FanText.verdict(.stalled(fan: fan, target: target)) + " "
+                            + FanText.stalledAnswer(fan: fan, spinning: answer), failed: true)
+        onChange?()
+    }
+
     private var simulatedTarget = 1200.0
 
     private func read() -> [FanReading] {
@@ -131,6 +144,10 @@ public final class FanTestRunner {
         simulatedTarget = state == .loading ? min(5000, simulatedTarget + 150) : max(1200, simulatedTarget - 150)
         return (0..<count).map { i in
             let lag = fans.first { $0.index == i }?.actual ?? 1200
+            // -FixStatSimulateFanStall YES: the first fan reads 0 rpm (no tach signal).
+            if i == 0, UserDefaults.standard.bool(forKey: "FixStatSimulateFanStall") {
+                return FanReading(index: i, actual: 0, minimum: 1200, maximum: 6000, target: simulatedTarget)
+            }
             return FanReading(index: i, actual: lag + (simulatedTarget - lag) * 0.6, minimum: 1200, maximum: 6000,
                               target: simulatedTarget)
         }
@@ -151,8 +168,7 @@ public enum FanText {
         case .passed:
             return L("Every fan followed the speed the system asked for.")
         case let .stalled(fan, target):
-            return L("Fan %lld does not turn although the system asks for %@: check the connector and the fan.",
-                     fan + 1, Format.rpm(target))
+            return L("Fan %1$lld reads 0 rpm although the system asks for %2$@.", fan + 1, Format.rpm(target))
         case let .belowTarget(fan, actual, target):
             return L("Fan %lld stays well below its target (%@ instead of %@): worn bearing, dirt or a weak fan.",
                      fan + 1, Format.rpm(actual), Format.rpm(target))
@@ -162,6 +178,18 @@ public enum FanText {
         case .notAsked:
             return L("The fans were not asked to speed up: the Mac stayed cool enough. Judge them by ear, or test again when the Mac is warm.")
         }
+    }
+
+    /// The question after a `.stalled` verdict.
+    public static func spinningQuestion(fan: Int) -> String {
+        L("FixStat cannot see the fan itself, only its speed signal. Is fan %lld spinning?", fan + 1)
+    }
+
+    /// What the technician's answer means.
+    public static func stalledAnswer(fan: Int, spinning: Bool) -> String {
+        spinning
+            ? L("Fan %lld spins but reads 0 rpm: its speed signal (tach) does not reach the SMC. If it runs at full speed, the PWM control signal does not reach the fan either. Check the fan connector's pins, the TACH and PWM lines and their series resistors. The SMC counts the fan as failed and can hold the CPU back until it is fixed.", fan + 1)
+            : L("Fan %lld does not turn: check the fan itself (try a known-good fan), its connector and the fan's 5 V supply.", fan + 1)
     }
 
     /// One fan's live line: "2 450 rpm · target 2 500 rpm · 1 200–6 000 rpm".

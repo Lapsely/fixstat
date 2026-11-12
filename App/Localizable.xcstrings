@@ -3690,6 +3690,26 @@
         }
       }
     },
+    "Fan %1$lld reads 0 rpm although the SMC asks for %2$@. Either it stands still or its speed signal (tach) does not reach the SMC: look whether it spins. The SMC then counts the fan as failed and can hold the CPU back." : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Fan %1$lld, SMC %2$@ istediği hâlde 0 rpm okunuyor. Ya duruyor ya da devir sinyali (tako) SMC'ye ulaşmıyor: dönüp dönmediğine bakın. SMC bu durumda fanı arızalı sayar ve işlemciyi kısabilir."
+          }
+        }
+      }
+    },
+    "Fan %1$lld reads 0 rpm although the system asks for %2$@." : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sistem %2$@ istediği hâlde fan %1$lld 0 rpm okunuyor."
+          }
+        }
+      }
+    },
     "Fan %1$lld runs at %2$@ although the system asks for only %3$@: the SMC does not control it. Before the sensors, check the fan itself (try a known-good fan) and its drive circuit (PWM line, fan connector, fan power); this is common after liquid damage." : {
       "localizations" : {
         "tr" : {
@@ -3710,18 +3730,22 @@
         }
       }
     },
-    "Fan %lld does not turn although the system asks for %@: check the connector and the fan." : {
+    "Fan %lld does not turn: check the fan itself (try a known-good fan), its connector and the fan's 5 V supply." : {
       "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Fan %1$lld does not turn although the system asks for %2$@: check the connector and the fan."
-          }
-        },
         "tr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Sistem %2$@ istediği halde fan %1$lld dönmüyor: konnektörü ve fanı kontrol edin."
+            "value" : "Fan %lld dönmüyor: fanın kendisini (sağlam bir fanla deneyin), konnektörünü ve fanın 5 V beslemesini kontrol edin."
+          }
+        }
+      }
+    },
+    "Fan %lld spins but reads 0 rpm: its speed signal (tach) does not reach the SMC. If it runs at full speed, the PWM control signal does not reach the fan either. Check the fan connector's pins, the TACH and PWM lines and their series resistors. The SMC counts the fan as failed and can hold the CPU back until it is fixed." : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Fan %lld dönüyor ama 0 rpm okunuyor: devir sinyali (tako) SMC'ye ulaşmıyor. Tam devirde dönüyorsa PWM kontrol sinyali de fana ulaşmıyordur. Fan konnektörünün pinlerini, TACH ve PWM hatlarını ve seri dirençlerini kontrol edin. SMC fanı arızalı sayar ve düzelene kadar işlemciyi kısabilir."
           }
         }
       }
@@ -3894,6 +3918,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "FixStat %@ çıktı. İndirmek için menü çubuğundaki paneli açın."
+          }
+        }
+      }
+    },
+    "FixStat cannot see the fan itself, only its speed signal. Is fan %lld spinning?" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "FixStat fanın kendisini göremez, yalnızca devir sinyalini görür. Fan %lld dönüyor mu?"
           }
         }
       }
@@ -6102,6 +6136,16 @@
         }
       }
     },
+    "No broken sensor found, but a fan reads 0 rpm although the SMC asks it to turn." : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bozuk sensör bulunmadı, ama SMC dönmesini istediği hâlde bir fan 0 rpm okunuyor."
+          }
+        }
+      }
+    },
     "No broken sensor found, but the Mac behaves as if one were missing." : {
       "localizations" : {
         "tr" : {
@@ -6308,6 +6352,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Sıcaklık sensörü bulunamadı"
+          }
+        }
+      }
+    },
+    "No, it stands still" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hayır, duruyor"
           }
         }
       }
@@ -11492,6 +11546,16 @@
         }
       }
     },
+    "Yes, it spins" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Evet, dönüyor"
+          }
+        }
+      }
+    },
     "Yes, the light was on the sensor" : {
       "localizations" : {
         "tr" : {
@@ -11944,6 +12008,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "macOS'ta Mac bataryaları için orijinal parça bayrağı yoktur ve kopyalar dijital verileri taklit edebilir; bu nedenle bu, bilinen orijinal parçalarla bir tutarlılık kontrolüdür, kesin kanıt değildir."
+          }
+        }
+      }
+    },
+    "macOS holds the CPU at %1$@ of its speed although it is not hot (%2$@), most likely because of the fan above." : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "macOS işlemciyi sıcak olmadığı hâlde (%2$@) hızının %1$@ kadarında tutuyor; büyük ihtimalle yukarıdaki fan yüzünden."
           }
         }
       }

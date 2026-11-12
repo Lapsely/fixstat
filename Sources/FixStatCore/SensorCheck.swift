@@ -19,6 +19,9 @@ public struct SensorCheckResult: Equatable {
     public var fansNearMax: [FanSpeed]
     /// Fans far faster than the SMC asks (`F<n>Tg`): out of its control, not a sensor problem.
     public var fansRunningAway: [FanSpeed] = []
+    /// Fans that read (almost) 0 rpm while the SMC asks them to turn: stalled, or the tach signal
+    /// does not reach the SMC (only the technician can see which). `target` = the highest asked.
+    public var fansStalled: [FanSpeed] = []
     /// Intel: the CPU speed limit macOS applies (`pmset -g therm`), when below 100 %.
     public var cpuSpeedLimit: Int?
     /// Mean shares of all CPUs while idle (0…1).
@@ -50,11 +53,15 @@ public struct SensorCheckResult: Equatable {
         return system >= SensorCheck.kernelShare && user < SensorCheck.quietUserShare
     }
 
-    public var hasSymptoms: Bool { !fansNearMax.isEmpty || !fansRunningAway.isEmpty || throttled || kernelBusy }
+    public var hasSymptoms: Bool {
+        !fansNearMax.isEmpty || !fansRunningAway.isEmpty || !fansStalled.isEmpty || throttled || kernelBusy
+    }
     public var passed: Bool { known.isEmpty && !hasSymptoms }
 }
 
 public enum SensorCheck {
+    /// Idle samples a fan must read 0 rpm while asked to turn before it counts as stalled.
+    public static let stalledSamples = 5
     /// Idle only: one minute (a stuck sensor needs that long to show).
     public static let idleDuration: TimeInterval = 60
     /// With load: a short idle part (symptoms, the start values), then CPU and GPU load.
@@ -108,6 +115,21 @@ public enum SensorCheck {
         // asks for it, the firmware is reacting to a sensor.
         var fansNearMax: [SensorCheckResult.FanSpeed] = []
         var fansRunningAway: [SensorCheckResult.FanSpeed] = []
+        // A fan asked to turn that reads (almost) 0 rpm in several idle samples.
+        var fansStalled: [SensorCheckResult.FanSpeed] = []
+        if let count = fans.last?.count {
+            for index in 0..<count {
+                let readings = fans.compactMap { index < $0.count ? $0[index] : nil }
+                let stalled = readings.filter {
+                    ($0.target ?? 0) >= FanCheck.activeTarget && ($0.actual ?? 0) < FanCheck.stoppedBelow
+                }
+                if stalled.count >= SensorCheck.stalledSamples {
+                    fansStalled.append(SensorCheckResult.FanSpeed(index: readings.last?.index ?? index, actual: 0,
+                                                                  maximum: readings.last?.maximum ?? 0,
+                                                                  target: stalled.compactMap(\.target).max()))
+                }
+            }
+        }
         let recent = fans.suffix(10)
         if let count = recent.last?.count {
             for index in 0..<count {
@@ -129,7 +151,7 @@ public enum SensorCheck {
 
         return SensorCheckResult(date: Date(), seconds: seconds, sensorCount: judged.count, faults: faults, names: names,
                                  underLoad: underLoad, hottestCPU: hottestCPU, fansNearMax: fansNearMax,
-                                 fansRunningAway: fansRunningAway,
+                                 fansRunningAway: fansRunningAway, fansStalled: fansStalled,
                                  cpuSpeedLimit: thermal?.cpuSpeedLimit.flatMap { $0 < 100 ? $0 : nil },
                                  systemShare: load?.system, userShare: load?.user)
     }
@@ -348,13 +370,22 @@ public enum SensorCheckText {
             lines.append(L("Fan %1$lld runs at %2$@ although the system asks for only %3$@: the SMC does not control it. Before the sensors, check the fan itself (try a known-good fan) and its drive circuit (PWM line, fan connector, fan power); this is common after liquid damage.",
                            fan.index + 1, Format.rpm(fan.actual), Format.rpm(fan.target ?? 0)))
         }
+        for fan in r.fansStalled {
+            lines.append(L("Fan %1$lld reads 0 rpm although the SMC asks for %2$@. Either it stands still or its speed signal (tach) does not reach the SMC: look whether it spins. The SMC then counts the fan as failed and can hold the CPU back.",
+                           fan.index + 1, Format.rpm(fan.target ?? 0)))
+        }
         for fan in r.fansNearMax {
             lines.append(L("A fan runs at %1$@ of %2$@ rpm although the CPU is only at %3$@. Macs speed their fans up like this when a temperature sensor is missing or broken.",
                            Format.number(fan.actual), Format.number(fan.maximum), cpu))
         }
         if r.throttled, let limit = r.cpuSpeedLimit {
-            lines.append(L("macOS holds the CPU at %1$@ of its speed although it is not hot (%2$@). A missing or broken sensor is a common cause, as are battery and power adapter problems.",
-                           Format.percent(Double(limit)), cpu))
+            if r.fansStalled.isEmpty {
+                lines.append(L("macOS holds the CPU at %1$@ of its speed although it is not hot (%2$@). A missing or broken sensor is a common cause, as are battery and power adapter problems.",
+                               Format.percent(Double(limit)), cpu))
+            } else {
+                lines.append(L("macOS holds the CPU at %1$@ of its speed although it is not hot (%2$@), most likely because of the fan above.",
+                               Format.percent(Double(limit)), cpu))
+            }
         }
         if r.kernelBusy, let system = r.systemShare {
             lines.append(L("The system (kernel_task) takes %@ of the CPU while little else runs: macOS keeps the CPU idle, often because of a missing sensor or a battery or power problem.",
@@ -365,7 +396,10 @@ public enum SensorCheckText {
 
     public static func verdict(_ r: SensorCheckResult) -> String {
         if !r.known.isEmpty { return L("Suspicious sensors: %lld.", r.known.count) }
-        let sensorSymptoms = !r.fansNearMax.isEmpty || r.throttled || r.kernelBusy
+        let sensorSymptoms = !r.fansNearMax.isEmpty || (r.throttled && r.fansStalled.isEmpty) || r.kernelBusy
+        if !r.fansStalled.isEmpty, !sensorSymptoms {
+            return L("No broken sensor found, but a fan reads 0 rpm although the SMC asks it to turn.")
+        }
         if !r.fansRunningAway.isEmpty, !sensorSymptoms {
             return L("No broken sensor found, but a fan is out of the SMC's control.")
         }

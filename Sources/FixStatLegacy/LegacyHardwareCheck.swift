@@ -892,6 +892,17 @@ final class LegacyFanPane: BlockPane, LegacySnapshotStartable {
                 case .notAsked: tone = .neutral
                 }
                 blocks.append(.status(FanText.verdict(verdict), tone, detail: FanText.detail(runner.check)))
+                if case let .stalled(fan, _) = verdict {
+                    if let spinning = runner.spinning {
+                        blocks.append(.status(FanText.stalledAnswer(fan: fan, spinning: spinning), .bad))
+                    } else {
+                        blocks.append(.headline(FanText.spinningQuestion(fan: fan), nil))
+                        blocks.append(.actions([
+                            DocAction(title: L("Yes, it spins")) { [unowned self] in runner.answerSpinning(true) },
+                            DocAction(title: L("No, it stands still")) { [unowned self] in runner.answerSpinning(false) },
+                        ]))
+                    }
+                }
             }
             blocks.append(.actions([DocAction(title: runner.state == .finished ? L("Test again") : L("Start fan test")) {
                 [unowned self] in runner.start()
