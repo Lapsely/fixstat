@@ -10049,7 +10049,7 @@
         "tr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Batarya paketindeki gauge (yakıt göstergesi) çipi. Voltaj, akım ve sıcaklığı ölçer, şarjı sayar, hücrelerin kapasitesini öğrenir ve paketin geçmişini tutar. Bir modelin orijinal paketleri aynı gauge çipini kullanır."
+            "value" : "Batarya paketindeki gauge çipi, yani pilin ölçüm ve yönetim çipi. Voltaj, akım ve sıcaklığı ölçer, şarjı sayar, hücrelerin kapasitesini öğrenir ve paketin geçmişini tutar. Bir modelin orijinal paketleri aynı gauge çipini kullanır."
           }
         }
       }
