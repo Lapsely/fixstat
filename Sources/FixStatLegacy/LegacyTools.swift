@@ -217,11 +217,26 @@ final class LegacyBatteryDetails {
         window.onClose = { [core] in core.detailsVisible = false }
     }
 
+    private var showAll: Bool { UserDefaults.standard.bool(forKey: Pref.batteryDetailsAll) }
+
+    /// Rarely needed rows only with "Show all values", or when they show a problem.
+    private func visible(_ rows: [DocRow]) -> [DocRow] {
+        showAll ? rows : rows.filter { !$0.more || $0.tone == .bad }
+    }
+
     private func blocks() -> [Block] {
         guard let battery = core.battery else {
             return [.headline(L("No battery"), nil), .secondary(L("This Mac has no internal battery."))]
         }
+        let all = showAll
+        let note = all ? L("Every value the gauge and the charger report.")
+                       : L("The values that matter most; a rarely needed value appears here when it shows a problem.")
         return [
+            .columns([[.secondary(note)], [.actions([DocAction(title: all ? L("Show fewer values") : L("Show all values"), link: true) {
+                [unowned self] in
+                UserDefaults.standard.set(!all, forKey: Pref.batteryDetailsAll)
+                window.reload()
+            }])]]),
             originality(battery),
             cells(battery),
             .columns([[pack(battery)], [lifetime(battery)]]),
@@ -262,7 +277,9 @@ final class LegacyBatteryDetails {
 
     private func partColumn(_ title: String, _ check: PartCheck) -> [Block] {
         let tone: Tone = check.verdict == .consistent ? .good : check.verdict == .suspicious ? .bad : .neutral
-        let items = check.items.map { item -> Block in
+        let shownItems = showAll ? check.items : check.items.filter { $0.status != .pass }
+        let passed = check.items.count - shownItems.count
+        let items = (passed > 0 ? [Block.status(PartText.passedCount(passed), .good)] : []) + shownItems.map { item -> Block in
             let itemTone: Tone = item.status == .pass ? .good : item.status == .warn ? .bad : .neutral
             return .status(PartText.item(item.id, status: item.status), itemTone, detail: item.detail.isEmpty ? nil : item.detail)
         }
@@ -300,41 +317,41 @@ final class LegacyBatteryDetails {
     }
 
     private func pack(_ b: BatteryInfo) -> Block {
-        .group(L("Pack"), [.rows([
+        .group(L("Pack"), [.rows(visible([
             DocRow(title: L("Gauge"), value: b.gaugeDeviceName, info: .gauge),
             DocRow(title: L("Chemistry ID"), value: b.identity?.chemistryID.map { String($0) }, info: .chemistryID),
             DocRow(title: L("Pack made"), value: BatteryDetailText.manufactured(b), info: .packMade),
-            DocRow(title: L("Manufacturer data"), value: BatteryDetailText.manufacturer(b), info: .manufacturerData),
+            DocRow(title: L("Manufacturer data"), value: BatteryDetailText.manufacturer(b), info: .manufacturerData, more: true),
             DocRow(title: L("Cycles"), value: BatteryDetailText.cycles(b), info: .cycles),
             DocRow(title: L("Health"), value: b.healthPercent.map { Format.percent($0, digits: 1) }, info: .health),
             DocRow(title: L("Nominal health"), value: b.nominalHealthPercent.map { Format.percent($0, digits: 1) }, info: .nominalHealth),
             DocRow(title: L("Capacity last measured"), value: BatteryDetailText.qmaxMeasured(b),
                    tone: PackHistory(battery: b).qmaxStale ? .bad : nil, info: .qmaxMeasured),
             DocRow(title: L("Permanent failure"), value: BatteryDetailText.hex(b.permanentFailureStatus),
-                   tone: (b.permanentFailureStatus ?? 0) != 0 ? .bad : nil, info: .permanentFailure),
+                   tone: (b.permanentFailureStatus ?? 0) != 0 ? .bad : nil, info: .permanentFailure, more: true),
             DocRow(title: L("Cell disconnects"), value: b.cellDisconnectCount.map { Format.number(Double($0)) },
-                   tone: (b.cellDisconnectCount ?? 0) != 0 ? .bad : nil, info: .cellDisconnects),
-            DocRow(title: L("Flash writes"), value: b.identity?.dataFlashWriteCount.map { Format.number(Double($0)) }, info: .flashWrites),
-            DocRow(title: L("Serial"), value: b.serial),
-        ], labelWidth: nil)])
+                   tone: (b.cellDisconnectCount ?? 0) != 0 ? .bad : nil, info: .cellDisconnects, more: true),
+            DocRow(title: L("Flash writes"), value: b.identity?.dataFlashWriteCount.map { Format.number(Double($0)) }, info: .flashWrites, more: true),
+            DocRow(title: L("Serial"), value: b.serial, more: true),
+        ]), labelWidth: nil)])
     }
 
     private func lifetime(_ b: BatteryInfo) -> Block {
         let l = b.lifetime
         let findings = BatteryDetailText.historyFindings(b).map { Block.status($0, .bad) }
-        return .group(L("Lifetime (gauge)"), [.rows([
+        return .group(L("Lifetime (gauge)"), [.rows(visible([
             DocRow(title: L("Operating time"), value: BatteryDetailText.operatingTime(l), info: .operatingTime),
             DocRow(title: L("Highest temperature"), value: l?.maximumTemperature.map { Format.temperature($0) }, info: .lifetimeExtremes),
             DocRow(title: L("Average temperature"), value: l?.averageTemperature.map { Format.temperature($0) }),
-            DocRow(title: L("Lowest temperature"), value: l?.minimumTemperature.map { Format.temperature($0) }),
-            DocRow(title: L("Highest charge current"), value: l?.maximumChargeCurrent.map { Format.milliamps($0) }),
-            DocRow(title: L("Highest discharge current"), value: l?.maximumDischargeCurrent.map { Format.milliamps($0) }),
-            DocRow(title: L("Highest pack voltage"), value: l?.maximumPackVoltage.map { Format.volts(millivolts: $0) }),
+            DocRow(title: L("Lowest temperature"), value: l?.minimumTemperature.map { Format.temperature($0) }, more: true),
+            DocRow(title: L("Highest charge current"), value: l?.maximumChargeCurrent.map { Format.milliamps($0) }, more: true),
+            DocRow(title: L("Highest discharge current"), value: l?.maximumDischargeCurrent.map { Format.milliamps($0) }, more: true),
+            DocRow(title: L("Highest pack voltage"), value: l?.maximumPackVoltage.map { Format.volts(millivolts: $0) }, more: true),
             DocRow(title: L("Lowest pack voltage"), value: BatteryDetailText.lowestPackVoltage(b),
                    tone: PackHistory(battery: b).lowVoltageRecorded ? .bad : nil, info: .lowestPackVoltage),
             DocRow(title: L("Time at high charge"), value: ChargeHistogram(lifetime: l).flatMap(ChargingText.highCharge), info: .timeAtHighCharge),
             DocRow(title: L("Charge today"), value: ChargingText.today(b), info: .chargeToday),
-        ] + (ChargeHistogram(lifetime: l).flatMap(ChargingText.bands).map { [DocRow(title: L("Charge bands (low → high)"), value: $0, info: .chargeBands)] } ?? []),
+        ] + (ChargeHistogram(lifetime: l).flatMap(ChargingText.bands).map { [DocRow(title: L("Charge bands (low → high)"), value: $0, info: .chargeBands, more: true)] } ?? [])),
                        labelWidth: nil)] + findings + [ChargingText.usageFinding(b).map { Block.status($0, .neutral) }].compactMap { $0 })
     }
 
@@ -342,22 +359,21 @@ final class LegacyBatteryDetails {
         let c = b.charger
         let why = ChargingText.notCharging(b).map { Block.status($0.text, $0.problem ? .bad : .neutral) }
         return .group(L("Charger"), [why].compactMap { $0 } + [
-            .rows([
+            .rows(visible([
                 DocRow(title: L("State"), value: BatteryText.state(b)),
                 DocRow(title: L("Battery current"), value: b.amperage.map { Format.milliamps($0) }, info: .batteryCurrent),
-                DocRow(title: L("Charger target current"), value: c?.chargingCurrent.map { Format.milliamps($0, signed: false) }, info: .chargerCurrent),
-                DocRow(title: L("Charger target voltage"), value: c?.chargingVoltage.map { Format.volts(millivolts: $0, digits: 3) }, info: .chargerVoltage),
+                DocRow(title: L("Charger target current"), value: c?.chargingCurrent.map { Format.milliamps($0, signed: false) }, info: .chargerCurrent, more: true),
+                DocRow(title: L("Charger target voltage"), value: c?.chargingVoltage.map { Format.volts(millivolts: $0, digits: 3) }, info: .chargerVoltage, more: true),
                 DocRow(title: L("Input"), value: BatteryDetailText.input(b.powerTelemetry), info: .input),
-                DocRow(title: L("Not charging reason"), value: BatteryDetailText.notCharging(c?.notChargingReason), info: .notChargingReason),
+                DocRow(title: L("Not charging reason"), value: BatteryDetailText.notCharging(c?.notChargingReason), info: .notChargingReason, more: true),
                 DocRow(title: L("Slow charging reason"), value: BatteryDetailText.hex(c?.slowChargingReason),
-                       tone: (c?.slowChargingReason ?? 0) != 0 ? .bad : nil, info: .reasonCodes),
+                       tone: (c?.slowChargingReason ?? 0) != 0 ? .bad : nil, info: .reasonCodes, more: true),
                 DocRow(title: L("Charger inhibit reason"), value: BatteryDetailText.hex(c?.chargerInhibitReason),
-                       tone: (c?.chargerInhibitReason ?? 0) != 0 ? .bad : nil, info: .reasonCodes),
+                       tone: (c?.chargerInhibitReason ?? 0) != 0 ? .bad : nil, info: .reasonCodes, more: true),
                 DocRow(title: L("Thermally limited"), value: c?.timeChargingThermallyLimited.map { Format.number(Double($0)) },
-                       tone: (c?.timeChargingThermallyLimited ?? 0) != 0 ? .bad : nil, info: .thermallyLimited),
-            ], labelWidth: nil),
-            .caption(L("Reason codes are Apple's undocumented bit fields, shown as reported. 0 means none.")),
-        ])
+                       tone: (c?.timeChargingThermallyLimited ?? 0) != 0 ? .bad : nil, info: .thermallyLimited, more: true),
+            ]), labelWidth: nil),
+        ] + (showAll ? [.caption(L("Reason codes are Apple's undocumented bit fields, shown as reported. 0 means none."))] : []))
     }
 
     private func powerDelivery(_ b: BatteryInfo) -> Block {
@@ -380,10 +396,10 @@ final class LegacyBatteryDetails {
         }
         let tones: [[Tone?]] = offers.map { _ in [.neutral, nil, .good] }
         blocks.append(.table(header: nil, rows: offers, tones: tones, leading: true))
-        blocks.append(.rows([
-            DocRow(title: L("Plug-ins / removals"), value: BatteryDetailText.counts(pd), info: .pdPlugIns),
-            DocRow(title: L("Hard resets"), value: pd.hardResetCount.map { Format.number(Double($0)) }, info: .pdHardResets),
-        ], labelWidth: nil))
+        blocks.append(.rows(visible([
+            DocRow(title: L("Plug-ins / removals"), value: BatteryDetailText.counts(pd), info: .pdPlugIns, more: true),
+            DocRow(title: L("Hard resets"), value: pd.hardResetCount.map { Format.number(Double($0)) }, info: .pdHardResets, more: true),
+        ]), labelWidth: nil))
         return .group(L("USB-C Power Delivery"), blocks)
     }
 }

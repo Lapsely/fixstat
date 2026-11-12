@@ -911,6 +911,12 @@ TR = {
     "Menu bar monitor for Mac repair technicians. Reads sensors only — never writes to the SMC.":
         "Mac tamircileri için menü çubuğu izleme uygulaması. Sensörleri yalnızca okur — SMC'ye asla yazmaz.",
     "Project page": "Proje sayfası",
+    '1 check passed': '1 kontrol geçti',
+    '%lld checks passed': '%lld kontrol geçti',
+    'Every value the gauge and the charger report.': "Gauge'un ve şarj devresinin bildirdiği tüm değerler.",
+    'The values that matter most; a rarely needed value appears here when it shows a problem.': 'En önemli değerler; nadiren gereken bir değer, sorun gösterdiğinde burada görünür.',
+    'Show all values': 'Tüm değerleri göster',
+    'Show fewer values': 'Daha az değer göster',
     'Voltage of each cell. The cells are in series, so at rest they should be within a few tens of millivolts of each other; a growing spread means a weak cell or balancing that does not keep up. A cell below 2.5 V has been over-discharged.': "Her hücrenin voltajı. Hücreler seri bağlı olduğu için dinlenirken aralarındaki fark birkaç on milivoltu geçmemeli; büyüyen fark zayıf bir hücreyi ya da yetişemeyen dengelemeyi gösterir. 2,5 V'un altına inmiş bir hücre aşırı deşarj olmuştur.",
     "The cell's real capacity as the gauge last measured it (mAh). The gauge measures it while the cell rests, from the voltage before and after a charge or discharge. Compared with the design capacity it shows wear; a cell clearly below the others is the weak one.": "Hücrenin gauge'un son ölçtüğü gerçek kapasitesi (mAh). Gauge bunu hücre dinlenirken, bir şarj ya da deşarjdan önceki ve sonraki voltajdan ölçer. Tasarım kapasitesiyle karşılaştırınca yıpranmayı gösterir; diğerlerinden belirgin düşük olan hücre zayıf olandır.",
     "The cell's internal resistance as the gauge tracks it (its weighted Ra value; Apple does not document the unit). It rises as a cell ages. Compare the cells with each other: one far above the rest sags under load and can shut the Mac down early.": "Hücrenin gauge'un izlediği iç direnci (ağırlıklı Ra değeri; Apple birimini belgelemiyor). Hücre yaşlandıkça yükselir. Hücreleri birbiriyle karşılaştırın: diğerlerinden çok yüksek olan hücre yük altında çöker ve Mac'i erken kapatabilir.",

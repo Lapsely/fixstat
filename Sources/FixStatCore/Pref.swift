@@ -6,6 +6,8 @@ public enum Pref {
     public static let menuBarBatteryPercent = "menuBar.batteryPercent"
     public static let menuBarCPUTemperature = "menuBar.cpuTemperature"
     public static let technicianMode = "technicianMode"
+    /// Battery details show every value, rarely needed ones included (both interfaces).
+    public static let batteryDetailsAll = "batteryDetails.showAll"
     /// "system", "light" or "dark" (AppearancePreference).
     public static let appearance = "appearance"
     public static let warmThreshold = "threshold.warm"

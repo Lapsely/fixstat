@@ -3,6 +3,11 @@ import MacSensors
 
 /// Localized texts for the originality check (window and PDF report).
 public enum PartText {
+    /// Checks that passed, folded into one line until every value is shown.
+    public static func passedCount(_ count: Int) -> String {
+        count == 1 ? L("1 check passed") : L("%lld checks passed", count)
+    }
+
     public static func verdict(_ verdict: PartCheck.Verdict) -> String {
         switch verdict {
         case .consistent: L("Consistent with a genuine part")

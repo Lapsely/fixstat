@@ -679,6 +679,16 @@
         }
       }
     },
+    "%lld checks passed" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld kontrol geçti"
+          }
+        }
+      }
+    },
     "%lld connected, %lld not connected" : {
       "localizations" : {
         "en" : {
@@ -932,6 +942,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "/sn"
+          }
+        }
+      }
+    },
+    "1 check passed" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "1 kontrol geçti"
           }
         }
       }
@@ -3536,6 +3556,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Adaptörün sunduğu tüm profiller. Orijinal Apple adaptörleri her model için bilinen bir set sunar; FixStat bunları orijinallik kontrolünde karşılaştırır."
+          }
+        }
+      }
+    },
+    "Every value the gauge and the charger report." : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Gauge'un ve şarj devresinin bildirdiği tüm değerler."
           }
         }
       }
@@ -8342,6 +8372,26 @@
         }
       }
     },
+    "Show all values" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tüm değerleri göster"
+          }
+        }
+      }
+    },
+    "Show fewer values" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Daha az değer göster"
+          }
+        }
+      }
+    },
     "Show full serial numbers in reports" : {
       "localizations" : {
         "tr" : {
@@ -9892,6 +9942,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Değer hiç değişmiyor: sensör okuması donmuş."
+          }
+        }
+      }
+    },
+    "The values that matter most; a rarely needed value appears here when it shows a problem." : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "En önemli değerler; nadiren gereken bir değer, sorun gösterdiğinde burada görünür."
           }
         }
       }

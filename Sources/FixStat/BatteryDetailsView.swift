@@ -9,11 +9,21 @@ struct BatteryDetailsView: View {
 
     @Environment(Monitor.self) private var monitor
     @State private var macOSHealth: MacOSBatteryHealth?
+    @AppStorage(Pref.batteryDetailsAll) private var showAll = false
 
     var body: some View {
         ScrollView {
             if let battery = monitor.battery {
                 VStack(alignment: .leading, spacing: 12) {
+                    HStack {
+                        Text(showAll ? "Every value the gauge and the charger report."
+                                     : "The values that matter most; a rarely needed value appears here when it shows a problem.")
+                            .font(.callout)
+                            .foregroundStyle(.secondary)
+                        Spacer()
+                        Button(showAll ? "Show fewer values" : "Show all values") { showAll.toggle() }
+                            .buttonStyle(.link)
+                    }
                     OriginalitySection(battery: battery, system: monitor.system,
                                        reference: monitor.partsReference, macOSHealth: macOSHealth)
                     CellsSection(battery: battery)
@@ -67,17 +77,23 @@ private struct DetailRow: View {
     let value: String?
     var highlight = false
     var info: Glossary.Term? = nil
+    /// Rarely needed: shown with "Show all values", or when it carries a warning.
+    var more = false
+    @AppStorage(Pref.batteryDetailsAll) private var showAll = false
 
     var body: some View {
-        HStack(alignment: .firstTextBaseline) {
-            Text(title).foregroundStyle(.secondary).info(info)
-            Spacer(minLength: 8)
-            Text(value ?? "–")
-                .monospacedDigit()
-                .foregroundStyle(highlight ? TemperatureColor.hot : .primary)
-                .multilineTextAlignment(.trailing)
+        if !more || highlight || showAll {
+            HStack(alignment: .firstTextBaseline) {
+                Text(title).foregroundStyle(.secondary).info(info)
+                Spacer(minLength: 12)
+                Text(value ?? "–")
+                    .monospacedDigit()
+                    .foregroundStyle(highlight ? TemperatureColor.hot : .primary)
+                    .multilineTextAlignment(.trailing)
+            }
+            .padding(.vertical, 2)
+            .accessibilityElement(children: .combine)
         }
-        .accessibilityElement(children: .combine)
     }
 }
 
@@ -132,6 +148,7 @@ private struct PartCheckColumn: View {
     let check: PartCheck
     /// Prefilled report form, offered when the part could not be confirmed.
     var report: URL? = nil
+    @AppStorage(Pref.batteryDetailsAll) private var showAll = false
 
     var body: some View {
         VStack(alignment: .leading, spacing: 5) {
@@ -145,7 +162,18 @@ private struct PartCheckColumn: View {
             .font(.callout.weight(.medium))
             .foregroundStyle(check.verdict == .consistent ? TemperatureColor.cool
                              : check.verdict == .suspicious ? TemperatureColor.hot : .secondary)
-            ForEach(Array(check.items.enumerated()), id: \.offset) { _, item in
+            let shownItems = showAll ? check.items : check.items.filter { $0.status != .pass }
+            let passed = check.items.count - shownItems.count
+            if passed > 0 {
+                Label {
+                    Text(verbatim: PartText.passedCount(passed))
+                } icon: {
+                    Image(systemName: "checkmark").foregroundStyle(TemperatureColor.cool)
+                }
+                .font(.callout)
+                .foregroundStyle(.secondary)
+            }
+            ForEach(Array(shownItems.enumerated()), id: \.offset) { _, item in
                 HStack(alignment: .firstTextBaseline, spacing: 6) {
                     Image(systemName: item.status == .pass ? "checkmark" : item.status == .warn ? "exclamationmark.triangle" : "info.circle")
                         .foregroundStyle(item.status == .pass ? TemperatureColor.cool : item.status == .warn ? TemperatureColor.hot : .secondary)
@@ -244,18 +272,18 @@ private struct PackSection: View {
             DetailRow(title: "Gauge", value: battery.gaugeDeviceName, info: .gauge)
             DetailRow(title: "Chemistry ID", value: battery.identity?.chemistryID.map { String($0) }, info: .chemistryID)
             DetailRow(title: "Pack made", value: BatteryDetailText.manufactured(battery), info: .packMade)
-            DetailRow(title: "Manufacturer data", value: BatteryDetailText.manufacturer(battery), info: .manufacturerData)
+            DetailRow(title: "Manufacturer data", value: BatteryDetailText.manufacturer(battery), info: .manufacturerData, more: true)
             DetailRow(title: "Cycles", value: BatteryDetailText.cycles(battery), info: .cycles)
             DetailRow(title: "Health", value: battery.healthPercent.map { Format.percent($0, digits: 1) }, info: .health)
             DetailRow(title: "Nominal health", value: battery.nominalHealthPercent.map { Format.percent($0, digits: 1) }, info: .nominalHealth)
             DetailRow(title: "Capacity last measured", value: BatteryDetailText.qmaxMeasured(battery),
                       highlight: PackHistory(battery: battery).qmaxStale, info: .qmaxMeasured)
             DetailRow(title: "Permanent failure", value: BatteryDetailText.hex(battery.permanentFailureStatus),
-                      highlight: (battery.permanentFailureStatus ?? 0) != 0, info: .permanentFailure)
+                      highlight: (battery.permanentFailureStatus ?? 0) != 0, info: .permanentFailure, more: true)
             DetailRow(title: "Cell disconnects", value: battery.cellDisconnectCount.map { Format.number(Double($0)) },
-                      highlight: (battery.cellDisconnectCount ?? 0) != 0, info: .cellDisconnects)
-            DetailRow(title: "Flash writes", value: battery.identity?.dataFlashWriteCount.map { Format.number(Double($0)) }, info: .flashWrites)
-            DetailRow(title: "Serial", value: battery.serial)
+                      highlight: (battery.cellDisconnectCount ?? 0) != 0, info: .cellDisconnects, more: true)
+            DetailRow(title: "Flash writes", value: battery.identity?.dataFlashWriteCount.map { Format.number(Double($0)) }, info: .flashWrites, more: true)
+            DetailRow(title: "Serial", value: battery.serial, more: true)
         }
     }
 
@@ -273,16 +301,16 @@ private struct LifetimeSection: View {
             DetailRow(title: "Operating time", value: BatteryDetailText.operatingTime(lifetime), info: .operatingTime)
             DetailRow(title: "Highest temperature", value: lifetime?.maximumTemperature.map { Format.temperature($0) }, info: .lifetimeExtremes)
             DetailRow(title: "Average temperature", value: lifetime?.averageTemperature.map { Format.temperature($0) })
-            DetailRow(title: "Lowest temperature", value: lifetime?.minimumTemperature.map { Format.temperature($0) })
-            DetailRow(title: "Highest charge current", value: lifetime?.maximumChargeCurrent.map { Format.milliamps($0) })
-            DetailRow(title: "Highest discharge current", value: lifetime?.maximumDischargeCurrent.map { Format.milliamps($0) })
-            DetailRow(title: "Highest pack voltage", value: lifetime?.maximumPackVoltage.map { Format.volts(millivolts: $0) })
+            DetailRow(title: "Lowest temperature", value: lifetime?.minimumTemperature.map { Format.temperature($0) }, more: true)
+            DetailRow(title: "Highest charge current", value: lifetime?.maximumChargeCurrent.map { Format.milliamps($0) }, more: true)
+            DetailRow(title: "Highest discharge current", value: lifetime?.maximumDischargeCurrent.map { Format.milliamps($0) }, more: true)
+            DetailRow(title: "Highest pack voltage", value: lifetime?.maximumPackVoltage.map { Format.volts(millivolts: $0) }, more: true)
             DetailRow(title: "Lowest pack voltage", value: BatteryDetailText.lowestPackVoltage(battery),
                       highlight: PackHistory(battery: battery).lowVoltageRecorded, info: .lowestPackVoltage)
             let histogram = ChargeHistogram(lifetime: lifetime)
             DetailRow(title: "Time at high charge", value: histogram.flatMap(ChargingText.highCharge), info: .timeAtHighCharge)
             if let bands = histogram.flatMap(ChargingText.bands) {
-                DetailRow(title: "Charge bands (low → high)", value: bands, info: .chargeBands)
+                DetailRow(title: "Charge bands (low → high)", value: bands, info: .chargeBands, more: true)
             }
             DetailRow(title: "Charge today", value: ChargingText.today(battery), info: .chargeToday)
             if let usage = ChargingText.usageFinding(battery) {
@@ -307,6 +335,7 @@ private struct LifetimeSection: View {
 @available(macOS 14.0, *)
 private struct ChargingSection: View {
     let battery: BatteryInfo
+    @AppStorage(Pref.batteryDetailsAll) private var showAll = false
 
     var body: some View {
         let charger = battery.charger
@@ -322,19 +351,21 @@ private struct ChargingSection: View {
                 .foregroundStyle(why.problem ? AnyShapeStyle(TemperatureColor.hot) : AnyShapeStyle(.secondary))
             }
             DetailRow(title: "Battery current", value: battery.amperage.map { Format.milliamps($0) }, info: .batteryCurrent)
-            DetailRow(title: "Charger target current", value: charger?.chargingCurrent.map { Format.milliamps($0, signed: false) }, info: .chargerCurrent)
-            DetailRow(title: "Charger target voltage", value: charger?.chargingVoltage.map { Format.volts(millivolts: $0, digits: 3) }, info: .chargerVoltage)
+            DetailRow(title: "Charger target current", value: charger?.chargingCurrent.map { Format.milliamps($0, signed: false) }, info: .chargerCurrent, more: true)
+            DetailRow(title: "Charger target voltage", value: charger?.chargingVoltage.map { Format.volts(millivolts: $0, digits: 3) }, info: .chargerVoltage, more: true)
             DetailRow(title: "Input", value: BatteryDetailText.input(telemetry), info: .input)
-            DetailRow(title: "Not charging reason", value: BatteryDetailText.notCharging(charger?.notChargingReason), info: .notChargingReason)
+            DetailRow(title: "Not charging reason", value: BatteryDetailText.notCharging(charger?.notChargingReason), info: .notChargingReason, more: true)
             DetailRow(title: "Slow charging reason", value: BatteryDetailText.hex(charger?.slowChargingReason),
-                      highlight: (charger?.slowChargingReason ?? 0) != 0, info: .reasonCodes)
+                      highlight: (charger?.slowChargingReason ?? 0) != 0, info: .reasonCodes, more: true)
             DetailRow(title: "Charger inhibit reason", value: BatteryDetailText.hex(charger?.chargerInhibitReason),
-                      highlight: (charger?.chargerInhibitReason ?? 0) != 0, info: .reasonCodes)
+                      highlight: (charger?.chargerInhibitReason ?? 0) != 0, info: .reasonCodes, more: true)
             DetailRow(title: "Thermally limited", value: charger?.timeChargingThermallyLimited.map { Format.number(Double($0)) },
-                      highlight: (charger?.timeChargingThermallyLimited ?? 0) != 0, info: .thermallyLimited)
-            Text("Reason codes are Apple's undocumented bit fields, shown as reported. 0 means none.")
-                .font(.caption)
-                .foregroundStyle(.secondary)
+                      highlight: (charger?.timeChargingThermallyLimited ?? 0) != 0, info: .thermallyLimited, more: true)
+            if showAll {
+                Text("Reason codes are Apple's undocumented bit fields, shown as reported. 0 means none.")
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
+            }
         }
     }
 
@@ -382,8 +413,8 @@ private struct PowerDeliverySection: View {
                     }
                 }
                 .font(.callout)
-                DetailRow(title: "Plug-ins / removals", value: BatteryDetailText.counts(pd), info: .pdPlugIns)
-                DetailRow(title: "Hard resets", value: pd.hardResetCount.map { Format.number(Double($0)) }, info: .pdHardResets)
+                DetailRow(title: "Plug-ins / removals", value: BatteryDetailText.counts(pd), info: .pdPlugIns, more: true)
+                DetailRow(title: "Hard resets", value: pd.hardResetCount.map { Format.number(Double($0)) }, info: .pdHardResets, more: true)
             } else {
                 Text("No USB-C Power Delivery contract.")
                     .font(.callout)

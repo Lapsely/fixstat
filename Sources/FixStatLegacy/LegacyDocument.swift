@@ -33,6 +33,8 @@ struct DocRow {
     var tone: Tone? = nil
     /// ⓘ after the title.
     var info: Glossary.Term? = nil
+    /// Rarely needed (battery details): left out unless every value is shown or `tone` is `.bad`.
+    var more = false
 }
 
 struct DocAction {
@@ -255,7 +257,8 @@ final class LegacyDocumentView: NSScrollView {
         let views = rows.map { row -> NSView in
             let label = makeLabel(row.title, color: .secondaryLabelColor)
             let title = withInfo(label, row.info)
-            let valueWidth = labelWidth.map { width - $0 - 8 } ?? width * 0.6
+            // Spread rows: the value wraps in whatever the title (and its ⓘ) leaves free.
+            let valueWidth = labelWidth.map { width - $0 - 8 } ?? max(width * 0.4, width - title.fittingSize.width - 16)
             let value = wrapping(row.value ?? "–", width: valueWidth, color: row.tone == .bad ? LegacyStyle.hot : .labelColor)
             value.isSelectable = true
             if let labelWidth {
@@ -263,11 +266,11 @@ final class LegacyDocumentView: NSScrollView {
                 return hStack([title, value, makeSpacer()], alignment: .firstBaseline)
             }
             value.alignment = .right
-            value.font = LegacyStyle.mono(LegacyStyle.body)
+            value.font = LegacyStyle.digits(LegacyStyle.body)
             label.setContentCompressionResistancePriority(.defaultHigh, for: .horizontal)
             return hStack([title, makeSpacer(), value], alignment: .firstBaseline)
         }
-        let stack = vStack(views, spacing: 5)
+        let stack = vStack(views, spacing: 8)
         for view in views { view.widthAnchor.constraint(equalToConstant: width).isActive = true }
         return stack
     }
@@ -284,7 +287,7 @@ final class LegacyDocumentView: NSScrollView {
             cells.append(row.enumerated().map { c, text in
                 let tone = r < tones.count && c < tones[r].count ? tones[r][c] : nil
                 let label = makeLabel(text, color: tone?.color ?? .labelColor,
-                                      font: leading ? nil : LegacyStyle.mono(LegacyStyle.body))
+                                      font: leading ? nil : LegacyStyle.digits(LegacyStyle.body))
                 label.lineBreakMode = .byTruncatingTail
                 return label
             })
