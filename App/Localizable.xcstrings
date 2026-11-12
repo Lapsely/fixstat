@@ -3738,6 +3738,16 @@
         }
       }
     },
+    "Far colder than the rest of the Mac: the sensor or its connection." : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mac'in geri kalanından çok daha soğuk: sensör ya da bağlantısı."
+          }
+        }
+      }
+    },
     "Fewest bad blocks per die" : {
       "localizations" : {
         "tr" : {
@@ -4274,6 +4284,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Hard reset"
+          }
+        }
+      }
+    },
+    "Hardly moved under load while the other sensors of its group heated up: stuck or badly placed sensor." : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Grubundaki diğer sensörler ısınırken yük altında neredeyse hiç değişmedi: takılı ya da yerinden oynamış sensör."
           }
         }
       }
@@ -5752,6 +5772,16 @@
         }
       }
     },
+    "Missing: this model has it, but the Mac does not report it (flex cable, connector or the part)." : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Eksik: bu modelde olması gerekiyor ama Mac bildirmiyor (flex kablo, konnektör ya da parçanın kendisi)."
+          }
+        }
+      }
+    },
     "Model" : {
       "localizations" : {
         "tr" : {
@@ -6078,6 +6108,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Sorun bulunmadı"
+          }
+        }
+      }
+    },
+    "No reading: the sensor or its connection is missing." : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Okuma yok: sensör ya da bağlantısı eksik."
           }
         }
       }
@@ -6518,6 +6558,16 @@
         }
       }
     },
+    "One output of the power management IC (PMU): a buck converter (b) or an LDO regulator (l) feeding one part of the board. Which part depends on the chip (on the M1, buck 0 feeds the performance CPU cores and buck 1 the GPU). A rail that draws current at idle while the others are quiet points at a leak or a short on that part of the board." : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Güç yönetim entegresinin (PMU) bir çıkışı: kartın bir bölümünü besleyen bir buck dönüştürücü (b) ya da LDO regülatör (l). Hangi bölüm olduğu çipe göre değişir (M1'de buck 0 performans CPU çekirdeklerini, buck 1 GPU'yu besler). Diğerleri sakinken boşta akım çeken bir hat, kartın o bölümünde kaçak ya da kısa devreyi gösterir."
+          }
+        }
+      }
+    },
     "Only guessed from the key name, so they may simply not be fitted on this model. Compare with a good Mac of the same model." : {
       "localizations" : {
         "tr" : {
@@ -6544,6 +6594,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Oturum açılışında başlat"
+          }
+        }
+      }
+    },
+    "Open circuit: the sensor or its connection (flex cable, connector)." : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Açık devre: sensör ya da bağlantısı (flex kablo, konnektör)."
           }
         }
       }
@@ -6698,6 +6758,16 @@
         }
       }
     },
+    "PDTR: the power coming in from the adapter (DC in). Zero on battery. With the adapter connected it is the system's power plus what goes into the battery." : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "PDTR: adaptörden gelen güç (DC giriş). Bataryadayken sıfırdır. Adaptör takılıyken sistemin gücü ile bataryaya gidenin toplamıdır."
+          }
+        }
+      }
+    },
     "PMU LDO %@" : {
       "localizations" : {
         "tr" : {
@@ -6744,6 +6814,26 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "PMU2 buck %@"
+          }
+        }
+      }
+    },
+    "PPBR: the power on the battery's rail. Positive values flow out of the battery to the Mac; while charging the battery takes power instead." : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "PPBR: batarya hattındaki güç. Pozitif değer bataryadan Mac'e akan güçtür; şarj sırasında ise batarya güç alır."
+          }
+        }
+      }
+    },
+    "PSTR: the power the whole Mac draws, measured by the SMC at the system's main power rail. On battery it is what drains the battery; on the adapter it also includes the charging power." : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "PSTR: Mac'in tamamının çektiği güç; SMC sistemin ana güç hattında ölçer. Bataryadayken bataryayı tüketen güçtür; adaptördeyken şarj gücü de buna dahildir."
           }
         }
       }
@@ -8362,6 +8452,16 @@
         }
       }
     },
+    "Short circuit: the sensor or its line." : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kısa devre: sensör ya da hattı."
+          }
+        }
+      }
+    },
     "Show" : {
       "localizations" : {
         "tr" : {
@@ -8958,6 +9058,16 @@
         }
       }
     },
+    "Stuck: stays at exactly this value while the sensors around it change." : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Takılı: çevresindeki sensörler değişirken tam olarak bu değerde kalıyor."
+          }
+        }
+      }
+    },
     "Surface %@" : {
       "localizations" : {
         "tr" : {
@@ -9500,6 +9610,16 @@
         }
       }
     },
+    "The battery's temperature from the gauge's sensor. Charging slows above about 40 °C, and a hot pack ages faster." : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Gauge'un sensöründen batarya sıcaklığı. Yaklaşık 40 °C'nin üstünde şarj yavaşlar; sıcak paket daha hızlı yaşlanır."
+          }
+        }
+      }
+    },
     "The camera could not confirm the light. Was the flashlight on the sensor?" : {
       "localizations" : {
         "tr" : {
@@ -9646,6 +9766,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Disk bir SMART arızası bildiriyor (eşik aşıldı)."
+          }
+        }
+      }
+    },
+    "The fan's real speed, measured from its tachometer signal (F…Ac). 0 rpm while the fan visibly spins means the tachometer signal does not reach the SMC: fan connector, the fan or its tach line." : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Fanın gerçek devri; tako sinyalinden ölçülür (F…Ac). Fan gözle görülür şekilde dönerken 0 rpm okunuyorsa tako sinyali SMC'ye ulaşmıyordur: fan konnektörü, fanın kendisi ya da tako hattı."
           }
         }
       }
@@ -9856,6 +9986,16 @@
         }
       }
     },
+    "The pack's voltage as the gauge measures it: the sum of the cells in series. It sags under load and rises while charging." : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Gauge'un ölçtüğü paket voltajı: seri bağlı hücrelerin toplamı. Yük altında düşer, şarjda yükselir."
+          }
+        }
+      }
+    },
     "The power log covers only %@: macOS starts it again after the Mac is erased or its clock is changed." : {
       "localizations" : {
         "tr" : {
@@ -9892,6 +10032,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Sensör feneri gördü ama kamera karanlık kaldı; kamerayı da kontrol edin."
+          }
+        }
+      }
+    },
+    "The speed the SMC asks the fan for (F…Tg). The real speed should follow it within a few hundred rpm. Far below: a worn or dirty fan. Far above, or full speed at target 0: the SMC has lost control of the fan (PWM line, connector, drive circuit)." : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "SMC'nin fandan istediği devir (F…Tg). Gerçek devir bunu birkaç yüz devir farkla izlemeli. Çok altındaysa: aşınmış ya da tozlu fan. Çok üstündeyse ya da hedef 0'ken tam devirdeyse: SMC fanın kontrolünü kaybetmiştir (PWM hattı, konnektör, sürücü devre)."
           }
         }
       }
@@ -10846,6 +10996,26 @@
         }
       }
     },
+    "What macOS and the SMC do when they miss a sensor or see a fault: fans at high speed although the Mac is cool, a CPU speed limit below 100 % (macOS runs the CPU slower; read from pmset -g therm), or kernel_task taking the CPU. A missing or broken sensor is a common cause, but a fan, battery or power adapter fault causes the same." : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "macOS ve SMC bir sensörü göremediğinde ya da bir arıza gördüğünde şunları yapar: Mac serinken fanları yüksek devirde çevirir, CPU hız sınırını %100'ün altına çeker (macOS işlemciyi yavaşlatır; pmset -g therm'den okunur) ya da kernel_task işlemciyi meşgul eder. Sık sebep eksik ya da bozuk bir sensördür, ama fan, batarya ya da adaptör arızası da aynı sonucu verir."
+          }
+        }
+      }
+    },
+    "What macOS does when it misses a sensor or sees a fault" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "macOS'un bir sensörü göremediğinde ya da arıza gördüğünde yaptıkları"
+          }
+        }
+      }
+    },
     "What the Mac asked the adapter for within the contract: the current it expects to draw." : {
       "localizations" : {
         "tr" : {
@@ -11494,6 +11664,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "sol"
+          }
+        }
+      }
+    },
+    "low %1$@ · high %2$@" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "en düşük %1$@ · en yüksek %2$@"
           }
         }
       }

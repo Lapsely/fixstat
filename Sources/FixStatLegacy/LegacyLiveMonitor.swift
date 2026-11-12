@@ -254,6 +254,17 @@ final class LiveChartView: NSView {
         super.init(frame: .zero)
         wantsLayer = true
         layer?.cornerRadius = 10
+        if let term = Glossary.term(forLiveChannel: channel.id, group: channel.group) {
+            let titleWidth = NSAttributedString(string: channel.title, attributes: [
+                .font: NSFont.systemFont(ofSize: 13, weight: .semibold)]).size().width
+            let info = InfoButton(term)
+            info.translatesAutoresizingMaskIntoConstraints = false
+            addSubview(info)
+            NSLayoutConstraint.activate([
+                info.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 12 + ceil(titleWidth) + 4),
+                info.topAnchor.constraint(equalTo: topAnchor, constant: 11),
+            ])
+        }
     }
 
     required init?(coder: NSCoder) { fatalError() }
@@ -276,10 +287,17 @@ final class LiveChartView: NSView {
         draw(channel.title, [.font: NSFont.systemFont(ofSize: 13, weight: .semibold), .foregroundColor: NSColor.labelColor],
              at: NSPoint(x: 12, y: 8))
         let current = values.last.map { LiveMonitor.format($0, channel.unit) } ?? "–"
-        draw(current, [.font: NSFont.monospacedDigitSystemFont(ofSize: 15, weight: .semibold), .foregroundColor: NSColor.labelColor],
-             at: NSPoint(x: bounds.maxX - 12, y: 6), right: true)
+        let currentFont = NSFont.monospacedDigitSystemFont(ofSize: 17, weight: .semibold)
+        draw(current, [.font: currentFont, .foregroundColor: NSColor.labelColor],
+             at: NSPoint(x: bounds.maxX - 12, y: 5), right: true)
+        if let low = values.min(), let high = values.max(), high > low {
+            let width = NSAttributedString(string: current, attributes: [.font: currentFont]).size().width
+            draw(LiveText.range(low: LiveMonitor.format(low, channel.unit), high: LiveMonitor.format(high, channel.unit)),
+                 [.font: NSFont.systemFont(ofSize: 11), .foregroundColor: NSColor.secondaryLabelColor],
+                 at: NSPoint(x: bounds.maxX - 24 - width, y: 10), right: true)
+        }
 
-        let plot = NSRect(x: 60, y: 34, width: bounds.width - 76, height: bounds.height - 56)
+        let plot = NSRect(x: 60, y: 40, width: bounds.width - 76, height: bounds.height - 62)
         guard let low = values.min(), let high = values.max(), let first = points.first?.0, let last = points.last?.0 else { return }
         let pad = high > low ? (high - low) * 0.1 : max(abs(high) * 0.02, 0.5)
         let y0 = low - pad, y1 = high + pad

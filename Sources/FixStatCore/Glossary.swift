@@ -15,6 +15,10 @@ public enum Glossary {
         case batteryCurrent, chargerCurrent, chargerVoltage, input, notChargingReason, reasonCodes, thermallyLimited
         // USB-C Power Delivery
         case pdContract, pdRequested, pdOffers, pdPlugIns, pdHardResets
+        // Live monitor
+        case systemPower, adapterInput, batteryRail, pmuRail, fanActual, fanTarget, batteryVoltage, batteryTemperature
+        // Sensor check
+        case macSymptoms
     }
 
     public static func explanation(_ term: Term) -> String {
@@ -83,8 +87,42 @@ public enum Glossary {
             return L("Every profile the adapter offers. Genuine Apple adapters offer a known set per model; FixStat compares them in the originality check.")
         case .pdPlugIns:
             return L("How often the port controller saw an adapter plugged in and removed. Many removals without anyone unplugging point at a loose cable or a worn port.")
+        case .systemPower:
+            return L("PSTR: the power the whole Mac draws, measured by the SMC at the system's main power rail. On battery it is what drains the battery; on the adapter it also includes the charging power.")
+        case .adapterInput:
+            return L("PDTR: the power coming in from the adapter (DC in). Zero on battery. With the adapter connected it is the system's power plus what goes into the battery.")
+        case .batteryRail:
+            return L("PPBR: the power on the battery's rail. Positive values flow out of the battery to the Mac; while charging the battery takes power instead.")
+        case .pmuRail:
+            return L("One output of the power management IC (PMU): a buck converter (b) or an LDO regulator (l) feeding one part of the board. Which part depends on the chip (on the M1, buck 0 feeds the performance CPU cores and buck 1 the GPU). A rail that draws current at idle while the others are quiet points at a leak or a short on that part of the board.")
+        case .fanActual:
+            return L("The fan's real speed, measured from its tachometer signal (F…Ac). 0 rpm while the fan visibly spins means the tachometer signal does not reach the SMC: fan connector, the fan or its tach line.")
+        case .fanTarget:
+            return L("The speed the SMC asks the fan for (F…Tg). The real speed should follow it within a few hundred rpm. Far below: a worn or dirty fan. Far above, or full speed at target 0: the SMC has lost control of the fan (PWM line, connector, drive circuit).")
+        case .batteryVoltage:
+            return L("The pack's voltage as the gauge measures it: the sum of the cells in series. It sags under load and rises while charging.")
+        case .batteryTemperature:
+            return L("The battery's temperature from the gauge's sensor. Charging slows above about 40 °C, and a hot pack ages faster.")
+        case .macSymptoms:
+            return L("What macOS and the SMC do when they miss a sensor or see a fault: fans at high speed although the Mac is cool, a CPU speed limit below 100 % (macOS runs the CPU slower; read from pmset -g therm), or kernel_task taking the CPU. A missing or broken sensor is a common cause, but a fan, battery or power adapter fault causes the same.")
         case .pdHardResets:
             return L("USB-C Power Delivery hard resets: the Mac and the adapter restarted their negotiation. A few are normal; many point at a bad cable, adapter or port.")
         }
+    }
+
+    /// The explanation that fits a live monitor channel (nil for temperature sensors: their names say it).
+    public static func term(forLiveChannel id: String, group: LiveMonitor.Group) -> Term? {
+        switch id {
+        case "smc:PSTR": return .systemPower
+        case "smc:PDTR": return .adapterInput
+        case "smc:PPBR": return .batteryRail
+        case "battery:voltage": return .batteryVoltage
+        case "battery:amperage": return .batteryCurrent
+        case "battery:temperature": return .batteryTemperature
+        default: break
+        }
+        if id.hasPrefix("battery:cell:") { return .cellVoltage }
+        if id.hasPrefix("fan:") { return id.hasSuffix(":target") ? .fanTarget : .fanActual }
+        return group == .rails ? .pmuRail : nil
     }
 }

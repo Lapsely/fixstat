@@ -112,6 +112,10 @@ final class LegacyHardwareCheck: NSObject, NSTableViewDataSource, NSTableViewDel
         evidence.font = .systemFont(ofSize: LegacyStyle.body)
         evidence.textColor = .secondaryLabelColor
         evidence.preferredMaxLayoutWidth = 600
+        // The pane above shows the details; here only the start of what goes into the report.
+        evidence.maximumNumberOfLines = 2
+        evidence.lineBreakMode = .byTruncatingTail
+        evidence.cell?.truncatesLastVisibleLine = true
 
         var buttons: [NSView] = []
         for status in [HardwareCheck.Status.passed, .failed, .skipped] {
@@ -229,6 +233,7 @@ final class LegacyHardwareCheck: NSObject, NSTableViewDataSource, NSTableViewDel
         guard let current else { return }
         let entry = check[current]
         evidence.stringValue = entry.detail ?? ""
+        evidence.toolTip = entry.detail
         evidence.isHidden = entry.detail == nil
         for (status, button) in markButtons {
             button.state = entry.status == status ? .on : .off
@@ -822,15 +827,20 @@ final class LegacySensorCheckPane: BlockPane, LegacySnapshotStartable {
         blocks.append(.status(SensorCheckText.verdict(result), result.passed ? .good : .bad))
         if !result.known.isEmpty {
             blocks.append(.group(L("Suspicious sensors"),
-                                 result.known.map { .status(SensorCheckText.fault($0, name: result.names[$0.uid]), .bad) }))
+                                 result.known.map { .status(SensorCheckText.faultHeadline($0, name: result.names[$0.uid]), .bad,
+                                                            detail: SensorCheckText.faultCause($0)) }))
         }
         let symptoms = SensorCheckText.symptoms(result)
         if !symptoms.isEmpty {
-            blocks.append(.group(L("What the Mac does"), symptoms.map { .status($0, .bad) }))
+            blocks.append(.group(L("What the Mac does"),
+                                 [.view(hStack([withInfo(makeLabel(L("What macOS does when it misses a sensor or sees a fault"),
+                                                                   color: .secondaryLabelColor), .macSymptoms), makeSpacer()]))]
+                                 + symptoms.map { .status($0, .bad) }))
         }
         if !result.unclear.isEmpty {
             blocks.append(.group(L("Unclear"), [.secondary(SensorCheckText.unclearNote)]
-                + result.unclear.map { .text("• " + SensorCheckText.fault($0, name: result.names[$0.uid])) }))
+                + result.unclear.map { .status(SensorCheckText.faultHeadline($0, name: result.names[$0.uid]), .neutral,
+                                               detail: SensorCheckText.faultCause($0)) }))
         }
         return blocks
     }

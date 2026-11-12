@@ -318,6 +318,29 @@ public enum SensorCheckText {
         }
     }
 
+    /// The sensor and its reading, for a two-line finding (`faultCause` under it).
+    public static func faultHeadline(_ f: SensorFault, name: String?) -> String {
+        let sensor = (name ?? f.label) + (name != nil && name != f.label ? " (\(f.label))" : "")
+        switch f.kind {
+        case .noReading, .missing: return sensor
+        case .noResponse: return sensor + ": " + (f.value.map { Format.degreesChange($0) } ?? "–")
+        default: return sensor + ": " + (f.value.map { Format.degrees($0, digits: 1) } ?? "–")
+        }
+    }
+
+    /// What the reading means and where to look.
+    public static func faultCause(_ f: SensorFault) -> String {
+        switch f.kind {
+        case .open: return L("Open circuit: the sensor or its connection (flex cable, connector).")
+        case .short: return L("Short circuit: the sensor or its line.")
+        case .noReading: return L("No reading: the sensor or its connection is missing.")
+        case .frozen: return L("Stuck: stays at exactly this value while the sensors around it change.")
+        case .tooCold: return L("Far colder than the rest of the Mac: the sensor or its connection.")
+        case .missing: return L("Missing: this model has it, but the Mac does not report it (flex cable, connector or the part).")
+        case .noResponse: return L("Hardly moved under load while the other sensors of its group heated up: stuck or badly placed sensor.")
+        }
+    }
+
     public static func symptoms(_ r: SensorCheckResult) -> [String] {
         var lines: [String] = []
         let cpu = r.hottestCPU.map { Format.degrees($0) } ?? "–"

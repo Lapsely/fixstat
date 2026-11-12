@@ -54,14 +54,15 @@ struct SensorCheckResultView: View {
                 Card {
                     CardHeader("Suspicious sensors", systemImage: "thermometer.medium.slash")
                     ForEach(Array(result.known.enumerated()), id: \.offset) { _, fault in
-                        FindingRow(text: SensorCheckText.fault(fault, name: result.names[fault.uid]))
+                        FindingRow(text: SensorCheckText.faultHeadline(fault, name: result.names[fault.uid]),
+                                   detail: SensorCheckText.faultCause(fault))
                     }
                 }
             }
             let symptoms = SensorCheckText.symptoms(result)
             if !symptoms.isEmpty {
                 Card {
-                    CardHeader("What the Mac does", systemImage: "fan")
+                    CardHeader("What the Mac does", systemImage: "fan") { InfoButton(.macSymptoms) }
                     ForEach(Array(symptoms.enumerated()), id: \.offset) { _, line in
                         FindingRow(text: line)
                     }
@@ -74,8 +75,8 @@ struct SensorCheckResultView: View {
                         .foregroundStyle(.secondary)
                         .fixedSize(horizontal: false, vertical: true)
                     ForEach(Array(result.unclear.enumerated()), id: \.offset) { _, fault in
-                        Text(verbatim: "• " + SensorCheckText.fault(fault, name: result.names[fault.uid]))
-                            .fixedSize(horizontal: false, vertical: true)
+                        FindingRow(text: SensorCheckText.faultHeadline(fault, name: result.names[fault.uid]), problem: false,
+                                   detail: SensorCheckText.faultCause(fault))
                     }
                 }
             }

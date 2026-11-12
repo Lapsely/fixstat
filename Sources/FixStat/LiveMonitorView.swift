@@ -208,18 +208,21 @@ private struct LiveChannelChart: View {
         Card {
             HStack(alignment: .firstTextBaseline) {
                 Text(verbatim: channel.title).font(.headline)
+                    .info(Glossary.term(forLiveChannel: channel.id, group: channel.group))
                 if let detail = channel.detail {
                     Text(verbatim: detail).font(.caption.monospaced()).foregroundStyle(.tertiary)
                 }
                 Spacer()
                 if let low = values.min(), let high = values.max(), high > low {
-                    Text(verbatim: LiveMonitor.format(low, channel.unit) + " … " + LiveMonitor.format(high, channel.unit))
-                        .font(.caption)
+                    Text(verbatim: LiveText.range(low: LiveMonitor.format(low, channel.unit), high: LiveMonitor.format(high, channel.unit)))
+                        .font(.callout)
                         .foregroundStyle(.secondary)
                 }
                 Text(verbatim: values.last.map { LiveMonitor.format($0, channel.unit) } ?? "–")
-                    .font(.title3.weight(.semibold))
+                    .font(.title2.weight(.semibold))
+                    .monospacedDigit()
             }
+            .padding(.bottom, 6)
             Chart {
                 ForEach(Array(points.enumerated()), id: \.offset) { _, point in
                     LineMark(x: .value("Time", point.0), y: .value("Value", point.1))
@@ -250,7 +253,7 @@ private struct LiveChannelChart: View {
                     AxisValueLabel { if let v = value.as(Double.self) { Text(LiveMonitor.axisLabel(v, channel.unit)) } }
                 }
             }
-            .frame(height: 110)
+            .frame(height: 120)
         }
     }
 }

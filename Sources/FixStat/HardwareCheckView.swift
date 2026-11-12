@@ -146,8 +146,11 @@ private struct ResultBar: View {
         let entry = monitor.hardwareCheck[item]
         Card {
             if let detail = entry.detail {
-                Label(detail, systemImage: "gauge.with.dots.needle.33percent")
+                // The pane above shows the details; here only the start of what goes into the report.
+                Label(detail, systemImage: "doc.text")
                     .foregroundStyle(.secondary)
+                    .lineLimit(2)
+                    .help(Text(verbatim: detail))
             }
             HStack(spacing: 8) {
                 mark("Passed", "checkmark", .passed, entry)

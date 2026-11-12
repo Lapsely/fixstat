@@ -363,3 +363,10 @@ public final class LiveMonitor {
         }
     }
 }
+
+public enum LiveText {
+    /// Lowest and highest value in the shown window, e.g. "low 4.7 W · high 12 W".
+    public static func range(low: String, high: String) -> String {
+        L("low %1$@ · high %2$@", low, high)
+    }
+}

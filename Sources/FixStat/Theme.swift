@@ -215,10 +215,18 @@ struct MetricTile: View {
 struct FindingRow: View {
     let text: String
     var problem = true
+    /// Second line in secondary colour (cause, what to check).
+    var detail: String? = nil
 
     var body: some View {
         Label {
-            Text(verbatim: text).fixedSize(horizontal: false, vertical: true)
+            VStack(alignment: .leading, spacing: 2) {
+                Text(verbatim: text).fixedSize(horizontal: false, vertical: true)
+                    .fontWeight(detail == nil ? nil : .semibold)
+                if let detail {
+                    Text(verbatim: detail).foregroundStyle(.secondary).fixedSize(horizontal: false, vertical: true)
+                }
+            }
         } icon: {
             Image(systemName: problem ? "exclamationmark.triangle.fill" : "checkmark.circle.fill")
                 .foregroundStyle(problem ? TemperatureColor.hot : TemperatureColor.cool)
