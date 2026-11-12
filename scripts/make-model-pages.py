@@ -105,6 +105,8 @@ STYLE = """
   code { background: var(--code); padding: 1px 6px; border-radius: 5px; font-size: 0.9em; }
   .ok { color: var(--ok); }
   .muted { color: var(--muted); }
+  .jump { font-size: 15px; margin: 6px 0 0; }
+  .count { color: var(--muted); font-weight: 500; font-size: 15px; margin-left: 6px; }
   .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 12px; }
   .grid a { display: block; background: var(--surface); border: 1px solid var(--line); border-radius: 12px;
             padding: 14px 16px; text-decoration: none; color: var(--text); }
@@ -181,6 +183,15 @@ def sensor_section(entry, names):
             + "\n".join(blocks) + note)
 
 
+def group_section(anchor, title, lead, cards):
+    """One group of model cards on the index, newest Macs first (no year in the name: the newest)."""
+    if not cards:
+        return ""
+    cards = sorted(cards, key=lambda c: (-c["year"], c["mac"]))
+    return (f"<h2 id=\"{anchor}\">{e(title)} <span class=\"count\">{len(cards)}</span></h2>\n<p class=\"lead\">{e(lead)}</p>\n"
+            "<div class=\"grid\">" + "".join(c["html"] for c in cards) + "</div>\n")
+
+
 def main():
     sensor_map = load("SensorMaps/sensor-map.json")
     parts = load("SensorMaps/parts.json")
@@ -220,8 +231,10 @@ def main():
         url = SITE + f"models/{slug(model)}.html"
         with open(os.path.join(OUT, slug(model) + ".html"), "w", encoding="utf-8") as f:
             f.write(page(f"{mac} ({model}): sensors and genuine parts – FixStat", description, url, body))
-        cards.append(f"<a href=\"{slug(model)}.html\"><strong>{e(mac)}</strong><span>{e(model)} · {e(chip)}"
-                     + (f" · {count} sensors" if entry else "") + "</span></a>")
+        year = re.search(r"\b(19|20)\d\d\b", mac)
+        cards.append({"silicon": chip.startswith("Apple"), "year": int(year.group(0)) if year else 9999, "mac": mac,
+                      "html": f"<a href=\"{slug(model)}.html\"><strong>{e(mac)}</strong><span>{e(model)} · {e(chip)}"
+                              + (f" · {count} sensors" if entry else "") + "</span></a>"})
 
     adapters = sorted(parts.get("adapters", []), key=lambda a: (a.get("watts") or 0, a.get("id", "")))
     rows = []
@@ -231,8 +244,11 @@ def main():
                     f"<td>{e(a.get('watts', ''))} W</td><td>{e(profiles)}</td><td>{e(', '.join(a.get('firmware', [])))}</td></tr>")
     body = ("<header><nav><a href=\"../\">FixStat</a> › Mac models</nav>\n<h1>Mac models</h1>\n"
             "<p class=\"lead\">Temperature sensor names with their SMC keys, and the values of genuine batteries and power "
-            "adapters, recorded on the bench with FixStat.</p></header>\n<div class=\"grid\">" + "".join(cards) + "</div>\n"
-            "<h2>Genuine Apple power adapters</h2>\n<p class=\"lead\">The adapter ID, power profiles and firmware that "
+            "adapters, recorded on the bench with FixStat.</p>\n<p class=\"jump\"><a href=\"#apple-silicon\">Apple Silicon</a> · "
+            "<a href=\"#intel\">Intel</a> · <a href=\"#adapters\">Power adapters</a></p></header>\n"
+            + group_section("apple-silicon", "Apple Silicon", "M1 and later.", [c for c in cards if c["silicon"]])
+            + group_section("intel", "Intel", "Intel Macs, including the T2 models.", [c for c in cards if not c["silicon"]])
+            + "<h2 id=\"adapters\">Genuine Apple power adapters</h2>\n<p class=\"lead\">The adapter ID, power profiles and firmware that "
             "original adapters report; FixStat compares a connected adapter with them.</p>\n"
             "<div class=\"card\"><table><tr><th>Adapter</th><th>ID</th><th>Reported</th><th>Profiles</th><th>Firmware</th></tr>"
             + "".join(rows) + "</table></div>")
