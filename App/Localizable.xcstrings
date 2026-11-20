@@ -4292,6 +4292,16 @@
         }
       }
     },
+    "Gauge resistance table not published. Some macOS versions leave it out for genuine packs, but an aftermarket gauge may not keep one either: the pack may be aftermarket, judge it by the other checks." : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Gauge direnç tablosu yayınlanmıyor. Bazı macOS sürümleri orijinal paketlerde de bunu göstermiyor, ama muadil bir gauge da bu tabloyu tutmayabilir: paket muadil olabilir, diğer kontrollere bakarak değerlendirin."
+          }
+        }
+      }
+    },
     "General" : {
       "localizations" : {
         "tr" : {
@@ -5922,6 +5932,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Küçült"
+          }
+        }
+      }
+    },
+    "Missing: %@" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Eksik: %@"
           }
         }
       }
@@ -11942,6 +11962,16 @@
         }
       }
     },
+    "lifetime record" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ömür boyu kaydı"
+          }
+        }
+      }
+    },
     "low %1$@ · high %2$@" : {
       "localizations" : {
         "tr" : {
@@ -12374,6 +12404,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "direnç ortalamaya göre %@"
+          }
+        }
+      }
+    },
+    "resistance table" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "direnç tablosu"
           }
         }
       }

@@ -907,6 +907,10 @@ TR = {
     "Menu bar monitor for Mac repair technicians. Reads sensors only — never writes to the SMC.":
         "Mac tamircileri için menü çubuğu izleme uygulaması. Sensörleri yalnızca okur — SMC'ye asla yazmaz.",
     "Project page": "Proje sayfası",
+    'Gauge resistance table not published. Some macOS versions leave it out for genuine packs, but an aftermarket gauge may not keep one either: the pack may be aftermarket, judge it by the other checks.': 'Gauge direnç tablosu yayınlanmıyor. Bazı macOS sürümleri orijinal paketlerde de bunu göstermiyor, ama muadil bir gauge da bu tabloyu tutmayabilir: paket muadil olabilir, diğer kontrollere bakarak değerlendirin.',
+    'resistance table': 'direnç tablosu',
+    'lifetime record': 'ömür boyu kaydı',
+    'Missing: %@': 'Eksik: %@',
     "Fan %1$lld reads 0 rpm although the system asks for %2$@.": "Sistem %2$@ istediği hâlde fan %1$lld 0 rpm okunuyor.",
     'Fan %1$lld reads 0 rpm although the SMC asks for %2$@. Either it stands still or its speed signal (tach) does not reach the SMC: look whether it spins. The SMC then counts the fan as failed and can hold the CPU back.': "Fan %1$lld, SMC %2$@ istediği hâlde 0 rpm okunuyor. Ya duruyor ya da devir sinyali (tako) SMC'ye ulaşmıyor: dönüp dönmediğine bakın. SMC bu durumda fanı arızalı sayar ve işlemciyi kısabilir.",
     'macOS holds the CPU at %1$@ of its speed although it is not hot (%2$@), most likely because of the fan above.': 'macOS işlemciyi sıcak olmadığı hâlde (%2$@) hızının %1$@ kadarında tutuyor; büyük ihtimalle yukarıdaki fan yüzünden.',

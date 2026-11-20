@@ -180,8 +180,8 @@ private struct PartCheckColumn: View {
                         .frame(width: 14)
                     VStack(alignment: .leading, spacing: 1) {
                         Text(verbatim: PartText.item(item.id, status: item.status)).fixedSize(horizontal: false, vertical: true)
-                        if !item.detail.isEmpty {
-                            Text(verbatim: item.detail).font(.caption.monospaced()).foregroundStyle(.secondary)
+                        if let detail = PartText.detail(item) {
+                            Text(verbatim: detail).font(.caption.monospaced()).foregroundStyle(.secondary)
                         }
                     }
                 }

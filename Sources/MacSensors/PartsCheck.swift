@@ -191,13 +191,27 @@ public struct PartCheck: Codable, Sendable, Equatable {
         let strings = b.identity?.manufacturerStrings ?? []
         items.append(Item(id: "manufacturerData", status: strings.isEmpty ? .warn : .pass,
                           detail: strings.joined(separator: " · ")))
-        let resistance = (b.cellResistance?.isEmpty == false) || (b.cellResistanceTables ?? 0) > 0
-        let learned = (b.cellQmax?.isEmpty == false) && resistance && b.lifetime != nil
         // A genuine gauge always publishes Qmax, resistance and lifetime data; a pack that hides them
         // is suspicious. When the design capacity, chemistry and cells are missing too, this macOS
-        // keeps the gauge data somewhere FixStat does not read: no evidence either way.
+        // keeps the gauge data somewhere FixStat does not read: no evidence either way. The detail
+        // lists what is missing ("qmax,resistance,lifetime"; PartText names them).
+        let hasResistance = (b.cellResistance?.isEmpty == false) || (b.cellResistanceTables ?? 0) > 0
+        var missing: [String] = []
+        if b.cellQmax?.isEmpty != false { missing.append("qmax") }
+        if !hasResistance { missing.append("resistance") }
+        if b.lifetime == nil { missing.append("lifetime") }
         let unreadable = b.designCapacity == nil && b.identity?.chemistryID == nil && b.cellVoltages == nil
-        items.append(Item(id: "gaugeData", status: learned ? .pass : unreadable ? .info : .warn, detail: ""))
+        if missing.isEmpty {
+            items.append(Item(id: "gaugeData", status: .pass, detail: ""))
+        } else if unreadable {
+            items.append(Item(id: "gaugeData", status: .info, detail: ""))
+        } else if missing == ["resistance"] {
+            // Only the resistance table: some macOS versions leave it out for genuine packs (Big Sur on a
+            // MacBookPro13,2 with a genuine pack), but a clone gauge may not keep one either.
+            items.append(Item(id: "gaugeData.resistance", status: .info, detail: "resistance"))
+        } else {
+            items.append(Item(id: "gaugeData", status: .warn, detail: missing.joined(separator: ",")))
+        }
         // Series cells cannot hold far more than the pack's design capacity: a clone gauge that
         // reports such Qmax values (e.g. 7150 mAh on a 4270 mAh pack) made them up.
         if let design = b.designCapacity, design > 0, let highest = b.cellQmax?.max(), highest > 0 {

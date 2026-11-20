@@ -281,7 +281,7 @@ final class LegacyBatteryDetails {
         let passed = check.items.count - shownItems.count
         let items = (passed > 0 ? [Block.status(PartText.passedCount(passed), .good)] : []) + shownItems.map { item -> Block in
             let itemTone: Tone = item.status == .pass ? .good : item.status == .warn ? .bad : .neutral
-            return .status(PartText.item(item.id, status: item.status), itemTone, detail: item.detail.isEmpty ? nil : item.detail)
+            return .status(PartText.item(item.id, status: item.status), itemTone, detail: PartText.detail(item))
         }
         return [.list([.headline(title, nil), .headline(PartText.verdict(check.verdict), tone)] + items)]
     }

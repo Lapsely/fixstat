@@ -38,11 +38,25 @@ import Testing
         b.gaugeDeviceName = "sn27541"
         b.designCapacity = 5000
         b.cellResistance = nil
+        b.cellQmax = nil
         b.cycleCount = 1
         let check = PartCheck.battery(b, model: "MacBookAir10,1", reference: Self.reference)
         #expect(check.verdict == .suspicious)
         let warned = Set(check.items.filter { $0.status == .warn }.map(\.id))
         #expect(warned.isSuperset(of: ["ref.gauge", "ref.designCapacity", "gaugeData", "cycleReset"]))
+        #expect(check.items.first { $0.id == "gaugeData" }?.detail == "qmax,resistance")
+    }
+
+    @Test func onlyTheResistanceTableMissingIsAHintNotAVerdict() {
+        // Big Sur published no resistance table for a genuine MacBookPro13,2 pack.
+        var b = Self.genuineBattery
+        b.cellResistance = nil
+        b.cellResistanceTables = nil
+        let check = PartCheck.battery(b, model: "MacBookAir10,1", reference: Self.reference)
+        let item = check.items.first { $0.id.hasPrefix("gaugeData") }
+        #expect(item?.id == "gaugeData.resistance")
+        #expect(item?.status == .info)
+        #expect(check.verdict == .consistent)
     }
 
     @Test func unseenChemistryWithFewSamplesIsNotSuspicious() {

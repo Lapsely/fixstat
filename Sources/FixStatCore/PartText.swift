@@ -17,10 +17,26 @@ public enum PartText {
     }
 
     /// The evidence line; items that check for data name the missing data when they warn.
+    /// The detail line under a check item: what is missing for the gauge data, else the raw values.
+    public static func detail(_ item: PartCheck.Item) -> String? {
+        guard !item.detail.isEmpty else { return nil }
+        guard item.id.hasPrefix("gaugeData") else { return item.detail }
+        let names = item.detail.split(separator: ",").map { token -> String in
+            switch token {
+            case "qmax": return "Qmax"
+            case "resistance": return L("resistance table")
+            case "lifetime": return L("lifetime record")
+            default: return String(token)
+            }
+        }
+        return L("Missing: %@", names.joined(separator: ", "))
+    }
+
     public static func item(_ id: String, status: PartCheck.Status = .pass) -> String {
         switch (id, status) {
         case ("manufacturerData", .warn): return L("Manufacturer data missing")
         case ("gaugeData", .warn): return L("Gauge learning data missing (Qmax, resistance, lifetime)")
+        case ("gaugeData.resistance", _): return L("Gauge resistance table not published. Some macOS versions leave it out for genuine packs, but an aftermarket gauge may not keep one either: the pack may be aftermarket, judge it by the other checks.")
         case ("gaugeData", .info): return L("Gauge learning data could not be read on this macOS version")
         case ("serial", .warn): return L("Pack serial number missing or too short")
         case ("gaugeClock", .warn): return L("The gauge has counted longer than the pack exists (years: counted / since it was made): a made-up record")
