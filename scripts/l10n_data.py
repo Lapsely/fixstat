@@ -907,6 +907,8 @@ TR = {
     "Menu bar monitor for Mac repair technicians. Reads sensors only — never writes to the SMC.":
         "Mac tamircileri için menü çubuğu izleme uygulaması. Sensörleri yalnızca okur — SMC'ye asla yazmaz.",
     "Project page": "Proje sayfası",
+    'FixStat is free. If it helps you, you can support it.': 'FixStat ücretsizdir. İşinize yarıyorsa destek olabilirsiniz.',
+    '♥ Support FixStat': "♥ FixStat'ı destekle",
     'Gauge resistance table not published. Some macOS versions leave it out for genuine packs, but an aftermarket gauge may not keep one either: the pack may be aftermarket, judge it by the other checks.': 'Gauge direnç tablosu yayınlanmıyor. Bazı macOS sürümleri orijinal paketlerde de bunu göstermiyor, ama muadil bir gauge da bu tabloyu tutmayabilir: paket muadil olabilir, diğer kontrollere bakarak değerlendirin.',
     'resistance table': 'direnç tablosu',
     'lifetime record': 'ömür boyu kaydı',

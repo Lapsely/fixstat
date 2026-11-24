@@ -3,6 +3,8 @@ import AppKit
 /// Version information and the standard About panel.
 public enum AboutInfo {
     public static let repositoryURL = URL(string: "https://github.com/Lapsely/fixstat")!
+    /// GitHub Sponsors page (a plain link in Settings › About; FixStat never asks for money).
+    public static let sponsorURL = URL(string: "https://github.com/sponsors/Lapsely")!
 
     public static var version: String {
         Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as? String ?? "–"

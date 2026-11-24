@@ -3962,6 +3962,16 @@
         }
       }
     },
+    "FixStat is free. If it helps you, you can support it." : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "FixStat ücretsizdir. İşinize yarıyorsa destek olabilirsiniz."
+          }
+        }
+      }
+    },
     "FixStat may not use the microphone: allow it under Privacy & Security › Microphone." : {
       "localizations" : {
         "tr" : {
@@ -13288,6 +13298,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "°C"
+          }
+        }
+      }
+    },
+    "♥ Support FixStat" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "♥ FixStat'ı destekle"
           }
         }
       }

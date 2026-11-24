@@ -145,6 +145,8 @@ final class LegacySettingsController: NSWindowController, NSWindowDelegate {
                     },
                     ActionButton.link(L("Project page")) { NSWorkspace.shared.open(AboutInfo.repositoryURL) }]),
             makeNote(FeedbackText.reportHelp, width: Self.formWidth),
+            hStack([makeLabel(L("FixStat is free. If it helps you, you can support it."), color: .secondaryLabelColor), makeSpacer(),
+                    ActionButton.link(L("♥ Support FixStat")) { NSWorkspace.shared.open(AboutInfo.sponsorURL) }]),
         ]
         return form(rows)
     }

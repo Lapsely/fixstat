@@ -187,6 +187,12 @@ biçimleri bölge ayarınızı izler.
   forum ekinden ya da birinin gönderdiği dosyadan FixStat kurmayın. FixStat'taki güncelleme bildirimi yalnızca o sayfaya
   bağlantı verir.
 
+## FixStat'ı destekleyin
+
+FixStat ücretsizdir ve ücretsiz kalacak. İşinizi kolaylaştırıyorsa
+[GitHub Sponsors](https://github.com/sponsors/Lapsely) üzerinden destek olabilirsiniz. İlk hedef
+Apple geliştirici üyeliği: böylece FixStat imzalanıp notarize edilebilir ve macOS açılışta uyarı vermez.
+
 ## Teşekkür
 
 SMC parametre yapısı ve IOHID sensör yaklaşımı, [exelban/stats](https://github.com/exelban/stats)

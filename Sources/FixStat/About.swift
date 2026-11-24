@@ -37,6 +37,11 @@ struct AboutSection: View {
                 }
                 Link("Project page", destination: AboutInfo.repositoryURL)
             }
+            HStack {
+                Text("FixStat is free. If it helps you, you can support it.").foregroundStyle(.secondary)
+                Spacer()
+                Link("♥ Support FixStat", destination: AboutInfo.sponsorURL)
+            }
         }
     }
 }

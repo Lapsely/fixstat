@@ -179,6 +179,12 @@ FixStat and pick a language. Numbers and units follow your region settings.
   cannot vouch for a copy: do not install a FixStat from another site, a forum attachment or a file someone sent you.
   The update notice in FixStat only links to that page.
 
+## Support FixStat
+
+FixStat is free and stays free. If it saves you time at the bench, you can support it through
+[GitHub Sponsors](https://github.com/sponsors/Lapsely). The first goal is Apple's developer
+membership, so FixStat can be signed and notarized and macOS stops warning when you open it.
+
 ## Acknowledgements
 
 The SMC parameter layout and the IOHID sensor approach follow the public reverse
