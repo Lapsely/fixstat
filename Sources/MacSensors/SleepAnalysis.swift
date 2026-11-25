@@ -1,4 +1,6 @@
 import Foundation
+import Darwin
+import CoreServices
 
 /// Sleep / wake behaviour from the power management log (`pmset -g log`, about a week
 /// of history kept by macOS) and the current settings (`pmset -g`). No root needed.
@@ -101,8 +103,75 @@ public struct SleepAnalysis: Codable, Sendable, Equatable {
                                                     fullChargeCapacity: BatteryReader.read()?.rawMaxCapacity)
         let current = parseSettings(Command.output("/usr/bin/pmset", ["-g"]) ?? "")
         analysis.settings = current.settings
-        analysis.preventingNow = current.preventing
+        let behalf = onBehalf(assertions: Command.output("/usr/bin/pmset", ["-g", "assertions"]) ?? "",
+                              name: processName(pid:))
+        analysis.preventingNow = current.preventing.map { process in
+            guard let apps = behalf[process], !apps.isEmpty else { return process }
+            return process + " → " + apps.joined(separator: ", ")
+        }
         return analysis
+    }
+
+    /// Services that hold sleep assertions on behalf of an app: the app is what the technician
+    /// needs (coreaudiod for an open audio stream, runningboardd for an app's background work).
+    static let proxies: Set<String> = ["coreaudiod", "runningboardd"]
+
+    /// `pmset -g assertions`, "Listed by owning process": the apps behind the proxies' assertions,
+    /// from "Created for PID: N." lines (coreaudiod) or the assertion name (runningboardd:
+    /// "app<application.com.apple.Safari.1.2(501)>…").
+    static func onBehalf(assertions: String, name: (Int32) -> String?) -> [String: [String]] {
+        var result: [String: [String]] = [:]
+        var owner: String?
+        for raw in assertions.split(separator: "\n") {
+            let line = raw.trimmingCharacters(in: .whitespaces)
+            if line.hasPrefix("pid "), let open = line.firstIndex(of: "("), let close = line.firstIndex(of: ")"), open < close {
+                let process = String(line[line.index(after: open)..<close])
+                owner = proxies.contains(process) ? process : nil
+                if let owner, let quoted = line.range(of: "named: \""),
+                   let target = target(ofAssertion: String(line[quoted.upperBound...])) {
+                    result[owner, default: []].appendUnique(target)
+                }
+            } else if let owner, line.hasPrefix("Created for PID:") {
+                let digits = line.dropFirst("Created for PID:".count).filter { $0.isNumber }
+                if let pid = Int32(digits), let app = name(pid) { result[owner, default: []].appendUnique(app) }
+            }
+        }
+        return result
+    }
+
+    /// The app or service a runningboardd assertion is for: "app<application.com.apple.Safari.145132.145798(501)>…"
+    /// → "Safari", "osservice<com.apple.mobileassetd>…" → "mobileassetd"; nil for other names.
+    static func target(ofAssertion name: String) -> String? {
+        guard let open = name.firstIndex(of: "<"), let close = name.firstIndex(of: ">"), open < close else { return nil }
+        var inner = String(name[name.index(after: open)..<close])
+        if let paren = inner.firstIndex(of: "(") { inner = String(inner[..<paren]) }
+        if inner.hasPrefix("application.") { inner = String(inner.dropFirst("application.".count)) }
+        // Drop the trailing instance numbers ("….145132.145798").
+        var parts = inner.split(separator: ".").map(String.init)
+        while let last = parts.last, !last.isEmpty, last.allSatisfy({ $0.isNumber }) { parts.removeLast() }
+        guard let last = parts.last, !last.isEmpty else { return nil }
+        if let name = appName(bundleID: parts.joined(separator: ".")) { return name }
+        // "com.spotify.client": the last word is generic, the one before it names the app.
+        if parts.count >= 2, genericBundleWords.contains(last.lowercased()) { return parts[parts.count - 2].capitalized }
+        return last
+    }
+
+    static let genericBundleWords: Set<String> = ["client", "app", "desktop", "mac", "macos", "osx", "helper", "agent", "main"]
+
+    /// The installed app's name for a bundle id ("com.spotify.client" → "Spotify"), nil when none is installed.
+    static func appName(bundleID: String) -> String? {
+        guard bundleID.contains("."),
+              let urls = LSCopyApplicationURLsForBundleIdentifier(bundleID as CFString, nil)?.takeRetainedValue() as? [URL],
+              let url = urls.first else { return nil }
+        return FileManager.default.displayName(atPath: url.path).replacingOccurrences(of: ".app", with: "")
+    }
+
+    /// Short process name of a PID (nil when it is gone).
+    static func processName(pid: Int32) -> String? {
+        var buffer = [CChar](repeating: 0, count: 256)
+        guard proc_name(pid, &buffer, UInt32(buffer.count)) > 0 else { return nil }
+        let name = String(cString: buffer)
+        return name.isEmpty ? nil : name
     }
 
     public static let dateFormatter: DateFormatter = {
@@ -160,8 +229,14 @@ public struct SleepAnalysis: Codable, Sendable, Equatable {
                     drivers[driver] = entry
                 }
             case "Assertions":
-                if let (process, type, seconds) = releasedAssertion(message), sleepPreventing.contains(type),
-                   process != "powerd" {
+                if let (owner, type, seconds) = releasedAssertion(message), sleepPreventing.contains(type),
+                   owner != "powerd" {
+                    // runningboardd names the app in the assertion: keep it apart per app.
+                    var process = owner
+                    if proxies.contains(owner), let quote = message.firstIndex(of: "\""),
+                       let app = target(ofAssertion: String(message[quote...])) {
+                        process = owner + " → " + app
+                    }
                     var entry = preventers[process] ?? Preventer(process: process, count: 0, longestSeconds: 0)
                     entry.count += 1
                     entry.longestSeconds = max(entry.longestSeconds, seconds)
@@ -255,5 +330,11 @@ public struct SleepAnalysis: Codable, Sendable, Equatable {
         else { return (process, type, 0) }
         let hms = duration.split(separator: ":").compactMap { Int($0) }
         return (process, type, hms[0] * 3600 + hms[1] * 60 + hms[2])
+    }
+}
+
+extension Array where Element == String {
+    mutating func appendUnique(_ value: String) {
+        if !contains(value) { append(value) }
     }
 }

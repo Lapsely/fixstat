@@ -114,4 +114,31 @@ import Testing
         #expect(OffStateDrain.measured(mark: mark, records: [(boot, true)], now: boot.addingTimeInterval(3600),
                                        remaining: 1964, charge: 61) == nil)
     }
+
+    @Test func runningboardAssertionNamesTheApp() {
+        #expect(SleepAnalysis.target(ofAssertion: "\"app<application.com.apple.Safari.145132.145798(501)>:fetch\"") == "Safari")
+        #expect(SleepAnalysis.target(ofAssertion: "osservice<com.apple.mobileassetd>176-344") == "mobileassetd")
+        #expect(SleepAnalysis.target(ofAssertion: "com.apple.audio.context271.preventuseridlesleep") == nil)
+        let log = "2026-11-25 09:19:44 +0300 Assertions          \tPID 176(runningboardd) Released PreventUserIdleSystemSleep "
+            + "\"app<application.com.google.Chrome.1.2(501)>:media\" 00:42:00  id:0x0x1000080aa [System: PrevIdle]"
+        let a = SleepAnalysis.parse(log: log)
+        #expect(a.preventers.first?.process == "runningboardd → Chrome")
+        #expect(a.preventers.first?.longestSeconds == 2520)
+    }
+
+    @Test func currentAssertionsNameTheAppBehindCoreAudio() {
+        let text = """
+            Listed by owning process:
+               pid 374(coreaudiod): [0x00004ece00018319] 00:00:10 PreventUserIdleSystemSleep named: "com.apple.audio.BuiltInSpeakerDevice.context.preventuseridlesleep"
+            \tCreated for PID: 6613.
+            \tResources: audio-out BuiltInSpeakerDevice
+               pid 176(runningboardd): [0x01] 00:00:05 PreventUserIdleSystemSleep named: "app<application.com.spotify.client.9.9(501)>:x"
+               pid 130(mds): [0x02] 00:00:22 BackgroundTask named: "com.apple.metadata.mds.power"
+            \tCreated for PID: 1.
+            """
+        let behalf = SleepAnalysis.onBehalf(assertions: text) { $0 == 6613 ? "Music" : "launchd" }
+        #expect(behalf["coreaudiod"] == ["Music"])
+        #expect(behalf["runningboardd"] == ["Spotify"])
+        #expect(behalf["mds"] == nil)
+    }
 }
