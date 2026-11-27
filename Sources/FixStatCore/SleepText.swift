@@ -6,6 +6,24 @@ public enum SleepText {
         L("%@ per hour", Format.percent(percentPerHour, digits: 1))
     }
 
+    /// What "drain while asleep" is based on: the sleeps on battery of at least 30 minutes and
+    /// the whole percentages of the log, so a small loss reads 0 %.
+    public static func drainBasis(_ a: SleepAnalysis) -> String {
+        guard let d = a.sleepDrain else {
+            return L("Drain while asleep: the log has no sleep of 30 minutes or more on battery between two real wakes (on the charger it is not measured).")
+        }
+        let sleeps = d.segments == 1 ? L("1 night or break") : L("%lld nights or breaks", d.segments)
+        return L("Drain while asleep from %1$@ on battery (from going to sleep to the next real wake, dark wakes included), %2$@ in all. The log keeps whole percentages, so a small loss reads 0 %; the drain detective below measures in mA.",
+                 sleeps, Format.duration(d.hours * 3600))
+    }
+
+    /// The drain with its basis on one line (PDF): "0.3 % per hour · 4 sleeps, 6 h".
+    public static func drainWithBasis(_ a: SleepAnalysis) -> String? {
+        guard let d = a.sleepDrain else { return nil }
+        let sleeps = d.segments == 1 ? L("1 night or break") : L("%lld nights or breaks", d.segments)
+        return drain(d.percentPerHour) + " · " + sleeps + ", " + Format.duration(d.hours * 3600)
+    }
+
     public static func kind(_ k: SleepAnalysis.Event.Kind) -> String {
         switch k {
         case .sleep: L("Sleep")

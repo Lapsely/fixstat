@@ -548,6 +548,7 @@ final class LegacySleep: LegacySnapshotStartable {
             (L("Average wake time"), a.averageWakeTime.map { Format.seconds($0) } ?? "–"),
             (L("Low battery warnings"), Format.number(Double(a.lowBatteryWarnings))),
         ], columns: 4))
+        blocks.append(.caption(SleepText.drainBasis(a)))
 
         if core.profile.hasBattery {
             let drain = core.drainReport(analysis: a)

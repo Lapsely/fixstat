@@ -63,6 +63,10 @@ struct SleepView: View {
         Text("Battery ran empty \(a.lowPowerSleeps) · Failures \(a.failures.count) · Average wake \(a.averageWakeTime.map { Format.seconds($0) } ?? "–") · Low battery warnings \(a.lowBatteryWarnings)")
             .font(.callout)
             .foregroundStyle(.secondary)
+        Text(verbatim: SleepText.drainBasis(a))
+            .font(.caption)
+            .foregroundStyle(.secondary)
+            .fixedSize(horizontal: false, vertical: true)
 
         if !findings.isEmpty {
             Card {

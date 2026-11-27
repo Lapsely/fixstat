@@ -38,10 +38,11 @@ import Testing
 
     @Test func drainAndDrivers() {
         let a = SleepAnalysis.parse(log: Self.log)
-        // 80 → 79 over 38 min, 79 → 77 over 81 min; the 24 s sleep is too short.
+        // Sleep at 80 % to the lid opening at 77 % two hours later, the dark wake included; the
+        // 24 s sleep is too short.
         let drain = a.sleepDrain!
-        #expect(drain.segments == 2)
-        #expect(abs(drain.percentPerHour - 3 / ((38 * 60 + 1 + 81 * 60 + 14) / 3600.0)) < 0.01)
+        #expect(drain.segments == 1)
+        #expect(abs(drain.percentPerHour - 1.5) < 0.01)
         #expect(a.slowDrivers.first?.driver == "AppleSEPManager" || a.slowDrivers.first?.driver == "CoreKDLDriver")
         #expect(a.slowDrivers.contains { $0.driver == "CoreKDLDriver" && $0.maxMilliseconds == 3233 })
         #expect(a.preventers == [.init(process: "Claude", count: 1, longestSeconds: 4004)])
@@ -140,5 +141,25 @@ import Testing
         #expect(behalf["coreaudiod"] == ["Music"])
         #expect(behalf["runningboardd"] == ["Spotify"])
         #expect(behalf["mds"] == nil)
+    }
+
+    @Test func frequentDarkWakesStillCountAsAsleep() {
+        // Lid closed at 90 %, a dark wake every 10 minutes for 5 hours, opened at 40 %.
+        var lines: [String] = []
+        let f = SleepAnalysis.dateFormatter
+        var t = f.date(from: "2026-11-25 22:00:00 +0300")!
+        var charge = 90
+        lines.append("\(f.string(from: t)) Sleep               \tEntering Sleep state due to 'Clamshell Sleep': Using Batt (Charge:\(charge)%) 600 secs")
+        for _ in 0..<30 {
+            t += 600; charge -= 1
+            lines.append("\(f.string(from: t)) DarkWake            \tDarkWake from Deep Idle [CDNP] : due to smc.sysState.Wake wifibt SMC.OutboxNotEmpty/ Using BATT (Charge:\(charge)%) 6 secs")
+            lines.append("\(f.string(from: t + 6)) Sleep               \tEntering Sleep state due to 'Maintenance Sleep': Using Batt (Charge:\(charge)%) 594 secs")
+        }
+        t += 600
+        lines.append("\(f.string(from: t)) Wake                \tWake from Normal Sleep [CDNVA] : due to EC.LidOpen/Lid Open Using BATT (Charge:40%)")
+        let drain = SleepAnalysis.parse(log: lines.joined(separator: "\n")).sleepDrain!
+        #expect(drain.segments == 1)
+        #expect(abs(drain.hours - 31.0 / 6) < 0.01)
+        #expect(drain.percentPerHour > 9)
     }
 }

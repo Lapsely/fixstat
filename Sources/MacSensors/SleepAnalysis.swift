@@ -77,19 +77,33 @@ public struct SleepAnalysis: Codable, Sendable, Equatable {
 
     /// Battery drain while asleep on battery: charge lost between falling asleep and the
     /// next (dark) wake, over sleeps of at least 30 minutes that did not gain charge.
+    /// Charge lost per hour while asleep on battery. A period runs from a sleep to the next full
+    /// wake (the user opening the lid or pressing a key), so dark wakes and the short sleeps between
+    /// them count: a Mac that wakes for the network every few minutes drains during exactly those.
+    /// Periods under 30 minutes, or with the charger connected in between, are left out.
     public var sleepDrain: (percentPerHour: Double, hours: Double, segments: Int)? {
         var lost = 0.0
         var hours = 0.0
         var segments = 0
-        for (index, event) in events.enumerated() where event.kind == .sleep && event.onBattery == true {
-            guard let start = event.charge,
-                  let next = events[(index + 1)...].first(where: { $0.kind == .wake || $0.kind == .darkWake }),
-                  let end = next.charge, end <= start else { continue }
-            let span = next.date.timeIntervalSince(event.date) / 3600
-            guard span >= 0.5 else { continue }
-            lost += Double(start - end)
-            hours += span
-            segments += 1
+        var start: (date: Date, charge: Int)?
+        for event in events {
+            switch event.kind {
+            case .sleep:
+                if event.onBattery == false { start = nil; continue }
+                if start == nil, event.onBattery == true, let charge = event.charge { start = (event.date, charge) }
+            case .darkWake:
+                if event.onBattery == false { start = nil }
+            case .wake:
+                defer { start = nil }
+                guard let open = start, let end = event.charge, end <= open.charge else { continue }
+                let span = event.date.timeIntervalSince(open.date) / 3600
+                guard span >= 0.5 else { continue }
+                lost += Double(open.charge - end)
+                hours += span
+                segments += 1
+            case .failure:
+                break
+            }
         }
         return hours > 0 ? (lost / hours, hours, segments) : nil
     }

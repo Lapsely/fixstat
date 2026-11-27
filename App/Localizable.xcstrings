@@ -775,6 +775,16 @@
         }
       }
     },
+    "%lld nights or breaks" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld gece ya da ara"
+          }
+        }
+      }
+    },
     "%lld passed · %lld failed · %lld not tested" : {
       "localizations" : {
         "en" : {
@@ -952,6 +962,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "1 kontrol geçti"
+          }
+        }
+      }
+    },
+    "1 night or break" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "1 gece ya da ara"
           }
         }
       }
@@ -3326,6 +3346,26 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Uykuda tüketim (ölçülen)"
+          }
+        }
+      }
+    },
+    "Drain while asleep from %1$@ on battery (from going to sleep to the next real wake, dark wakes included), %2$@ in all. The log keeps whole percentages, so a small loss reads 0 %; the drain detective below measures in mA." : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Uykuda tüketim, bataryada geçen %1$@ üzerinden hesaplandı (uykuya geçişten bir sonraki gerçek uyanmaya kadar, karanlık uyanmalar dahil), toplam %2$@. Günlük tam yüzde tuttuğu için küçük bir kayıp %0 görünür; aşağıdaki drenaj dedektifi mA cinsinden ölçer."
+          }
+        }
+      }
+    },
+    "Drain while asleep: the log has no sleep of 30 minutes or more on battery between two real wakes (on the charger it is not measured)." : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Uykuda tüketim: günlükte iki gerçek uyanma arasında bataryada geçen 30 dakika ya da daha uzun bir uyku yok (şarjdayken ölçülmez)."
           }
         }
       }

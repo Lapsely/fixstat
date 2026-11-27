@@ -409,7 +409,7 @@ private final class ReportWriter {
             row(L("Period"), Format.date(from) + " – " + Format.date(to))
         }
         row(L("Sleeps · wakes · dark wakes"), "\(a.sleeps.count) · \(a.wakes.count) · \(a.darkWakes.count)")
-        row(L("Drain while asleep"), a.sleepDrain.map { SleepText.drain($0.percentPerHour) })
+        row(L("Drain while asleep"), SleepText.drainWithBasis(a))
         row(L("Battery ran empty"), Format.number(Double(a.lowPowerSleeps)))
         row(L("Drain while shut down"), OffStateDrain.summary(data.offPeriods).map(SleepText.offSummary))
         if let top = a.reasons(.wake, limit: 3).first {
