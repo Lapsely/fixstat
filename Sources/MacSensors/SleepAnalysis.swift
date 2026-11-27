@@ -184,7 +184,7 @@ public struct SleepAnalysis: Codable, Sendable, Equatable {
     static func processName(pid: Int32) -> String? {
         var buffer = [CChar](repeating: 0, count: 256)
         guard proc_name(pid, &buffer, UInt32(buffer.count)) > 0 else { return nil }
-        let name = String(cString: buffer)
+        let name = Registry.string(from: buffer)
         return name.isEmpty ? nil : name
     }
 
