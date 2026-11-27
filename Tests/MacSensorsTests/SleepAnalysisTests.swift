@@ -120,10 +120,12 @@ import Testing
         #expect(SleepAnalysis.target(ofAssertion: "\"app<application.com.apple.Safari.145132.145798(501)>:fetch\"") == "Safari")
         #expect(SleepAnalysis.target(ofAssertion: "osservice<com.apple.mobileassetd>176-344") == "mobileassetd")
         #expect(SleepAnalysis.target(ofAssertion: "com.apple.audio.context271.preventuseridlesleep") == nil)
+        // A bundle id no Mac has installed: the name comes from the id, whatever the test Mac has
+        // (with Google Chrome installed, "com.google.Chrome" reads "Google Chrome").
         let log = "2026-11-25 09:19:44 +0300 Assertions          \tPID 176(runningboardd) Released PreventUserIdleSystemSleep "
-            + "\"app<application.com.google.Chrome.1.2(501)>:media\" 00:42:00  id:0x0x1000080aa [System: PrevIdle]"
+            + "\"app<application.org.fixstat-test.Player.1.2(501)>:media\" 00:42:00  id:0x0x1000080aa [System: PrevIdle]"
         let a = SleepAnalysis.parse(log: log)
-        #expect(a.preventers.first?.process == "runningboardd → Chrome")
+        #expect(a.preventers.first?.process == "runningboardd → Player")
         #expect(a.preventers.first?.longestSeconds == 2520)
     }
 
