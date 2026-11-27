@@ -4,29 +4,31 @@
 <dict>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>en</string>
+	<key>CFBundleDisplayName</key>
+	<string>FixStat</string>
+	<key>CFBundleExecutable</key>
+	<string>FixStat</string>
+	<key>CFBundleIconFile</key>
+	<string>AppIcon</string>
+	<key>CFBundleIdentifier</key>
+	<string>io.github.burakfixlab.fixstat</string>
+	<key>CFBundleInfoDictionaryVersion</key>
+	<string>6.0</string>
 	<key>CFBundleLocalizations</key>
 	<array>
 		<string>en</string>
 		<string>tr</string>
 	</array>
-	<key>CFBundleIconFile</key>
-	<string>AppIcon</string>
-	<key>CFBundleExecutable</key>
-	<string>FixStat</string>
-	<key>CFBundleIdentifier</key>
-	<string>io.github.burakfixlab.fixstat</string>
 	<key>CFBundleName</key>
-	<string>FixStat</string>
-	<key>CFBundleDisplayName</key>
 	<string>FixStat</string>
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
 	<key>CFBundleShortVersionString</key>
-	<string>1.7.0</string>
+	<string>1.7.1</string>
 	<key>CFBundleVersion</key>
-	<string>18</string>
-	<key>CFBundleInfoDictionaryVersion</key>
-	<string>6.0</string>
+	<string>19</string>
+	<key>LSApplicationCategoryType</key>
+	<string>public.app-category.utilities</string>
 	<key>LSMinimumSystemVersion</key>
 	<string>10.13</string>
 	<key>LSMinimumSystemVersionByArchitecture</key>
@@ -36,17 +38,15 @@
 		<key>x86_64</key>
 		<string>10.13</string>
 	</dict>
-	<key>LSApplicationCategoryType</key>
-	<string>public.app-category.utilities</string>
 	<key>LSUIElement</key>
 	<true/>
-	<key>NSCameraUsageDescription</key>
-	<string>The hardware check shows the camera image so you can test the camera.</string>
-	<key>NSMicrophoneUsageDescription</key>
-	<string>The hardware check shows the microphone level and records a few seconds so you can test the microphones.</string>
 	<key>NSBluetoothAlwaysUsageDescription</key>
 	<string>The hardware check scans for nearby Bluetooth devices to test the Bluetooth radio.</string>
+	<key>NSCameraUsageDescription</key>
+	<string>The hardware check shows the camera image so you can test the camera.</string>
 	<key>NSHumanReadableCopyright</key>
 	<string>MIT License</string>
+	<key>NSMicrophoneUsageDescription</key>
+	<string>The hardware check shows the microphone level and records a few seconds so you can test the microphones.</string>
 </dict>
 </plist>
